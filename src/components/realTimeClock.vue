@@ -32,5 +32,5 @@ onMounted(() => {
     </p>
   </div>
   <br>
-  <diV><p>今日もお仕事、頑張りましょう…</p></diV>
+  <diV><p>今日もお仕事、がんばりましょう…</p></diV>
 </template>
