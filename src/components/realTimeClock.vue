@@ -19,7 +19,7 @@ onMounted(() => {
 <template>
   <div>
     <p>
-      今日は&nbsp;<span style="font-weight: 900; font-size: 1.4em; color: red">{{
+      今日は&nbsp;<span style="font-weight: 500; font-size: 1.4em; color: red">{{
         currentDate
       }}</span
       >&nbsp;です
@@ -27,10 +27,9 @@ onMounted(() => {
   </div>
   <div>
     <p>
-      現在の時刻は&nbsp;<span style="font-weight: 650; font-size: 1.4em">{{ currentTime }}</span
+      現在の時刻は&nbsp;<span style="font-weight: 250; font-size: 1.4em">{{ currentTime }}</span
       >&nbsp;です
     </p>
   </div>
-  <br>
   <diV><p>今日もお仕事、がんばりましょう…</p></diV>
 </template>

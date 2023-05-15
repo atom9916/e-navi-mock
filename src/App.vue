@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import RealTimeClock from "./components/realTimeClock.vue"
-import {useHead} from "@vueuse/head"
+import { RouterLink, RouterView } from 'vue-router'
 
-useHead({
-  title:'メインページ'
-})
+
 </script>
 
 <template>
-<h2>メインページ</h2>
-<div>
-<RealTimeClock/>
-</div>
+  <header>
+    <nav>
+      <RouterLink to="/">ホーム</RouterLink><br />
+      <RouterLink to="/monthly">月次勤怠</RouterLink><br />
+      <RouterLink to="/dayly">日次勤怠</RouterLink><br />
+    </nav>
+  </header>
+<h2>e-navi-mock</h2>
+<RouterView/>
 </template>
 
 
