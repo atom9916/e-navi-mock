@@ -24,7 +24,6 @@ const signUp = () => {
 const login = () => {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
-      // Signed in 
       const user = userCredential.user;
       console.log('Login!', user)
     })
