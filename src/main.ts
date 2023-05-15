@@ -1,4 +1,4 @@
-import './assets/main.css'
+// import './assets/main.css'
 import './firebase/firebase.ts'
 
 import { createApp } from 'vue'
