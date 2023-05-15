@@ -2,6 +2,11 @@
 
 erDiagram
 
+users||--|{ department: "userは１つ以上の部署に所属"
+users||--|{ daily_attendance: "userは複数の日次勤怠データをもつ"
+users||--|{ monthly_attendance: "userは複数の月次勤怠データを持つ"
+
+
 users{
   uuid id PK
   text name
