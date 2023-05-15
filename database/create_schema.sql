@@ -1,0 +1,5 @@
+DROP SCHEMA IF EXISTS api CASCADE;
+
+-- @block
+CREATE SCHEMA api;
+COMMENT ON SCHEMA api IS 'PostgREST api schema';
