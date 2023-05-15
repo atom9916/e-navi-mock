@@ -26,7 +26,7 @@ model Monthly_attendance {
   id                  Int       @id @default(autoincrement())
   userId              Int       @unique
   user                User      @relation(fields: [userId], references: [id])
-  month               DateTime  @db.Timestamp(6)
+  month               DateTime?  @db.Timestamp(6)
   attendanceAmount    Int       @default(0)
   absenceAmount       Int       @default(0)
   paidOffAmount       Int       @default(0)
@@ -41,7 +41,7 @@ model User {
   id                    Int                   @id @default(autoincrement())
   name                  String                @db.VarChar(30)
   email                 String                @unique @db.VarChar(255)
-  password              String?                @unique @db.VarChar(30)
+  password              String                @unique @db.VarChar(30)
   departmentId          Int
   department            Department            @relation(fields: [departmentId], references: [id])
   monthlyAttendance     Monthly_attendance[]

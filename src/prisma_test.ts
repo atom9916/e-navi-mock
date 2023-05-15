@@ -3,23 +3,30 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  // await prisma.tag.create({
-  //   data: {
-  //     name: 'greet',
-  //     posts: {
-  //       connect: { id: 1 }
-  //     }
-  //   }
-  // })
-  // const allPosts = await prisma.post.findMany({
-  //   include: { tags: true }
-  // })
-  // console.dir(allPosts, {depth: null})
+  await prisma.department.create({
+    data: {
+      name: '人事部'
+    }
+  })
+
+  await prisma.user.create({
+    data: {
+      name: 'Alice',
+      email: 'alice@prisma.io',
+      password: 'alice2023',
+      departmentId: 1
+    }
+  })
+
+  const allUsers = await prisma.user.findMany()
+
+  console.dir(allUsers, { depth: null })
+
   // const post = await prisma.post.update({
   //   where: { id: 1 },
   //   data: { published: true }
   // })
-  // console.log(post)
+
   // await prisma.user.create({
   //   data: {
   //     name: 'Alice',
@@ -32,13 +39,13 @@ async function main() {
   //     }
   //   }
   // })
+
   // const allUsers = await prisma.user.findMany({
   //   include: {
-  //     posts: true,
-  //     profile: true
+  //      posts: true
+  //      profile: true
   //   }
   // })
-  // console.dir(allUsers, { depth: null })
 }
 
 main()
@@ -48,5 +55,5 @@ main()
   .catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()
-    // process.exit(1)
+    process.exit(1)
   })

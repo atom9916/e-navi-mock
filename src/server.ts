@@ -1,8 +1,10 @@
 import express from 'express'
 import userController from './controllers/userController'
+import dailyAttendanceController from './controllers/dailyAttendanceController'
+import monthlyAttendanceController from './controllers/mothlyAttendanceController'
 
 const app: express.Express = express()
-const port = 3000
+const port = 4242
 
 app.use(express.json())
 
@@ -12,6 +14,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/users', userController)
+app.use('/day', dailyAttendanceController)
+app.use('/month', monthlyAttendanceController)
 
 app.listen(port, () => {
   console.log(`this app listening on port ${port}`)
