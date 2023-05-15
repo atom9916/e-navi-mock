@@ -8,5 +8,5 @@ useHead({
 </script>
 
 <template>
-    <h2>月次勤怠</h2>
+    <h2>日次勤怠</h2>
 </template>
