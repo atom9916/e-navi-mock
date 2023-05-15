@@ -10,6 +10,11 @@ users{
   text department
 }
 
+department {
+  id id PK
+  text name
+}
+
 daily_attendance {
   uuid user_id "FK from users"
   timestamp date
@@ -30,7 +35,7 @@ monthly_attendance {
   int abcence_amount "欠勤日数の合計"
   int paid_off_amount "有給日数の合計"
   int holiday_work_amount "休日出勤日数の合計"
-  int targiness_amount "遅刻早退時間の合計"
+  int tardiness_amount "遅刻早退時間の合計"
   int basic_work_amount "基本労働時間の合計"
   int over_time_amount "残業時間の合計"
   int monthly_work_amount "月次就業時間の合計"

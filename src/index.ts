@@ -3,13 +3,23 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  const post = await prisma.post.update({
-    where: { id: 1 },
-    data: { published: true }
-  })
-
-  console.log(post)
-
+  // await prisma.tag.create({
+  //   data: {
+  //     name: 'greet',
+  //     posts: {
+  //       connect: { id: 1 }
+  //     }
+  //   }
+  // })
+  // const allPosts = await prisma.post.findMany({
+  //   include: { tags: true }
+  // })
+  // console.dir(allPosts, {depth: null})
+  // const post = await prisma.post.update({
+  //   where: { id: 1 },
+  //   data: { published: true }
+  // })
+  // console.log(post)
   // await prisma.user.create({
   //   data: {
   //     name: 'Alice',
@@ -22,7 +32,6 @@ async function main() {
   //     }
   //   }
   // })
-
   // const allUsers = await prisma.user.findMany({
   //   include: {
   //     posts: true,

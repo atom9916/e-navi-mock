@@ -9,46 +9,70 @@ datasource db {
 
 model Daily_attendance {
   id         Int       @id @default(autoincrement())
-  user_id    String?   @db.Uuid
+  userId     Int       @unique
+  user       User      @relation(fields: [userId], references: [id])
   date       DateTime? @db.Timestamp(6)
-  state      String?
-  attendance String?
-  punch_in   Int?
-  punch_out  Int?
-  break_time Int?
-  work_hour  Int?
-  tardiness  String?
+  state      String    @default("未入力")
+  attendance String    @default("出勤")
+  punch_in   Int       @default(9)
+  punch_out  Int       @default(18) 
+  break_time Int       @default(1)
+  work_hour  Int       @default(8)
+  tardiness  String    @default("なし")
   comment    String?
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  tags      Tag[]
-}
-
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  user   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model Monthly_attendance {
+  id                  Int       @id @default(autoincrement())
+  userId              Int       @unique
+  user                User      @relation(fields: [userId], references: [id])
+  month               DateTime  @db.Timestamp(6)
+  attendanceAmount    Int       @default(0)
+  absenceAmount       Int       @default(0)
+  paidOffAmount       Int       @default(0)
+  holidayWorkAmount   Int       @default(0)
+  tardinessAmount     Int       @default(0)
+  basicWorkAmount     Int       @default(0)
+  overWorkAmount      Int       @default(0)
+  monthlyWorkAmount   Int       @default(0)
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique @db.VarChar(255)
-  posts   Post[]
-  profile Profile?
+  id                    Int                   @id @default(autoincrement())
+  name                  String                @db.VarChar(30)
+  email                 String                @unique @db.VarChar(255)
+  password              String?                @unique @db.VarChar(30)
+  departmentId          Int
+  department            Department            @relation(fields: [departmentId], references: [id])
+  monthlyAttendance     Monthly_attendance[]
+  dailyAttendance       Daily_attendance[]
 }
 
-model Tag {
-  id    Int @id @default(autoincrement())
-  name  String
-  posts Post[]
+model Department {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(30)
+  employee  User[]
 }
+
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   title     String   @db.VarChar(255)
+//   createdAt DateTime @default(now()) @db.Timestamp(6)
+//   content   String?
+//   published Boolean  @default(false)
+//   authorId  Int
+//   author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   tags      Tag[]
+// }
+
+// model Profile {
+//   id     Int     @id @default(autoincrement())
+//   bio    String?
+//   userId Int     @unique
+//   user   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// }
+// model Tag {
+//   id    Int @id @default(autoincrement())
+//   name  String
+//   posts Post[]
+// }
