@@ -25,7 +25,7 @@ router.put('/:id', async (req, res) => {
   res.json({ updatedWork })
 })
 
-router.post('/:id', async (req, res) => {
+router.post('/', async (req, res) => {
   const newWork = await prisma.daily_attendance.create({
     data: req.body
   })

@@ -1,46 +1,64 @@
-# e-navi-mock
+# prisma の使い方について
 
-This template should help get you started developing with Vue 3 in Vite.
+1. 必要なモジュールのインストール
+   下記のコマンドをターミナルで実行。
 
-## Recommended IDE Setup
+   ```typescript
+        npm i
+   ```
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+2. 現在のテーブルの確認
+   以下のコードをターミナルで実行し、prisma の studio を起動。
+   GUI で現在のテーブルのデータを確認したり、追加・編集等が行える。
 
-## Type Support for `.vue` Imports in TS
+   ```typescript
+        npx prisma studio
+   ```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+3. 新しいテーブルの作成
+   /prisma/schema.prisma のファイルに追加したいテーブルをモデルとして追加。
+   データの種類等の記載方法は既存のコードを参照。
+   モデル追加後、下記のコードをターミナルで実行(hogehoge は任意の名前に変更)。
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+   ```typescript
+        npx prisma migrate dev --name hogehoge
+   ```
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+   上記のコマンド実行の際にエラーが発生した場合は、下記のコマンドを実行することで一度データをリセットすることが可能。
+   ※ただし、それまでに登録したデータが全て消えてしまうことに注意。
 
-## Customize configuration
+   ```typescript
+        npx prisma migrate reset
+   ```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# api の使用方法について
 
-## Project Setup
+1. 必要なモジュールのインストール(prisma で実行してる場合はスキップ)
+   下記のコマンドをターミナルで実行。
 
-```sh
-npm install
-```
+   ```typescript
+       npm i
+   ```
 
-### Compile and Hot-Reload for Development
+2. users テーブルに対するリクエスト
 
-```sh
-npm run dev
-```
+   - 全てのユーザーデータを取得:'/users'に対して GET
+   - 特定のユーザーデータを取得:'/users/:id'に対して GET
+   - ユーザーデータを送信:'/users'に対して POST(body に neme,email,password,departmentId を含めることが必須)
+   - ユーザーデータを変更:'/users/:id'に対して PUT(body に変更したいデータを含める)
+   - ユーザーデータを削除:'/users/:id'に対して DELETE
 
-### Type-Check, Compile and Minify for Production
+3. daily_attendance テーブルに対するリクエスト
 
-```sh
-npm run build
-```
+   - 全ての日次勤怠データを取得: '/day'に対して GET
+   - 特定のユーザーの日次勤怠データを取得: '/day/:id'に対して GET
+   - 日次勤怠データを登録: '/day'に対して POST(body に日次勤怠データ(データ ER 図を参照)を含める)
+   - 日次勤怠データを変更: '/day/:id'に対して PUT(body に日次勤怠データの id を含めることが必須)
+   - 日次勤怠データを削除: '/day/:id'に対して DELETE(body に日次勤怠データの id を含めることが必須)
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+4. monthly_attendance テーブルに対するリクエスト
+   - 全ての月次勤怠データを取得: '/day'に対して GET
+   - 特定のユーザーの月次勤怠データを取得: '/day/:id'に対して GET
+   - 月次勤怠データを登録: '/day'に対して POST(body に月次勤怠データ(データ ER 図を参照)を含める)
+   - 月次勤怠データを変更: '/day/:id'に対して PUT(body に月次勤怠データの id を含めることが必須)
+   - 月次勤怠データを削除: '/day/:id'に対して DELETE(body に月次勤怠データの id を含めることが必須)
