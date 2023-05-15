@@ -9,7 +9,7 @@
   ],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
-  },
-  "compilerOptions": { "types": ["vue"] }
+    "esModuleInterop": true,
+    "types": ["vue"]
+  }
 }
