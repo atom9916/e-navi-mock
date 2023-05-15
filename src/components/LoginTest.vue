@@ -1,28 +1,43 @@
+<!-- ユーザー登録とログインテスト用コンポーネント -->
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from '@firebase/auth';
+import { collection, addDoc, getFirestore } from "firebase/firestore";
 
 const auth = getAuth();
-const signUpEmail = ref('');
-const signUpPassword = ref('');
+const db = getFirestore();
+const name = ref('');
+const departmentId = ref(null);
 const email = ref('');
 const password = ref('');
+const loginEmail = ref('');
+const loginPassword = ref('');
 
 const signUp = () => {
-  createUserWithEmailAndPassword(auth, signUpEmail.value, signUpPassword.value)
+  createUserWithEmailAndPassword(auth, email.value, password.value)
   .then((userCredential) => {
-    const user = userCredential.user;
-    console.log('Sign Up!', user)
-    // ...
+    addDoc(collection(db, "users"), {
+      name: name.value,
+      departmentId: departmentId.value,
+      email: email.value,
+      password: password.value
+    })
+    .then((docRef) => {
+      const user = userCredential.user;
+      console.log('Sign Up!', user)
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
   })
   .catch((error) => {
     console.log(error.code, error.message)
-    // ..
   });
 }
 
 const login = () => {
-  signInWithEmailAndPassword(auth, email.value, password.value)
+  signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
     .then((userCredential) => {
       const user = userCredential.user;
       console.log('Login!', user)
@@ -53,15 +68,16 @@ const checkAuth = () => {
 onMounted(() => {
   console.log('LoginTest.vue is mounted!')
 })
-
 </script>
 
 <template>
   <div>
     <h2>Sign Up</h2>
     <p>
-      <input type="text" v-model="signUpEmail" placeholder="Email">
-      <input type="password" v-model="signUpPassword" placeholder="Password">
+      <input type="text" v-model="name" placeholder="Name"><br>
+      <input type="number" v-model="departmentId" placeholder="Department"><br>
+      <input type="text" v-model="email" placeholder="Email"><br>
+      <input type="password" v-model="password" placeholder="Password"><br>
       <button @click="signUp">Sign Up</button>
     </p>
   </div>
@@ -69,22 +85,10 @@ onMounted(() => {
   <div>
     <h2>Login</h2>
     <p>
-      <input type="text" v-model="email" placeholder="Email">
-      <input type="password" v-model="password" placeholder="Password">
+      <input type="text" v-model="loginEmail" placeholder="Email">
+      <input type="password" v-model="loginPassword" placeholder="Password">
       <button @click="login">Login</button>
-    </p>
-  </div>
-
-  <div>
-    <h2>Logout</h2>
-    <p>
       <button @click="logout">Logout</button>
-    </p>
-  </div>
-
-  <div>
-    <h2>Check Auth</h2>
-    <p>
       <button @click="checkAuth">Check Auth</button>
     </p>
   </div>

@@ -2,8 +2,6 @@
 import RealTimeClock from "./components/realTimeClock.vue"
 import {useHead} from "@vueuse/head"
 
-import LoginTest from "./components/LoginTest.vue";
-
 useHead({
   title:'メインページ'
 })
@@ -13,8 +11,6 @@ useHead({
 <h2>メインページ</h2>
 <div>
 <RealTimeClock/>
-<!-- テスト用 -->
-<LoginTest/>
 </div>
 </template>
 
