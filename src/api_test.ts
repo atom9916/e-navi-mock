@@ -12,9 +12,9 @@ export async function ApiPostTest() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      name: 'yuka',
-      email: 'yuka@prisma.io',
-      password: 'yuka',
+      name: 'yuka2',
+      email: 'yuka2@prisma.io',
+      password: 'yuka2',
       departmentId: 1
     })
   })
@@ -49,10 +49,18 @@ export async function ApiDeleteTest() {
     .catch((error) => console.log('DELETEに失敗しました', error))
 }
 
+export async function EnvironmentVariant() {
+  require('dotenv').config({ path: '.env.local' })
+  console.log(require('dotenv').config({ path: '.env.local' }))
+  const ev = process.env.VITE_API_KEY
+  console.log('ev', ev)
+}
+
 // ApiGetTest()
 // ApiPostTest()
 // ApiPutTest()
 // ApiDeleteTest()
+// EnvironmentVariant()
 
 // GET・POST・DELETEのリクエストは正常に動作することが確認済です。
 // PUTについては、name,emailの変更は反映されるのですが、それ以外の変更が反映されないという不具合が発生しているため、

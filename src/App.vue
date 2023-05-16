@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import RealTimeClock from "./components/realTimeClock.vue"
-import {useHead} from "@vueuse/head"
+import RealTimeClock from './components/realTimeClock.vue'
+import { useHead } from '@vueuse/head'
+
+require('dotenv').config()
 
 useHead({
-  title:'メインページ'
+  title: 'メインページ'
 })
 </script>
 
 <template>
-<h2>メインページ</h2>
-<div>
-<RealTimeClock/>
-</div>
+  <h2>メインページ</h2>
+  <div>
+    <RealTimeClock />
+  </div>
 </template>
-
 
 <!-- 後学のためとりあえず一旦、残してますが後で消す -->
 <!-- <style scoped>
