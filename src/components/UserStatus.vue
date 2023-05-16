@@ -1,27 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth, signOut, onAuthStateChanged } from '@firebase/auth'
+import { getFirestore, getDocs, collection, query, where } from 'firebase/firestore'
 
 const auth = getAuth()
 const router = useRouter()
-const userInfo = ref({})
-const isAuthenticated = ref(false)
+const db = getFirestore()
 
-// ユーザーがログインしているときにユーザー情報を取得する
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    userInfo.value = user
-    isAuthenticated.value = !isAuthenticated.value
-  } else {
-    userInfo.value = null
-  }
-})
+const userInfo = ref()
+const isLoading = ref(true)
+const isAuthenticated = ref(false)
 
 const logout = () => {
   signOut(auth)
     .then(() => {
-      isAuthenticated.value = !isAuthenticated.value
+      isAuthenticated.value = false
     })
     .catch((error) => {
       console.log(error.code, error.message)
@@ -31,14 +25,35 @@ const logout = () => {
 const login = () => {
   router.push('/login')
 }
+
+onMounted(() => {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      isAuthenticated.value = true
+      const usersRef = collection(db, 'users')
+      const q = query(usersRef, where('email', '==', user.email))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        userInfo.value = doc.data()
+      })
+      isLoading.value = false
+    } else {
+      userInfo.value = null
+    }
+  })
+})
 </script>
 
 <template>
-  <div>
-    <p>
-      {{ userInfo ? 'ログイン中' : 'ログアウト中' }}
-    </p>
-    <button v-if="isAuthenticated" @click="logout">ログアウト</button>
-    <button v-else @click="login">ログイン</button>
+  <div v-if="isLoading">Loading</div>
+  <div v-else>
+    <div v-if="isAuthenticated">
+      <p>{{ userInfo ? `${userInfo.name}さんがログイン中` : ' ' }}</p>
+      <button @click="logout">ログアウト</button>
+    </div>
+    <div v-else>
+      <p>ログインしていません</p>
+      <button @click="login">ログイン</button>
+    </div>
   </div>
 </template>

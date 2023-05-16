@@ -11,24 +11,34 @@ useHead({
 const email = ref('')
 const password = ref('')
 const disabled = ref(false)
+const error = ref('')
 const router = useRouter()
 const auth = getAuth()
 
 const isAuthenticated = ref(false)
 
-const login = () => {
+const login = async () => {
   disabled.value = true
   signInWithEmailAndPassword(auth, email.value, password.value)
-    .then((userCredential) => {
-      const user = userCredential.user
-      console.log('Login!', user)
+    .then(() => {
       isAuthenticated.value = !isAuthenticated.value
       router.push('/')
     })
     .catch((error) => {
-      console.log(error.code, error.message)
+      checkError(error.code)
       disabled.value = false
+      password.value = ''
     })
+}
+
+const checkError = (code: string) => {
+  if (code === 'auth/user-not-found') {
+    error.value = 'ユーザーが見つかりませんでした'
+  } else if (code === 'auth/wrong-password') {
+    error.value = 'パスワードが間違っています'
+  } else {
+    error.value = 'ログインに失敗しました'
+  }
 }
 </script>
 
@@ -41,6 +51,7 @@ const login = () => {
       <input type="password" v-model="password" placeholder="パスワード" required />
       <br />
       <button type="submit" :disabled="disabled">ログイン</button>
+      <p>{{ error }}</p>
     </form>
   </div>
 </template>
