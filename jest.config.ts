@@ -4,7 +4,7 @@ module.exports = {
   collectCoverage: false,
   coverageDirectory: 'coverage',
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  testEnvironment: ['jest-environment-jsdom', 'node'],
+  testEnvironment: ['node'],
   transform: { '^.+\\.(ts|tsx)$': ['esbuild-jest', { sourcemap: true }] },
   setupFilesAfterEnv: ['./jest.setup.ts', '<rootDir>/singleton.ts'],
   reporters: [

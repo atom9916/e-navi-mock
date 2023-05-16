@@ -1,5 +1,5 @@
-import { createUser, updateUser } from '../src/functions-without-context'
-import { prismaMock } from '../src/singleton'
+import { createUser, updateUser } from '../functions-with-context'
+import { prismaMock } from '../singleton'
 
 test('should create new user', async () => {
   const user = {
