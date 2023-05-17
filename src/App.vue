@@ -16,7 +16,6 @@ import { RouterLink, RouterView } from 'vue-router'
 <RouterView/>
 </template>
 
-
 <!-- 後学のためとりあえず一旦、残してますが後で消す -->
 <!-- <style scoped>
 header {

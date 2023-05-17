@@ -1,3 +1,9 @@
+#　 postgreSQL の設定
+
+1. postgreSQL で新しく e-navi-mock というデータベースを作成する。
+
+2. .env ファイルの DATABASE_URL を、"postgresql://(ユーザー名):(パスワード)@localhost:5432/e-navi-mock?schema=public"に書き換える。
+
 # prisma の使い方について
 
 1. 必要なモジュールのインストール

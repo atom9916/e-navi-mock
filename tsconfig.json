@@ -10,6 +10,8 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "types": ["vue"]
+    "strictNullChecks": true,
+    "declaration": true,
+    "declarationDir": "dist"
   }
 }
