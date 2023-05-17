@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import RealTimeClock from './typing/realTimeClock'
-import { useHead } from '@vueuse/head'
+import { RouterLink, RouterView } from 'vue-router'
 
-require('dotenv').config()
 
-useHead({
-  title: 'メインページ'
-})
 </script>
 
 <template>
-  <h2>メインページ</h2>
-  <div>
-    <RealTimeClock />
-  </div>
+  <header>
+    <nav>
+      <RouterLink to="/">ホーム</RouterLink><br />
+      <RouterLink to="/monthly">月次勤怠</RouterLink><br />
+      <RouterLink to="/dayly">日次勤怠</RouterLink><br />
+    </nav>
+  </header>
+<h2>e-navi-mock</h2>
+<RouterView/>
 </template>
 
 <!-- 後学のためとりあえず一旦、残してますが後で消す -->
