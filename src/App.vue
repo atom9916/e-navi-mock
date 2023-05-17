@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RealTimeClock from './components/realTimeClock.vue'
+import RealTimeClock from './typing/realTimeClock'
 import { useHead } from '@vueuse/head'
 
 require('dotenv').config()
