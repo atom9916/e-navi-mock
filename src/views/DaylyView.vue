@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useHead } from '@vueuse/head';
+import { useHead } from '@vueuse/head'
 useHead({
-  title:'日次勤怠'
+  title: '日次勤怠'
 })
-
-
 </script>
 
 <template>
-    <h2>日次勤怠</h2>
+  <h2>日次勤怠</h2>
+  <div>
+    <button @click="$router.push({ path: '/dayly/attendanceRegistration' })">登録する</button>
+  </div>
 </template>
