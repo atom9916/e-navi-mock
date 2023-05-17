@@ -4,6 +4,7 @@ import NotFound from '../views/NotFound.vue'
 import Login from '../views/LoginView.vue'
 
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +26,20 @@ const router = createRouter({
       path: '/dayly',
       name: 'dayly',
       component: () => import('../views/DaylyView.vue'),
+      meta:{requiresAuth:false}
+      // バックの実装が完了したらtrueに修正します
+    },
+    {
+      path: '/dayly/attendanceRegistration',
+      name: 'attendanceRegistration',
+      component: () => import('../views/AttendanceRegistrationVeiw.vue'),
+      meta:{requiresAuth:false}
+      // バックの実装が完了したらtrueに修正します
+    },
+    {
+      path: '/dayly/attendanceRegistration/attendanceCompleted',
+      name: 'attendanceCompleted',
+      component: () => import('../views/AttendanceCompletedView.vue'),
       meta:{requiresAuth:false}
       // バックの実装が完了したらtrueに修正します
     },
