@@ -1,29 +1,34 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
+  <script setup lang="ts">
+  import { useHead } from '@vueuse/head'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { getAuth, signInWithEmailAndPassword } from '@firebase/auth' 
+  import {useStoreAuth} from '../stores/login'
 
-useHead({
-  title: 'ログイン'
-})
+  useHead({
+    title: 'ログイン'
+  })
 
-const email = ref('')
-const password = ref('')
-const disabled = ref(false)
-const error = ref('')
-const router = useRouter()
-const auth = getAuth()
-
-const isAuthenticated = ref(false)
+  const email = ref('')
+  const password = ref('')
+  const disabled = ref(false)
+  const error = ref('')
+  const router = useRouter()
+  const auth = getAuth()
 
 const login = async () => {
+
+  const store = useStoreAuth()
+
   disabled.value = true
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(() => {
-      isAuthenticated.value = !isAuthenticated.value
+      store.login()
       router.push('/')
     })
+    // .then(()=>{
+    //   router.push('/')
+    // })
     .catch((error) => {
       checkError(error.code)
       disabled.value = false
