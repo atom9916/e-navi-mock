@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.body
   const updatedWork = await prisma.daily_attendance.update({
-    where: { userId: Number(req.params.id), id: id },
+    where: { id: id },
     data: req.body
   })
   res.json({ updatedWork })
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.body
   const deletedWork = await prisma.daily_attendance.delete({
-    where: { userId: Number(req.params.id), id: id }
+    where: { id: id }
   })
   res.json({ deletedWork })
 })
