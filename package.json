@@ -23,8 +23,9 @@
     "express": "^4.18.2",
     "firebase": "^9.22.0",
     "firebase-admin": "^11.8.0",
+    "pinia": "^2.1.1",
     "ts-node": "^10.9.1",
-    "vue": "^3.2.47",
+    "vue": "^3.3.2",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

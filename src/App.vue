@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import UserStatus from './components/UserStatus.vue';
+import LogoutButton from './components/LogoutButton.vue';
+import { useStoreAuth } from './stores/login';
 
+const store = useStoreAuth()
 
 </script>
 
 <template>
-  <header>
+  <header v-if="store.isLoggedIn">
     <nav>
       <RouterLink to="/">ホーム</RouterLink><br />
       <RouterLink to="/monthly">月次勤怠</RouterLink><br />
       <RouterLink to="/dayly">日次勤怠</RouterLink><br />
+      <UserStatus/>
+      <LogoutButton/>
     </nav>
   </header>
 <h2>e-navi-mock</h2>
