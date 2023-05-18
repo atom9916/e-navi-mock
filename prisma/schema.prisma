@@ -9,7 +9,7 @@ datasource db {
 
 model Daily_attendance {
   id         Int       @id @default(autoincrement())
-  userId     Int       @unique
+  userId     Int       
   user       User      @relation(fields: [userId], references: [id])
   date       DateTime? @db.Timestamp(6)
   state      String    @default("未入力")
@@ -24,7 +24,7 @@ model Daily_attendance {
 
 model Monthly_attendance {
   id                  Int       @id @default(autoincrement())
-  userId              Int       @unique
+  userId              Int       
   user                User      @relation(fields: [userId], references: [id])
   month               DateTime?  @db.Timestamp(6)
   attendanceAmount    Int       @default(0)
