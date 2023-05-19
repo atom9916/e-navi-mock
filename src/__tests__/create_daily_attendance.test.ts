@@ -1,5 +1,5 @@
-import prisma from '../client'
-import { createDailyAttendance } from '../src/prisma_test/create_daily_attendance'
+import prisma from '../../client'
+import { createDailyAttendance } from '../prisma_test/create_daily_attendance'
 
 beforeAll(async () => {
   //ユーザーデータの作成

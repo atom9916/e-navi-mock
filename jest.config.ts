@@ -9,12 +9,19 @@ module.exports = {
   roots: ['<rootDir>/'],
   testMatch: ['**/?(*.)+(spec|test).+(ts|tsx|js)'],
   testEnvironment: 'node',
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+  testEnvironmentOptions: {
+    customExportConditions: ['node', 'node-addons']
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^~/(.*)$': '<rootDir>/$1'
+  },
+  moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   setupFilesAfterEnv: ['<rootDir>/singleton.ts'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
     '^.+\\.vue$': '@vue/vue3-jest'
-  }
+  },
+  collectCoverage: true,
+  collectCoverageFrom: ['<rootDir>/components/**/*.vue', '<rootDir>/pages/**/*.vue']
 }

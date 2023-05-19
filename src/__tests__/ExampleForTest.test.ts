@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { render, fireEvent, screen } from '@testing-library/vue'
 import ExampleForTest from '@/components/ExampleForTest.vue'
 
