@@ -37,12 +37,18 @@
       </ul>
     </div>
     分
+    <br />
+    <div>
+      <p>勤務時間合計:{{ totalWorkHours }}</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onUnmounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
+// 初期値
 const startHour = ref('')
 const startMinute = ref('')
 const endHour = ref('')
@@ -52,6 +58,7 @@ const showStartMinuteOptions = ref(false)
 const showEndHourOptions = ref(false)
 const showEndMinuteOptions = ref(false)
 
+// 選択肢の規定
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
 
@@ -75,16 +82,43 @@ const selectEndMinute = (minute) => {
   showEndMinuteOptions.value = false
 }
 
-// onMounted(() => {
-//   document.addEventListener('click', hideDropdowns)
-// })
+// 勤務合計時間の規定
+let totalWorkHours = ''
 
-// const hideDropdowns = () => {
-//   showStartHourOptions.value = false
-//   showStartMinuteOptions.value = false
-//   showEndHourOptions.value = false
-//   showEndMinuteOptions.value = false
-// }
+watch([startHour, startMinute, endHour, endMinute], () => {
+  const start = Number(startHour.value) * 60 + Number(startMinute.value)
+  const end = Number(endHour.value) * 60 + Number(endMinute.value)
+
+  if (start && end && end >= start) {
+    const diff = end - start
+
+    const hours = Math.floor(diff / 60)
+    const minutes = diff % 60
+
+    totalWorkHours = `${hours}時間 ${minutes}分`
+  } else {
+    totalWorkHours = ''
+  }
+})
+
+// ドロップダウンリスト消すやつ
+const handleDocumentClick = (event) => {
+  const target = event.target
+  if (!target.closest('.dropdown')) {
+    showStartHourOptions.value = false
+    showStartMinuteOptions.value = false
+    showEndHourOptions.value = false
+    showEndMinuteOptions.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleDocumentClick)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleDocumentClick)
+})
 </script>
 
 <style scoped>
@@ -94,7 +128,7 @@ const selectEndMinute = (minute) => {
 }
 
 .dropdown input {
-  width: 40px; /* 幅を調整する値に変更してください */
+  width: 40px;
 }
 
 .dropdown-menu {
