@@ -37,21 +37,52 @@
       </ul>
     </div>
     分
+    <br />
+
+    <label>休憩時間:</label>
+    <div class="dropdown">
+      <input type="text" v-model="restHour" @click="showRestHourOptions = true" />
+      <ul v-show="showRestHourOptions" class="dropdown-menu">
+        <li v-for="hour in hours" :key="hour" @click="selectRestHour(hour)">{{ hour }}</li>
+      </ul>
+    </div>
+    時間
+    <div class="dropdown">
+      <input type="text" v-model="restMinute" @click="showRestMinuteOptions = true" />
+      <ul v-show="showRestMinuteOptions" class="dropdown-menu">
+        <li v-for="minute in minutes" :key="minute" @click="selectRestMinute(minute)">
+          {{ minute }}
+        </li>
+      </ul>
+    </div>
+
+    <br>
+    <div>
+      <p>勤務時間合計:{{ totalWorkHours }}</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onUnmounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
+// 初期値
 const startHour = ref('')
 const startMinute = ref('')
 const endHour = ref('')
 const endMinute = ref('')
+const restHour = ref('')
+const restMinute = ref('')
 const showStartHourOptions = ref(false)
 const showStartMinuteOptions = ref(false)
 const showEndHourOptions = ref(false)
 const showEndMinuteOptions = ref(false)
+const showRestHourOptions = ref(false)
+const showRestMinuteOptions = ref(false)
 
+
+// 選択肢の規定
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
 
@@ -75,16 +106,57 @@ const selectEndMinute = (minute) => {
   showEndMinuteOptions.value = false
 }
 
-// onMounted(() => {
-//   document.addEventListener('click', hideDropdowns)
-// })
+const selectRestHour = (hour) => {
+  restHour.value = hour
+  showRestHourOptions.value = false
+}
 
-// const hideDropdowns = () => {
-//   showStartHourOptions.value = false
-//   showStartMinuteOptions.value = false
-//   showEndHourOptions.value = false
-//   showEndMinuteOptions.value = false
-// }
+const selectRestMinute = (minute) => {
+  restMinute.value = minute
+  showRestMinuteOptions.value = false
+}
+
+
+
+
+// 勤務合計時間の規定
+let totalWorkHours = ''
+
+watch([startHour, startMinute, endHour, endMinute,restHour,restMinute], () => {
+  const start = Number(startHour.value) * 60 + Number(startMinute.value)
+  const end = Number(endHour.value) * 60 + Number(endMinute.value)
+  const rest =Number(restHour.value) * 60 + Number(restMinute.value)
+
+  if (start && end  && end >= start) {
+    const diff = end - (rest + start)
+
+    const hours = Math.floor(diff / 60)
+    const minutes = diff % 60
+
+    totalWorkHours = `${hours}時間 ${minutes}分`
+  } else {
+    totalWorkHours = ''
+  }
+})
+
+// ドロップダウンリスト消すやつ
+const handleDocumentClick = (event) => {
+  const target = event.target
+  if (!target.closest('.dropdown')) {
+    showStartHourOptions.value = false
+    showStartMinuteOptions.value = false
+    showEndHourOptions.value = false
+    showEndMinuteOptions.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleDocumentClick)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleDocumentClick)
+})
 </script>
 
 <style scoped>
@@ -94,7 +166,7 @@ const selectEndMinute = (minute) => {
 }
 
 .dropdown input {
-  width: 40px; /* 幅を調整する値に変更してください */
+  width: 40px;
 }
 
 .dropdown-menu {
