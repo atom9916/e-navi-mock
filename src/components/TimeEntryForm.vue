@@ -156,7 +156,7 @@ onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
 
-// 非同期通信
+// 非同期通信(のちにコンポーネント化)
 
 const submitForm = async (event) => {
   event.preventDefault()
@@ -169,16 +169,17 @@ const submitForm = async (event) => {
     restHour: restHour.value,
     restMinute: restMinute.value
   }
-  try {
-    const response = await axios.post('urlはこれから設定', formData)
-    if (response.status === 200) {
-      console.log('勤怠データが保存されました')
-    } else {
-      console.error('勤怠データは保存出来ていません')
-    }
-  } catch (error) {
-    console.error('エラーが発生しました', error)
+try{
+  const response = await axios.post('urlはこれから設定',formData)
+  if(response.status === 200){
+    console.log('勤怠データが保存されました')
+  }else{
+    console.error('勤怠データは保存出来ていません')
   }
+}catch(error){
+  console.error('エラーが発生しました',error)
+}
+
 }
 </script>
 
