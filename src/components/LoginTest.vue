@@ -65,6 +65,41 @@ const checkAuth = () => {
   });
 }
 
+const awsPostTest = () => {
+  const url = 'https://2zrdh8abfj.execute-api.ap-northeast-1.amazonaws.com/prod/backup'
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': import.meta.env.VITE_AWS_API_KEY
+    },
+    body: JSON.stringify([
+      {
+        "id": 1,
+        "name": "test",
+        "departmentId": 1,
+      },
+      {
+        "id": 2,
+        "name": "test2",
+        "departmentId": 2,
+      },
+      {
+        "id": 3,
+        "name": "test3",
+        "departmentId": 3,
+      },
+    ])
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+  })
+  .catch(error => {
+    console.log(error)
+  })
+}
+
 onMounted(() => {
   console.log('LoginTest.vue is mounted!')
 })
@@ -79,6 +114,7 @@ onMounted(() => {
       <input type="text" v-model="email" placeholder="Email"><br>
       <input type="password" v-model="password" placeholder="Password"><br>
       <button @click="signUp">Sign Up</button>
+      <button @click="awsPostTest">AWS Post Test</button>
     </p>
   </div>
 

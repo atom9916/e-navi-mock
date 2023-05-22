@@ -8,6 +8,10 @@
     }
   ],
   "compilerOptions": {
+    "composite": true,
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
