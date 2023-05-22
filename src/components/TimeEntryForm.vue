@@ -1,6 +1,5 @@
 <template>
   <div>
-    <form @submit="submitForm">
       <label>就業開始時間:</label>
       <div class="dropdown">
         <input type="text" v-model="startHour" @click="showStartHourOptions = true" />
@@ -57,7 +56,6 @@
         </ul>
       </div>
       分
-    </form>
     <br />
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
@@ -66,9 +64,10 @@
 </template>
 
 <script setup lang="ts">
+import { provide } from 'vue'
 import { onUnmounted } from 'vue'
 import { ref, onMounted, watch } from 'vue'
-import axios from 'axios'
+// import axios from 'axios'
 
 // 初期値
 const startHour = ref('')
@@ -159,31 +158,42 @@ onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
 
-// 非同期通信(のちにコンポーネント化)
+// コンポーネント間の橋渡し
+provide('timeEntryData', {
+  startHour,
+  startMinute,
+  endHour,
+  endMinute,
+  restHour,
+  restMinute,
+  totalWorkHours
+})
 
-const submitForm = async (event) => {
-  event.preventDefault()
+// 非同期通信(他のコンポーネントで実施予定かもなので一旦コメントアウト)
 
-  const formData = {
-    startHour: startHour.value,
-    startMinute: startMinute.value,
-    endHour: endHour.value,
-    endMinute: endMinute.value,
-    restHour: restHour.value,
-    restMinute: restMinute.value
-  }
-try{
-  const response = await axios.post('urlはこれから設定',formData)
-  if(response.status === 200){
-    console.log('勤怠データが保存されました')
-  }else{
-    console.error('勤怠データは保存出来ていません')
-  }
-}catch(error){
-  console.error('エラーが発生しました',error)
-}
+// const submitForm = async (event) => {
+//   event.preventDefault()
 
-}
+//   const formData = {
+//     startHour: startHour.value,
+//     startMinute: startMinute.value,
+//     endHour: endHour.value,
+//     endMinute: endMinute.value,
+//     restHour: restHour.value,
+//     restMinute: restMinute.value
+//   }
+// try{
+//   const response = await axios.post('urlはこれから設定',formData)
+//   if(response.status === 200){
+//     console.log('勤怠データが保存されました')
+//   }else{
+//     console.error('勤怠データは保存出来ていません')
+//   }
+// }catch(error){
+//   console.error('エラーが発生しました',error)
+// }
+
+// }
 </script>
 
 <style scoped>
