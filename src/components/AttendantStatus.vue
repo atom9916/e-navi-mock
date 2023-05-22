@@ -1,5 +1,4 @@
 <template>
-  <form>
     <label>出欠:</label>
     <div class="dropdown">
       <input type="text" v-model="defaultAttendantStatus" @click="showAttendantStatusOptions=true" />
@@ -11,11 +10,10 @@
         >{{ attendantStatus }}</li>
       </ul>
     </div>
-  </form>
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref, onMounted } from 'vue'
+import { onUnmounted, ref, onMounted, provide } from 'vue'
 
 // 初期値
 const defaultAttendantStatus = ref('')
@@ -44,6 +42,9 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
+
+// コンポーネント間の橋渡し
+provide('attendantStatusData',{defaultAttendantStatus})
 </script>
 
 <style scoped>
