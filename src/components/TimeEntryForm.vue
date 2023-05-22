@@ -56,6 +56,7 @@
           </li>
         </ul>
       </div>
+      分
     </form>
     <br />
     <div>
@@ -145,6 +146,8 @@ const handleDocumentClick = (event) => {
     showStartMinuteOptions.value = false
     showEndHourOptions.value = false
     showEndMinuteOptions.value = false
+    showRestHourOptions.value = false
+    showRestMinuteOptions.value = false
   }
 }
 
