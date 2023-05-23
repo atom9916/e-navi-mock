@@ -52,7 +52,7 @@ const formData = { tardinessStatusData, attendantStatusData, timeEntryData }
 
 const handleSubmit = async () => {
   try {
-    const response = await axios.post('urlこれから整備', formData)
+    const response = await axios.post('/daily_attendance', formData)
     console.log(response.data)
   } catch (error) {
     console.error(error)
