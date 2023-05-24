@@ -52,7 +52,7 @@ const formData = { tardinessStatusData, attendantStatusData, timeEntryData }
 
 const handleSubmit = async () => {
   try {
-    const response = await axios.post('/daily_attendance', formData)
+    const response = await axios.post('http://localhost:4242/day', formData)
     console.log(response.data)
   } catch (error) {
     console.error(error)
@@ -68,6 +68,7 @@ const handleSubmit = async () => {
   <TardinessStatus />
   <br />
   <div>
-    <button @click="$router.push({ path: '/dayly/attendanceRegistration' }),handleSubmit">登録する</button>
+    <!-- <button @click="$router.push({ path: '/daily/attendanceRegistration' }),handleSubmit">登録する</button> -->
+    <button @click="handleSubmit">登録する</button>
   </div>
 </template>
