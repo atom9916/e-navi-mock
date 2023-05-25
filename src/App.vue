@@ -13,7 +13,7 @@ const store = useStoreAuth()
     <nav>
       <RouterLink to="/">ホーム</RouterLink><br />
       <RouterLink to="/monthly">月次勤怠</RouterLink><br />
-      <RouterLink to="/dayly">日次勤怠</RouterLink><br />
+      <RouterLink to="/daily">日次勤怠</RouterLink><br />
       <UserStatus/>
       <LogoutButton/>
     </nav>
