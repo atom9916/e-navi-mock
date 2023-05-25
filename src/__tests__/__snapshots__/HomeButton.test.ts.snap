@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomeButtonコンポーネントのテスト スナップショット 1`] = `
+<div>
+  <div>
+    <button>
+      ホーム
+    </button>
+  </div>
+</div>
+`;
