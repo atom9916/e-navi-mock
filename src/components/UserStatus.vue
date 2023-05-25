@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 // import { useRouter } from 'vue-router'
 import { getAuth, /*signOut,*/ onAuthStateChanged } from '@firebase/auth'
 import { getFirestore, getDocs, collection, query, where } from 'firebase/firestore'
+import { provide } from 'vue';
 
 const auth = getAuth()
 // const router = useRouter()
@@ -41,6 +42,7 @@ onMounted(() => {
       userInfo.value = null
     }
   })
+  provide('userInfo',userInfo)
 })
 </script>
 
@@ -50,6 +52,7 @@ onMounted(() => {
   <div v-else>
     <div v-if="isAuthenticated">
       <p>{{ userInfo ? `${userInfo.name}さんがログイン中` : ' ' }}</p>
+      <p>{{ userInfo }}</p>
       <!-- <button @click="logout">ログアウト</button> -->
     </div>
     <div v-else>
