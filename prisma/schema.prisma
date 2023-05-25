@@ -10,7 +10,7 @@ datasource db {
 model Daily_attendance {
   id         Int       @id @default(autoincrement())
   userId     Int       
-  user       User      @relation(fields: [userId], references: [id])
+  // user       User      @relation(fields: [userId], references: [id])
   date       DateTime? @db.Timestamp(6)
   state      String    @default("未入力")
   attendance String    @default("出勤")
@@ -25,7 +25,7 @@ model Daily_attendance {
 model Monthly_attendance {
   id                  Int       @id @default(autoincrement())
   userId              Int       
-  user                User      @relation(fields: [userId], references: [id])
+  // user                User      @relation(fields: [userId], references: [id])
   month               DateTime?  @db.Timestamp(6)
   attendanceAmount    Int       @default(0)
   absenceAmount       Int       @default(0)
@@ -37,22 +37,22 @@ model Monthly_attendance {
   monthlyWorkAmount   Int       @default(0)
 }
 
-model User {
-  id                    Int                   @id @default(autoincrement())
-  name                  String                @db.VarChar(30)
-  email                 String                @unique @db.VarChar(255)
-  password              String                @unique @db.VarChar(30)
-  departmentId          Int
-  department            Department            @relation(fields: [departmentId], references: [id])
-  monthlyAttendance     Monthly_attendance[]
-  dailyAttendance       Daily_attendance[]
-}
+// model User {
+//   id                    Int                   @id @default(autoincrement())
+//   name                  String                @db.VarChar(30)
+//   email                 String                @unique @db.VarChar(255)
+//   password              String                @unique @db.VarChar(30)
+//   departmentId          Int
+//   department            Department            @relation(fields: [departmentId], references: [id])
+//   // monthlyAttendance     Monthly_attendance[]
+//   // dailyAttendance       Daily_attendance[]
+// }
 
-model Department {
-  id        Int     @id @default(autoincrement())
-  name      String  @db.VarChar(30)
-  employee  User[]
-}
+// model Department {
+//   id        Int     @id @default(autoincrement())
+//   name      String  @db.VarChar(30)
+//   employee  User[]
+// }
 
 // model Post {
 //   id        Int      @id @default(autoincrement())
