@@ -87,7 +87,8 @@
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
-    <button type="submit" @click="$router.push({path:'/daily/attendanceRegistration/attendanceCompleted'})">登録する</button>
+    <button type="submit">登録する</button>
+    <!-- @click="$router.push({path:'/daily/attendanceRegistration/attendanceCompleted'}) -->
   </form>
 </template>
 
@@ -95,7 +96,7 @@
 import { onUnmounted } from 'vue'
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
-import { inject } from 'vue';
+// import { inject } from 'vue';
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -208,7 +209,7 @@ onUnmounted(() => {
 })
 
 // ユーザー情報
-const userInfo = inject('userInfo')
+// const userInfo = inject('userInfo')
 
 // 非同期通信
 
@@ -216,7 +217,7 @@ const submitForm = async (event) => {
   event.preventDefault()
 
   const formData = {
-    user:userInfo,
+    userId:1,
     date:new Date(),
     state:'',
     attendance:defaultAttendantStatus.value,
@@ -231,7 +232,7 @@ const submitForm = async (event) => {
     comment:''
   }
 try{
-  const response = await axios.post('/day',formData)
+  const response = await axios.post('http://localhost:4242/day',formData)
   if(response.status === 200){
     console.log('勤怠データが保存されました')
   }else{
