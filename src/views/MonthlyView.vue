@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
-import CalenderTable from '../components/CalenderTable.vue';
+import MonthlyTable from '../components/MonthlyTable.vue';
 useHead({
   title:'月次勤怠'
 })
@@ -8,5 +8,5 @@ useHead({
 
 <template>
     <h2>月次勤怠</h2>
-    <component :is='CalenderTable'/>
+    <MonthlyTable/>
 </template>

@@ -1,4 +1,6 @@
 <template>
+  <CalenderTable/>
+  <br>
   <form @submit="submitForm">
     <label>出欠:</label>
     <div class="dropdown">
@@ -84,6 +86,9 @@
       </ul>
     </div>
     <br>
+    <label>コメント:</label>
+    <textarea name="comment"  v-model="comment" cols="30" rows="1"/>
+    <br>
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
@@ -96,7 +101,8 @@
 import { onUnmounted } from 'vue'
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
-// import { inject } from 'vue';
+import { inject } from 'vue';
+import CalenderTable from '../components/CalenderTable.vue'
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -105,6 +111,7 @@ const endHour = ref('')
 const endMinute = ref('')
 const restHour = ref('')
 const restMinute = ref('')
+const comment = ref('')
 
 // 初期値遅刻理由
 const defaultTardinessStatus = ref('')
@@ -183,10 +190,6 @@ watch([startHour, startMinute, endHour, endMinute, restHour, restMinute], () => 
   }
 })
 
-const hoursPattern =/(\d+)時間/
-const match = totalWorkHours.match(hoursPattern)
-const totalWorkHoursData = match?parseInt(match[1]):0
-
 // ドロップダウンリスト消すやつ
 const handleDocumentClick = (event) => {
   const target = event.target
@@ -209,27 +212,30 @@ onUnmounted(() => {
 })
 
 // ユーザー情報
-// const userInfo = inject('userInfo')
+// const userInfo = inject('userInfo') 
+
+
 
 // 非同期通信
 
 const submitForm = async (event) => {
   event.preventDefault()
 
+  const startMinuteForCalculation = Number(startMinute.value)/60
+  const endMinuteForCalculation = Number(endMinute.value)/60
+  const restMinuteForCalculation = Number(restMinute.value)/60
+
   const formData = {
     userId:1,
-    date:new Date(),
+    date:'',
     state:'',
     attendance:defaultAttendantStatus.value,
-    punch_in: Number(startHour.value),
-    /*startMinute: startMinute.value,*/
-    punch_out: Number(endHour.value),
-    /*endMinute: endMinute.value,*/
-    break_time: Number(restHour.value),
-    /*restMinute: restMinute.value,*/
-    work_hour:Number(endHour.value)-Number(restHour.value)-Number(startHour.value),
+    punch_in: `${startHour.value}:${startMinute.value}`,
+    punch_out: `${endHour.value}:${endMinute.value}`,
+    break_time: `${restHour.value}:${restMinute.value}`,
+    work_hour:Number(endHour.value)+endMinuteForCalculation-(Number(restHour.value)+restMinuteForCalculation)-(Number(startHour.value)+startMinuteForCalculation),
     tardiness:defaultTardinessStatus.value,
-    comment:''
+    comment:comment.value
   }
 try{
   const response = await axios.post('http://localhost:4242/day',formData)

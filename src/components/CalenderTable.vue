@@ -1,47 +1,54 @@
 <template>
-  <form @submit.prevent="updateCalendar">
-    <label>年:</label>
-    <div class="dropdown">
-      <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" />
-      <ul v-show="showDefaultYearOptions" class="dropdown-menu">
-        <li v-for="year in years" :key="year" @click="selectYear(year)">{{ year }}</li>
-      </ul>
-    </div>
-    <label>月:</label>
-    <div class="dropdown">
-      <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
-      <ul v-show="showDefaultMonthsOptions" class="dropdown-menu">
-        <li v-for="month in months" :key="month" @click="selectMonth(month)">{{ month }}</li>
-      </ul>
-    </div>
-    <br />
-    <button type="submit">確認</button> 
-  </form>
+  <label>年:</label>
+  <div class="dropdown">
+    <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" />
+    <ul v-show="showDefaultYearOptions" class="dropdown-menu">
+      <li v-for="year in years" :key="year" @click="selectYear(year)">{{ year }}</li>
+    </ul>
+  </div>
+  <label>月:</label>
+  <div class="dropdown">
+    <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
+    <ul v-show="showDefaultMonthsOptions" class="dropdown-menu">
+      <li v-for="month in months" :key="month" @click="selectMonth(month)">{{ month }}</li>
+    </ul>
+  </div>
   <br />
+  <button type="submit" @click="generateCalendar">確認</button>
+
   <table>
     <thead>
       <tr>
-        <th v-for="topic in topicsOfHeader" :key="topic">{{ topic }}</th>
+        <th v-for="day in daysOfWeek" :key="day">{{ day }}</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="week in weeks" :key="String(week)">
         <td v-for="day in week" :key="day">
-          {{ `${defaultMonths}/${day}` }}
+            <template v-if="day !==0">
+          <button @click="selectDate(day)" class="button">{{ day }}</button>
+        </template>
+        <template v-else></template>
         </td>
-        <td td v-for="day in week" :key="day">{{ getWeekday(day) }}</td>
-      </tr>
+      </tr> 
     </tbody>
   </table>
+  <p>日付:{{ formattedDate }}</p>
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+import { provide } from 'vue';
 import { ref, onMounted, onUnmounted } from 'vue'
+
+
 
 // 年月選択
 
 const defaultYears = ref('')
 const defaultMonths = ref('')
+const selectedDate = ref<Date | null>(null)
+const formattedDate = ref<string>('')
 
 const showDefaultYearOptions = ref(false)
 const showDefaultMonthsOptions = ref(false)
@@ -59,6 +66,14 @@ const selectMonth = (month) => {
   showDefaultMonthsOptions.value = false
 }
 
+const selectDate = (day) =>{
+    const year = parseInt(defaultYears.value)
+  const month = parseInt(defaultMonths.value) -1
+  const selected = dayjs().year(year).month(month).date(day).locale('ja')
+  selectedDate.value = selected.toDate();
+  formattedDate.value = selected.format('YYYY年M月D日')
+}
+
 const handleDocumentClick = (event) => {
   const target = event.target
   if (!target.closest('.dropdown')) {
@@ -67,76 +82,45 @@ const handleDocumentClick = (event) => {
   }
 }
 
-
-
 onMounted(() => {
-  document.addEventListener('click', handleDocumentClick)  
-  }
-)
+  document.addEventListener('click', handleDocumentClick)
+})
 onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
 
-//表組
-const topicsOfHeader = [
-  '日付',
-  '曜日',
-  '種別',
-  '状態',
-  'シフト',
-  '出欠',
-  '開始',
-  '終了',
-  '休憩',
-  '基本',
-  '残業',
-  '深夜',
-  '深夜残',
-  '時有給',
-  '終了',
-  '遅早',
-  '理由',
-  '休出日',
-  'コメント'
-]
+const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土']
 const weeks = ref<number[][]>([])
 
-const updateCalendar = () => {
-  const selectedYear = parseInt(defaultYears.value)
-  const selectedMonth = parseInt(defaultMonths.value) - 1
+onMounted(() => {
+  generateCalendar()
+})
 
-  const startDate = new Date(selectedYear, selectedMonth, 1)
-  const endDate = new Date(selectedYear, selectedMonth + 1, 0)
-
+function generateCalendar() {
+  const year = parseInt(defaultYears.value)
+  const month = parseInt(defaultMonths.value) -1
+  const startDate = dayjs().year(year).month(month).startOf('month').startOf('week')
+  const endDate = dayjs().year(year).month(month).endOf('month').endOf('week')
+  
   const newWeeks: number[][] = []
-
   let currentDay = startDate
 
-  while (currentDay <= endDate) {
+  while (currentDay.isBefore(endDate)) {
     const week: number[] = []
-
-    week.push(currentDay.getDate())
-    currentDay.setDate(currentDay.getDate() + 1)
-    newWeeks.push(week)
+    for (let i = 0; i < 7; i++) {
+      if (currentDay.month() === month) {
+        week.push(currentDay.date());
+      } else {
+        week.push(0); // 非表示の日付を0で埋める
+      }
+      currentDay = currentDay.add(1, 'day');
+    }
+    newWeeks.push(week);
   }
   weeks.value = newWeeks
 }
 
-  const getWeekday = (day: number) => {
-    const selectedYear = parseInt(defaultYears.value)
-    const selectedMonth = parseInt(defaultMonths.value) - 1
-
-    const lastDayOfMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate()
-
-    if (day < 1 || day > lastDayOfMonth) {
-      return undefined
-    }
-    const date = new Date(selectedYear, selectedMonth, day)
-    const options = { weekday: 'short' } as Intl.DateTimeFormatOptions
-
-    const weekday = new Intl.DateTimeFormat('ja-JP', options).format(date)
-    return `(${weekday})`
-  }
+provide('selectedDate',selectedDate.value)
 </script>
 
 <style scoped>
@@ -168,5 +152,11 @@ const updateCalendar = () => {
 
 .dropdown-menu li:hover {
   background-color: #f5f5f5;
+}
+
+.button {
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
 }
 </style>
