@@ -1,11 +1,6 @@
 module.exports = {
   clearMocks: true,
   preset: 'ts-jest',
-  globals: {
-    'ts-jest': {
-      tsConfig: 'tsconfig.json'
-    }
-  },
   roots: ['<rootDir>/'],
   testMatch: ['**/?(*.)+(spec|test).+(ts|tsx|js)'],
   testEnvironment: 'node',
@@ -17,10 +12,11 @@ module.exports = {
     '^~/(.*)$': '<rootDir>/$1'
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
-  setupFilesAfterEnv: ['<rootDir>/singleton.ts'],
+  setupFilesAfterEnv: ['<rootDir>/singleton.ts', '@testing-library/jest-dom/extend-expect'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
-    '^.+\\.vue$': '@vue/vue3-jest'
+    '^.+\\.vue$': '@vue/vue3-jest',
+    '<transform_regex>': ['ts-jest', { tsconfig: 'tsconfig.json' }]
   },
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/components/**/*.vue', '<rootDir>/pages/**/*.vue']

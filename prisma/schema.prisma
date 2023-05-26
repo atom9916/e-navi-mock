@@ -53,26 +53,3 @@ model Monthly_attendance {
 //   name      String  @db.VarChar(30)
 //   employee  User[]
 // }
-
-// model Post {
-//   id        Int      @id @default(autoincrement())
-//   title     String   @db.VarChar(255)
-//   createdAt DateTime @default(now()) @db.Timestamp(6)
-//   content   String?
-//   published Boolean  @default(false)
-//   authorId  Int
-//   author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   tags      Tag[]
-// }
-
-// model Profile {
-//   id     Int     @id @default(autoincrement())
-//   bio    String?
-//   userId Int     @unique
-//   user   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-// }
-// model Tag {
-//   id    Int @id @default(autoincrement())
-//   name  String
-//   posts Post[]
-// }

@@ -1,29 +1,8 @@
 import prisma from '../../client'
-import { createDailyAttendance } from '../prisma_test/create_daily_attendance'
-
-beforeAll(async () => {
-  //ユーザーデータの作成
-  await prisma.$transaction(async (prisma) => {
-    await prisma.user.create({
-      data: {
-        id: 999,
-        name: '山田 太郎',
-        email: 'yamada@test.io',
-        password: 'yamada-test',
-        departmentId: 1
-      }
-    })
-
-    const testUser = await prisma.user.findFirst({
-      orderBy: { id: 'desc' }
-    })
-
-    console.log('ユーザーを作成しました', testUser)
-  })
-})
+import { createDailyAttendance } from '@/prisma_test/create_daily_attendance'
 
 afterAll(async () => {
-  await prisma.user.deleteMany()
+  await prisma.daily_attendance.deleteMany()
 
   await prisma.$disconnect()
 })

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MonthlyViewビューのテスト スナップショットテスト 1`] = `
+<div>
+  <h2>
+    月次勤怠
+  </h2>
+</div>
+`;
