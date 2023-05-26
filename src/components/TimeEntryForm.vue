@@ -88,6 +88,7 @@
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
     <button type="submit">登録する</button>
+    <!-- @click="$router.push({path:'/daily/attendanceRegistration/attendanceCompleted'}) -->
   </form>
 </template>
 
@@ -95,6 +96,7 @@
 import { onUnmounted } from 'vue'
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
+// import { inject } from 'vue';
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -206,13 +208,16 @@ onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
 
+// ユーザー情報
+// const userInfo = inject('userInfo')
+
 // 非同期通信
 
 const submitForm = async (event) => {
   event.preventDefault()
 
   const formData = {
-    user:'',
+    userId:1,
     date:new Date(),
     state:'',
     attendance:defaultAttendantStatus.value,
