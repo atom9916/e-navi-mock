@@ -20,7 +20,7 @@ const router = createRouter({
       path: '/monthly',
       name: 'monthlyt',
       component: () => import('../views/MonthlyView.vue'),
-      meta:{requiresAuth:true}
+      meta:{requiresAuth:false}
     },
     {
       path: '/daily',

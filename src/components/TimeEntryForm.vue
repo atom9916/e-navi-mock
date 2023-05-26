@@ -231,7 +231,7 @@ const submitForm = async (event) => {
     comment:''
   }
 try{
-  const response = await axios.post('http://localhost:4242/day',formData)
+  const response = await axios.post('/day',formData)
   if(response.status === 200){
     console.log('勤怠データが保存されました')
   }else{
