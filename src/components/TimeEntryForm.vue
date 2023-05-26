@@ -227,7 +227,7 @@ const submitForm = async (event) => {
     /*endMinute: endMinute.value,*/
     break_time: Number(restHour.value),
     /*restMinute: restMinute.value,*/
-    work_hour:totalWorkHoursData,
+    work_hour:Number(endHour.value)-Number(restHour.value)-Number(startHour.value),
     tardiness:defaultTardinessStatus.value,
     comment:''
   }
