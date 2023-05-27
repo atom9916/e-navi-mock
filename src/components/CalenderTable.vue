@@ -25,52 +25,54 @@
     <tbody>
       <tr v-for="week in weeks" :key="String(week)">
         <td v-for="day in week" :key="day">
-            <template v-if="day !==0">
-          <button @click="selectDate(day)" class="button">{{ day }}</button>
-        </template>
-        <template v-else></template>
+          <template v-if="day !== 0">
+            <form @submit="selectDate(day)">
+            <button type="submit" class="button">{{ day }}</button>
+          </form>
+          </template>
+          <template v-else></template>
         </td>
-      </tr> 
+      </tr>
     </tbody>
   </table>
-  <p>日付:{{ formattedDate }}</p>
 </template>
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { provide } from 'vue';
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useStoreSelectedDate } from '@/stores/selectedDate';
 
-
-
-// 年月選択
-
+// 初期値
 const defaultYears = ref('')
 const defaultMonths = ref('')
 const selectedDate = ref<Date | null>(null)
 const formattedDate = ref<string>('')
 
+// ドロップダウンリストの表示非表示
 const showDefaultYearOptions = ref(false)
 const showDefaultMonthsOptions = ref(false)
 
+// 選択肢
 const years = [2022, 2023, 2024]
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
+// 選択時のアクション
 const selectYear = (year) => {
   defaultYears.value = year
   showDefaultYearOptions.value = false
 }
-
 const selectMonth = (month) => {
   defaultMonths.value = month
   showDefaultMonthsOptions.value = false
 }
 
-const selectDate = (day) =>{
-    const year = parseInt(defaultYears.value)
-  const month = parseInt(defaultMonths.value) -1
+const selectDate = (day) => {
+  const year = parseInt(defaultYears.value)
+  const month = parseInt(defaultMonths.value) - 1
   const selected = dayjs().year(year).month(month).date(day).locale('ja')
-  selectedDate.value = selected.toDate();
+  selectedDate.value = selected.toDate()
+  const store = useStoreSelectedDate()
+  store.setSelectedDate(selected.toDate())
   formattedDate.value = selected.format('YYYY年M月D日')
 }
 
@@ -89,6 +91,9 @@ onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
 
+
+// カレンダー作成
+
 const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土']
 const weeks = ref<number[][]>([])
 
@@ -98,10 +103,10 @@ onMounted(() => {
 
 function generateCalendar() {
   const year = parseInt(defaultYears.value)
-  const month = parseInt(defaultMonths.value) -1
+  const month = parseInt(defaultMonths.value) - 1
   const startDate = dayjs().year(year).month(month).startOf('month').startOf('week')
   const endDate = dayjs().year(year).month(month).endOf('month').endOf('week')
-  
+
   const newWeeks: number[][] = []
   let currentDay = startDate
 
@@ -109,18 +114,16 @@ function generateCalendar() {
     const week: number[] = []
     for (let i = 0; i < 7; i++) {
       if (currentDay.month() === month) {
-        week.push(currentDay.date());
+        week.push(currentDay.date())
       } else {
-        week.push(0); // 非表示の日付を0で埋める
+        week.push(0) // 非表示の日付を0で埋める
       }
-      currentDay = currentDay.add(1, 'day');
+      currentDay = currentDay.add(1, 'day')
     }
-    newWeeks.push(week);
+    newWeeks.push(week)
   }
   weeks.value = newWeeks
 }
-
-provide('selectedDate',selectedDate.value)
 </script>
 
 <style scoped>
@@ -155,8 +158,8 @@ provide('selectedDate',selectedDate.value)
 }
 
 .button {
-    border: none;
-    background-color: #fff;
-    cursor: pointer;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
 }
 </style>

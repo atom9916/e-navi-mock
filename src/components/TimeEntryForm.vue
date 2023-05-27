@@ -1,72 +1,81 @@
 <template>
-  <CalenderTable/>
-  <br>
+  <CalenderTable />
+  <br />
+  <p>日付:{{ selectedDate }}</p>
+  <p>ID:{{ userId }}</p>
+  <br />
   <form @submit="submitForm">
     <label>出欠:</label>
     <div class="dropdown">
-      <input type="text" v-model="defaultAttendantStatus" @click="showAttendantStatusOptions=true" />
+      <input
+        type="text"
+        v-model="defaultAttendantStatus"
+        @click="showAttendantStatusOptions = true"
+      />
       <ul v-show="showAttendantStatusOptions" class="dropdown-menu">
         <li
           v-for="attendantStatus in attendantStatuses"
           :key="attendantStatus"
           @click="selectAttendantStatus(attendantStatus)"
-        >{{ attendantStatus }}</li>
+        >
+          {{ attendantStatus }}
+        </li>
       </ul>
     </div>
-    <br>
-      <label>就業開始時間:</label>
-      <div class="dropdown">
-        <input type="text" v-model="startHour" @click="showStartHourOptions = true" />
-        <ul v-show="showStartHourOptions" class="dropdown-menu">
-          <li v-for="hour in hours" :key="hour" @click="selectStartHour(hour)">{{ hour }}</li>
-        </ul>
-      </div>
-      時
-      <div class="dropdown">
-        <input type="text" v-model="startMinute" @click="showStartMinuteOptions = true" />
-        <ul v-show="showStartMinuteOptions" class="dropdown-menu">
-          <li v-for="minute in minutes" :key="minute" @click="selectStartMinute(minute)">
-            {{ minute }}
-          </li>
-        </ul>
-      </div>
-      分
-      <br />
-      <label>就業終了時間:</label>
-      <div class="dropdown">
-        <input type="text" v-model="endHour" @click="showEndHourOptions = true" />
-        <ul v-show="showEndHourOptions" class="dropdown-menu">
-          <li v-for="hour in hours" :key="hour" @click="selectEndHour(hour)">{{ hour }}</li>
-        </ul>
-      </div>
-      時
-      <div class="dropdown">
-        <input type="text" v-model="endMinute" @click="showEndMinuteOptions = true" />
-        <ul v-show="showEndMinuteOptions" class="dropdown-menu">
-          <li v-for="minute in minutes" :key="minute" @click="selectEndMinute(minute)">
-            {{ minute }}
-          </li>
-        </ul>
-      </div>
-      分
-      <br />
-      <label>休憩時間:</label>
-      <div class="dropdown">
-        <input type="text" v-model="restHour" @click="showRestHourOptions = true" />
-        <ul v-show="showRestHourOptions" class="dropdown-menu">
-          <li v-for="hour in hours" :key="hour" @click="selectRestHour(hour)">{{ hour }}</li>
-        </ul>
-      </div>
-      時間
-      <div class="dropdown">
-        <input type="text" v-model="restMinute" @click="showRestMinuteOptions = true" />
-        <ul v-show="showRestMinuteOptions" class="dropdown-menu">
-          <li v-for="minute in minutes" :key="minute" @click="selectRestMinute(minute)">
-            {{ minute }}
-          </li>
-        </ul>
-      </div>
-      分
+    <br />
+    <label>就業開始時間:</label>
+    <div class="dropdown">
+      <input type="text" v-model="startHour" @click="showStartHourOptions = true" />
+      <ul v-show="showStartHourOptions" class="dropdown-menu">
+        <li v-for="hour in hours" :key="hour" @click="selectStartHour(hour)">{{ hour }}</li>
+      </ul>
+    </div>
+    時
+    <div class="dropdown">
+      <input type="text" v-model="startMinute" @click="showStartMinuteOptions = true" />
+      <ul v-show="showStartMinuteOptions" class="dropdown-menu">
+        <li v-for="minute in minutes" :key="minute" @click="selectStartMinute(minute)">
+          {{ minute }}
+        </li>
+      </ul>
+    </div>
+    分
+    <br />
+    <label>就業終了時間:</label>
+    <div class="dropdown">
+      <input type="text" v-model="endHour" @click="showEndHourOptions = true" />
+      <ul v-show="showEndHourOptions" class="dropdown-menu">
+        <li v-for="hour in hours" :key="hour" @click="selectEndHour(hour)">{{ hour }}</li>
+      </ul>
+    </div>
+    時
+    <div class="dropdown">
+      <input type="text" v-model="endMinute" @click="showEndMinuteOptions = true" />
+      <ul v-show="showEndMinuteOptions" class="dropdown-menu">
+        <li v-for="minute in minutes" :key="minute" @click="selectEndMinute(minute)">
+          {{ minute }}
+        </li>
+      </ul>
+    </div>
+    分
+    <br />
+    <label>休憩時間:</label>
+    <div class="dropdown">
+      <input type="text" v-model="restHour" @click="showRestHourOptions = true" />
+      <ul v-show="showRestHourOptions" class="dropdown-menu">
+        <li v-for="hour in hours" :key="hour" @click="selectRestHour(hour)">{{ hour }}</li>
+      </ul>
+    </div>
+    時間
+    <div class="dropdown">
+      <input type="text" v-model="restMinute" @click="showRestMinuteOptions = true" />
+      <ul v-show="showRestMinuteOptions" class="dropdown-menu">
+        <li v-for="minute in minutes" :key="minute" @click="selectRestMinute(minute)">
+          {{ minute }}
+        </li>
+      </ul>
+    </div>
+    分
     <br />
     <label>遅刻理由:</label>
     <div class="dropdown">
@@ -85,10 +94,10 @@
         </li>
       </ul>
     </div>
-    <br>
+    <br />
     <label>コメント:</label>
-    <textarea name="comment"  v-model="comment" cols="30" rows="1"/>
-    <br>
+    <textarea name="comment" v-model="comment" cols="30" rows="1" />
+    <br />
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
@@ -101,8 +110,9 @@
 import { onUnmounted } from 'vue'
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
-import { inject } from 'vue';
 import CalenderTable from '../components/CalenderTable.vue'
+import { useStoreSelectedDate } from '../stores/selectedDate'
+import { useUserInfoStore } from '@/stores/userInfo'
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -129,14 +139,13 @@ const showRestMinuteOptions = ref(false)
 const showTardinessStatusOptions = ref(false)
 const showAttendantStatusOptions = ref(false)
 
-
-// 選択肢の規定
+// ドロップダウンリストの選択肢
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
-const attendantStatuses = ['出勤','有給','半休','慶弔休','欠勤','休日出勤']
+const attendantStatuses = ['出勤', '有給', '半休', '慶弔休', '欠勤', '休日出勤']
 const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他']
 
-
+//選択時のアクション
 const selectStartHour = (hour) => {
   startHour.value = hour
   showStartHourOptions.value = false
@@ -211,43 +220,49 @@ onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
 
-// ユーザー情報
-// const userInfo = inject('userInfo') 
+// ユーザー情報をストアから取得
+const userInfoStore = useUserInfoStore()
+const userId = userInfoStore.userInfo?.user_id
 
-
+//カレンダーから日付を取得
+const selectedDate = ref<Date | null>(null)
+const store = useStoreSelectedDate()
+store.selectedDate = selectedDate.value
 
 // 非同期通信
-
 const submitForm = async (event) => {
   event.preventDefault()
 
-  const startMinuteForCalculation = Number(startMinute.value)/60
-  const endMinuteForCalculation = Number(endMinute.value)/60
-  const restMinuteForCalculation = Number(restMinute.value)/60
+  const startMinuteForCalculation = Number(startMinute.value) / 60
+  const endMinuteForCalculation = Number(endMinute.value) / 60
+  const restMinuteForCalculation = Number(restMinute.value) / 60
 
   const formData = {
-    userId:1,
-    date:'',
-    state:'',
-    attendance:defaultAttendantStatus.value,
+    userId: userId,
+    date: selectedDate,
+    state: '',
+    attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
     punch_out: `${endHour.value}:${endMinute.value}`,
     break_time: `${restHour.value}:${restMinute.value}`,
-    work_hour:Number(endHour.value)+endMinuteForCalculation-(Number(restHour.value)+restMinuteForCalculation)-(Number(startHour.value)+startMinuteForCalculation),
-    tardiness:defaultTardinessStatus.value,
-    comment:comment.value
+    work_hour:
+      Number(endHour.value) +
+      endMinuteForCalculation -
+      (Number(restHour.value) + restMinuteForCalculation) -
+      (Number(startHour.value) + startMinuteForCalculation),
+    tardiness: defaultTardinessStatus.value,
+    comment: comment.value
   }
-try{
-  const response = await axios.post('http://localhost:4242/day',formData)
-  if(response.status === 200){
-    console.log('勤怠データが保存されました')
-  }else{
-    console.error('勤怠データは保存出来ていません')
+  try {
+    const response = await axios.post('http://localhost:4242/day', formData)
+    if (response.status === 200) {
+      console.log('勤怠データが保存されました')
+    } else {
+      console.error('勤怠データは保存出来ていません')
+    }
+  } catch (error) {
+    console.error('エラーが発生しました', error)
   }
-}catch(error){
-  console.error('エラーが発生しました',error)
-}
-
 }
 </script>
 
