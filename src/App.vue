@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import UserStatus from './components/UserStatus.vue';
 import LogoutButton from './components/LogoutButton.vue';
 import { useStoreAuth } from './stores/login';
 
@@ -14,7 +13,6 @@ const store = useStoreAuth()
       <RouterLink to="/">ホーム</RouterLink><br />
       <RouterLink to="/monthly">月次勤怠</RouterLink><br />
       <RouterLink to="/daily">日次勤怠</RouterLink><br />
-      <UserStatus/>
       <LogoutButton/>
     </nav>
   </header>
