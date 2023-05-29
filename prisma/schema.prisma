@@ -9,14 +9,14 @@ datasource db {
 
 model Daily_attendance {
   id         Int       @id @default(autoincrement())
-  userId     Int       
+  userId     String       
   // user       User      @relation(fields: [userId], references: [id])
-  date       DateTime? @db.Timestamp(6)
+  date       DateTime? @db.Date
   state      String    @default("未入力")
   attendance String    @default("出勤")
-  punch_in   String       @default(9)
-  punch_out  String       @default(18) 
-  break_time Int       @default(1)
+  punch_in   String       @default("9:00")
+  punch_out  String       @default("18:00") 
+  break_time String       @default("1:00")
   work_hour  Int       @default(8)
   tardiness  String    @default("なし")
   comment    String?

@@ -44,7 +44,6 @@ import { useStoreSelectedDate } from '@/stores/selectedDate';
 const defaultYears = ref(dayjs().year())
 const defaultMonths = ref(dayjs().month() +1)
 const selectedDate = ref<Date | null>(null)
-const formattedDate = ref<string>('')
 
 // ドロップダウンリストの表示非表示
 const showDefaultYearOptions = ref(false)
@@ -71,7 +70,7 @@ const selectDate = (day) => {
   selectedDate.value = selected.toDate()
   const store = useStoreSelectedDate()
   store.setSelectedDate(selected.toDate())
-  formattedDate.value = selected.format('YYYY年M月D日')
+  console.log(selectedDate.value)
 }
 
 const handleDocumentClick = (event) => {
