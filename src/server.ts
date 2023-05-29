@@ -1,5 +1,5 @@
 import express from 'express'
-import userController from './controllers/userController'
+// import userController from './controllers/userController'
 import dailyAttendanceController from './controllers/dailyAttendanceController'
 import monthlyAttendanceController from './controllers/mothlyAttendanceController'
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
   res.end('Hello express!!\n')
 })
 
-app.use('/users', userController)
+// app.use('/users', userController)
 app.use('/day', dailyAttendanceController)
 app.use('/month', monthlyAttendanceController)
 
