@@ -72,7 +72,6 @@ const selectDate = (day) => {
   const store = useStoreSelectedDate()
   store.setSelectedDate(selected.toDate())
   formattedDate.value = selected.format('YYYY年M月D日')
-  console.log(selectedDate.value)
 }
 
 const handleDocumentClick = (event) => {
