@@ -26,9 +26,7 @@
       <tr v-for="week in weeks" :key="String(week)">
         <td v-for="day in week" :key="day">
           <template v-if="day !== 0">
-            <form @submit="selectDate(day)">
-            <button type="submit" class="button">{{ day }}</button>
-          </form>
+            <button @click="selectDate(day)" class="button">{{ day }}</button>
           </template>
           <template v-else></template>
         </td>
@@ -74,6 +72,7 @@ const selectDate = (day) => {
   const store = useStoreSelectedDate()
   store.setSelectedDate(selected.toDate())
   formattedDate.value = selected.format('YYYY年M月D日')
+  console.log(selectedDate.value)
 }
 
 const handleDocumentClick = (event) => {

@@ -1,8 +1,8 @@
 <template>
   <CalenderTable />
   <br />
-  <p>日付:{{ selectedDate }}</p>
   <p>ID:{{ userId }}</p>
+  <p>日付:{{ selectedDate }}</p>
   <br />
   <form @submit="submitForm">
     <label>出欠:</label>
@@ -112,7 +112,8 @@ import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
-import { useUserInfoStore } from '@/stores/userInfo'
+import { useUserInfoStore } from '@/stores/userInfo' 
+import {DateTime} from 'luxon'
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -225,9 +226,19 @@ const userInfoStore = useUserInfoStore()
 const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
-const selectedDate = ref<Date | null>(null)
 const store = useStoreSelectedDate()
-store.selectedDate = selectedDate.value
+const selectedDate = ref(store.selectedDate ? DateTime.fromJSDate(store.selectedDate) : null)
+
+const updateSelectedDate = (date) => {
+  selectedDate.value = DateTime.fromJSDate(date)
+}
+
+store.setSelectedDate = updateSelectedDate
+
+
+
+
+
 
 // 非同期通信
 const submitForm = async (event) => {
@@ -239,7 +250,7 @@ const submitForm = async (event) => {
 
   const formData = {
     userId: userId,
-    date: selectedDate,
+    date:selectedDate.value,
     state: '',
     attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
