@@ -112,7 +112,8 @@ import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
-import { useUserInfoStore } from '@/stores/userInfo'
+import { useUserInfoStore } from '@/stores/userInfo' 
+import {DateTime} from 'luxon'
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -226,13 +227,14 @@ const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
 const store = useStoreSelectedDate()
-const selectedDate = ref(store.selectedDate)
+const selectedDate = ref(store.selectedDate ? DateTime.fromJSDate(store.selectedDate) : null)
 
 const updateSelectedDate = (date) => {
-  selectedDate.value = date
+  selectedDate.value = DateTime.fromJSDate(date)
 }
 
 store.setSelectedDate = updateSelectedDate
+
 
 
 
@@ -248,7 +250,7 @@ const submitForm = async (event) => {
 
   const formData = {
     userId: userId,
-    date:selectedDate,
+    date:selectedDate.value,
     state: '',
     attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
