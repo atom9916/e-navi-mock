@@ -8,5 +8,10 @@ export const useStoreSelectedDate = defineStore('SelectedDate', {
     setSelectedDate(date: Date) {
       this.selectedDate = date
     }
+  },
+  getters:{
+    getSelectedDate():Date | null {
+      return this.selectedDate
+    }
   }
 })

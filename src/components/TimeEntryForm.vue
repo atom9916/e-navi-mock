@@ -1,8 +1,8 @@
 <template>
   <CalenderTable />
   <br />
-  <p>日付:{{ selectedDate }}</p>
   <p>ID:{{ userId }}</p>
+  <p>日付:{{ selectedDate }}</p>
   <br />
   <form @submit="submitForm">
     <label>出欠:</label>
@@ -225,9 +225,18 @@ const userInfoStore = useUserInfoStore()
 const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
-const selectedDate = ref<Date | null>(null)
 const store = useStoreSelectedDate()
-store.selectedDate = selectedDate.value
+const selectedDate = ref(store.selectedDate)
+
+const updateSelectedDate = (date) => {
+  selectedDate.value = date
+}
+
+store.setSelectedDate = updateSelectedDate
+
+
+
+
 
 // 非同期通信
 const submitForm = async (event) => {
@@ -239,7 +248,7 @@ const submitForm = async (event) => {
 
   const formData = {
     userId: userId,
-    date: selectedDate,
+    date:selectedDate,
     state: '',
     attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
