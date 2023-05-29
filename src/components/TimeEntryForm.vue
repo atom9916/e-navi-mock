@@ -1,10 +1,8 @@
 <template>
   <CalenderTable />
   <br />
-  <p>ID:{{ userId }}</p>
-  <p>日付:{{ selectedDate }}</p>
-  <br />
   <form @submit="submitForm">
+    <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください'  }}</p>
     <label>出欠:</label>
     <div class="dropdown">
       <input
@@ -234,11 +232,6 @@ const updateSelectedDate = (date) => {
 }
 
 store.setSelectedDate = updateSelectedDate
-
-
-
-
-
 
 // 非同期通信
 const submitForm = async (event) => {
