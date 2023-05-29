@@ -41,8 +41,8 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useStoreSelectedDate } from '@/stores/selectedDate';
 
 // 初期値
-const defaultYears = ref('')
-const defaultMonths = ref('')
+const defaultYears = ref(dayjs().year())
+const defaultMonths = ref(dayjs().month() +1)
 const selectedDate = ref<Date | null>(null)
 const formattedDate = ref<string>('')
 
@@ -65,8 +65,8 @@ const selectMonth = (month) => {
 }
 
 const selectDate = (day) => {
-  const year = parseInt(defaultYears.value)
-  const month = parseInt(defaultMonths.value) - 1
+  const year = defaultYears.value
+  const month = defaultMonths.value - 1
   const selected = dayjs().year(year).month(month).date(day).locale('ja')
   selectedDate.value = selected.toDate()
   const store = useStoreSelectedDate()
@@ -101,8 +101,8 @@ onMounted(() => {
 })
 
 function generateCalendar() {
-  const year = parseInt(defaultYears.value)
-  const month = parseInt(defaultMonths.value) - 1
+  const year = defaultYears.value
+  const month = defaultMonths.value - 1
   const startDate = dayjs().year(year).month(month).startOf('month').startOf('week')
   const endDate = dayjs().year(year).month(month).endOf('month').endOf('week')
 
