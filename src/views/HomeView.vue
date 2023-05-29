@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import TheWelcome from '../components/TheWelcome.vue'
-import RealTimeClock from '../components/RealTimeClock.vue'
+import RealTimeClock from '../components/realTimeClock.vue'
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'メインページ'
