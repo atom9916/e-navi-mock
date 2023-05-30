@@ -2,17 +2,23 @@
   <form @submit.prevent="updateCalendar">
     <label>年:</label>
     <div class="dropdown">
-      <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" />
-      <ul v-show="showDefaultYearOptions" class="dropdown-menu">
+      <select v-model="defaultYears">
+      <option :value="year" :key="year" v-for="year in years">{{ year }}</option>
+      </select>
+      <!-- <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" /> -->
+      <!-- <ul v-show="showDefaultYearOptions" class="dropdown-menu">
         <li v-for="year in years" :key="year" @click="selectYear(year)">{{ year }}</li>
-      </ul>
+      </ul> -->
     </div>
     <label>月:</label>
     <div class="dropdown">
-      <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
+      <select v-model="defaultMonths">
+      <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
+      </select>
+      <!-- <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
       <ul v-show="showDefaultMonthsOptions" class="dropdown-menu">
         <li v-for="month in months" :key="month" @click="selectMonth(month)">{{ month }}</li>
-      </ul>
+      </ul> -->
     </div>
     <br />
     <button type="submit">確認</button> 
@@ -30,6 +36,23 @@
           {{ `${defaultMonths}/${day}` }}
         </td>
         <td td v-for="day in week" :key="day">{{ getWeekday(day) }}</td>
+        <td>種別値</td>
+        <td>状態値</td>
+        <td>シフト値</td>
+        <td>出欠値</td>
+        <td>開始値</td>
+        <td>終了値</td>
+        <td>休憩値</td>
+        <td>基本値</td>
+        <td>残業値</td>
+        <td>深夜値</td>
+        <td>深夜残値</td>
+        <td>時有給値</td>
+        <td>終了値</td>
+        <td>遅早値</td>
+        <td>理由値</td>
+        <td>休出日値</td>
+        <td>コメント値</td>
       </tr>
     </tbody>
   </table>
@@ -37,11 +60,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import dayjs from 'dayjs';
+import axios from 'axios';
 
 // 年月選択
 
-const defaultYears = ref('')
-const defaultMonths = ref('')
+const defaultYears = ref(dayjs().year())
+const defaultMonths = ref(dayjs().month() +1)
 
 const showDefaultYearOptions = ref(false)
 const showDefaultMonthsOptions = ref(false)
@@ -70,7 +95,8 @@ const handleDocumentClick = (event) => {
 
 
 onMounted(() => {
-  document.addEventListener('click', handleDocumentClick)  
+  document.addEventListener('click', handleDocumentClick) 
+  updateCalendar()
   }
 )
 onUnmounted(() => {
@@ -102,8 +128,8 @@ const topicsOfHeader = [
 const weeks = ref<number[][]>([])
 
 const updateCalendar = () => {
-  const selectedYear = parseInt(defaultYears.value)
-  const selectedMonth = parseInt(defaultMonths.value) - 1
+  const selectedYear = defaultYears.value
+  const selectedMonth = defaultMonths.value - 1
 
   const startDate = new Date(selectedYear, selectedMonth, 1)
   const endDate = new Date(selectedYear, selectedMonth + 1, 0)
@@ -123,8 +149,8 @@ const updateCalendar = () => {
 }
 
   const getWeekday = (day: number) => {
-    const selectedYear = parseInt(defaultYears.value)
-    const selectedMonth = parseInt(defaultMonths.value) - 1
+    const selectedYear = defaultYears.value
+    const selectedMonth = defaultMonths.value - 1
 
     const lastDayOfMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate()
 
@@ -137,6 +163,8 @@ const updateCalendar = () => {
     const weekday = new Intl.DateTimeFormat('ja-JP', options).format(date)
     return `(${weekday})`
   }
+
+
 </script>
 
 <style scoped>
