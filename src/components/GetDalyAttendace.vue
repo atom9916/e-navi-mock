@@ -36,7 +36,17 @@ const formatDate = (dateString) => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   return `${month}/${day}`;
+} 
+
+const formatWeekday = (dateString) => {
+  const date = new Date(dateString);
+  const weekday = date.getDay();
+  const weekdays = ['日', '月', '火', '水', '木', '金', '土']; // 曜日の配列
+
+  return `(${weekdays[weekday]})`
 }
+
+
 </script>
 <template>
     <button @click="fetchDailyAttendanceData">確認</button>
@@ -67,7 +77,7 @@ const formatDate = (dateString) => {
       <tbody>
         <tr v-for="data in dailyAttendanceData" :key="data.userId">
           <td>{{ formatDate(data.date) }}</td>
-         <td></td> 
+         <td>{{ formatWeekday(data.date) }}</td> 
           <td></td>
           <td></td>
           <td></td>
