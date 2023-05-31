@@ -17,3 +17,21 @@ exports[`NotFoundコンポーネント スナップショットテスト 1`] = `
   
 </div>
 `;
+
+exports[`NotFoundビューのテスト スナップショットテスト 1`] = `
+<div>
+  
+  <h2>
+    Not Found
+  </h2>
+  <p>
+    アクセスしたページは存在しません
+  </p>
+  <div>
+    <button>
+      ホーム
+    </button>
+  </div>
+  
+</div>
+`;

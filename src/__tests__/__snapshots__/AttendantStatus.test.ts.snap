@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AttendantStatusコンポーネントのテスト スナップショットテスト 1`] = `
+<div>
+  
+  <label
+    for="attendance"
+  >
+    出欠:
+  </label>
+  <div
+    class="dropdown"
+  >
+    <input
+      id="attendance"
+      type="text"
+    />
+    <ul
+      class="dropdown-menu"
+      style="display: none;"
+    >
+      
+      <li>
+        出勤
+      </li>
+      <li>
+        有給
+      </li>
+      <li>
+        半休
+      </li>
+      <li>
+        慶弔休
+      </li>
+      <li>
+        欠勤
+      </li>
+      <li>
+        休日出勤
+      </li>
+      
+    </ul>
+  </div>
+  
+</div>
+`;

@@ -1,17 +1,5 @@
 import prisma from '../../client'
-
-export interface DailyAttendance {
-  userId: number
-  date?: Date
-  state: string
-  attendance: string
-  punch_in: number
-  punch_out: number
-  break_time: number
-  work_hour: number
-  tardiness: string
-  comment?: string
-}
+import type { DailyAttendance } from '@/types/daily_attendance.type'
 
 export async function createDailyAttendance(input: DailyAttendance) {
   await prisma.daily_attendance.create({
