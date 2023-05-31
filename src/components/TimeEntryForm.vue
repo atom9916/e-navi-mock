@@ -4,7 +4,10 @@
   <form @submit="submitForm">
     <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください' }}</p>
     <label>出欠:</label>
-    <div class="dropdown">
+    <select v-model="defaultAttendantStatus">
+      <option :value="attendantStatus" :key="attendantStatus" v-for="attendantStatus in attendantStatuses">{{ attendantStatus }}</option>
+    </select>
+    <!-- <div class="dropdown">
       <input
         type="text"
         v-model="defaultAttendantStatus"
@@ -19,17 +22,27 @@
           {{ attendantStatus }}
         </li>
       </ul>
-    </div>
+    </div> -->
     <br />
+    <label>状態:ここに表示(未入力・登録済・依頼中)</label>
+    <br/>
     <label>就業開始時間:</label>
-    <div class="dropdown">
+    <select v-model="startHour">
+      <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
+    </select>時
+    
+    <!-- <div class="dropdown">
       <input type="text" v-model="startHour" @click="showStartHourOptions = true" />
       <ul v-show="showStartHourOptions" class="dropdown-menu">
         <li v-for="hour in hours" :key="hour" @click="selectStartHour(hour)">{{ hour }}</li>
       </ul>
     </div>
-    時
-    <div class="dropdown">
+    時 -->
+    <select v-model="startMinute">
+      <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option>
+    </select>分
+   
+    <!-- <div class="dropdown">
       <input type="text" v-model="startMinute" @click="showStartMinuteOptions = true" />
       <ul v-show="showStartMinuteOptions" class="dropdown-menu">
         <li v-for="minute in minutes" :key="minute" @click="selectStartMinute(minute)">
@@ -37,10 +50,17 @@
         </li>
       </ul>
     </div>
-    分
+    分 -->
     <br />
     <label>就業終了時間:</label>
-    <div class="dropdown">
+    <select v-model="endHour">
+      <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
+    </select>時
+    <select v-model="endMinute">
+      <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option>
+    </select>分
+
+    <!-- <div class="dropdown">
       <input type="text" v-model="endHour" @click="showEndHourOptions = true" />
       <ul v-show="showEndHourOptions" class="dropdown-menu">
         <li v-for="hour in hours" :key="hour" @click="selectEndHour(hour)">{{ hour }}</li>
@@ -55,10 +75,16 @@
         </li>
       </ul>
     </div>
-    分
+    分 -->
     <br />
     <label>休憩時間:</label>
-    <div class="dropdown">
+    <select v-model="restHour">
+      <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
+    </select>時
+    <select v-model="restMinute">
+      <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option>
+    </select>分
+    <!-- <div class="dropdown">
       <input type="text" v-model="restHour" @click="showRestHourOptions = true" />
       <ul v-show="showRestHourOptions" class="dropdown-menu">
         <li v-for="hour in hours" :key="hour" @click="selectRestHour(hour)">{{ hour }}</li>
@@ -72,11 +98,14 @@
           {{ minute }}
         </li>
       </ul>
-    </div>
-    分
+    </div> 
+    分-->
     <br />
     <label>遅刻理由:</label>
-    <div class="dropdown">
+    <select v-model="defaultTardinessStatus">
+      <option :value="tardinessStatus" :key="tardinessStatus" v-for="tardinessStatus in tardinessStatuses">{{ tardinessStatus }}</option>
+    </select>
+    <!-- <div class="dropdown">
       <input
         type="text"
         v-model="defaultTardinessStatus"
@@ -91,7 +120,7 @@
           {{ tardinessStatus }}
         </li>
       </ul>
-    </div>
+    </div> -->
     <br />
     <label>コメント:</label>
     <textarea name="comment" v-model="comment" cols="30" rows="1" />
@@ -99,8 +128,8 @@
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
-    <button type="submit">登録する</button>
-    <!-- @click="$router.push({path:'/daily/attendanceRegistration/attendanceCompleted'}) -->
+    <button type="submit">承認依頼</button>
+    <!-- <button>登録</button> -->
   </form>
 </template>
 
@@ -145,40 +174,41 @@ const attendantStatuses = ['出勤', '有給', '半休', '慶弔休', '欠勤', 
 const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他']
 
 //選択時のアクション
-const selectStartHour = (hour) => {
-  startHour.value = hour
-  showStartHourOptions.value = false
-}
-const selectStartMinute = (minute) => {
-  startMinute.value = minute
-  showStartMinuteOptions.value = false
-}
-const selectEndHour = (hour) => {
-  endHour.value = hour
-  showEndHourOptions.value = false
-}
-const selectEndMinute = (minute) => {
-  endMinute.value = minute
-  showEndMinuteOptions.value = false
-}
-const selectRestHour = (hour) => {
-  restHour.value = hour
-  showRestHourOptions.value = false
-}
-const selectRestMinute = (minute) => {
-  restMinute.value = minute
-  showRestMinuteOptions.value = false
-}
-const selectAttendantStatus = (attendantStatus) => {
-  defaultAttendantStatus.value = attendantStatus
-  showAttendantStatusOptions.value = false
-}
-const selectTardinessStatus = (tardinessStatus) => {
-  defaultTardinessStatus.value = tardinessStatus
-  showTardinessStatusOptions.value = false
-}
+// const selectStartHour = (hour) => {
+//   startHour.value = hour
+//   showStartHourOptions.value = false
+// }
+// const selectStartMinute = (minute) => {
+//   startMinute.value = minute
+//   showStartMinuteOptions.value = false
+// }
+// const selectEndHour = (hour) => {
+//   endHour.value = hour
+//   showEndHourOptions.value = false
+// }
+// const selectEndMinute = (minute) => {
+//   endMinute.value = minute
+//   showEndMinuteOptions.value = false
+// }
+// const selectRestHour = (hour) => {
+//   restHour.value = hour
+//   showRestHourOptions.value = false
+// }
+// const selectRestMinute = (minute) => {
+//   restMinute.value = minute
+//   showRestMinuteOptions.value = false
+// }
+// const selectAttendantStatus = (attendantStatus) => {
+//   defaultAttendantStatus.value = attendantStatus
+//   showAttendantStatusOptions.value = false
+// }
+// const selectTardinessStatus = (tardinessStatus) => {
+//   defaultTardinessStatus.value = tardinessStatus
+//   showTardinessStatusOptions.value = false
+// }
 
 // 勤務合計時間の規定
+
 let totalWorkHours = ''
 
 watch([startHour, startMinute, endHour, endMinute, restHour, restMinute], () => {
@@ -244,7 +274,7 @@ const submitForm = async (event) => {
   const formData = {
     userId: userId,
     date: selectedDate.value,
-    state: '',
+    state: '依頼中',
     attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
     punch_out: `${endHour.value}:${endMinute.value}`,
@@ -260,6 +290,7 @@ const submitForm = async (event) => {
       (Number(restHour.value) + restMinuteForCalculation) -
       (Number(startHour.value) + startMinuteForCalculation) -
       8,
+      midnight:'00:00',
     midnightOvertime: '00:00',
     timePaidHoliday: 0,
     lateOrEarlyLeave:

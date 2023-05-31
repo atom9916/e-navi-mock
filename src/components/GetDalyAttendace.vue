@@ -14,6 +14,7 @@ interface DailyAttendanceData {
   break_time: string
   work_hour: number
   overtime:number
+  midnight:string
   midnightOvertime:string
   timePaidHoliday:number
   lateOrEarlyLeave:number
@@ -128,7 +129,6 @@ const showTargetMonth = () => {
         <th>深夜</th>
         <th>深夜残</th>
         <th>時有給</th>
-        <th>終了</th>
         <th>遅早</th>
         <th>理由</th>
         <th>コメント</th>
@@ -139,20 +139,18 @@ const showTargetMonth = () => {
         <td>{{ date }}</td>
         <td>{{ formatWeekday(date) }}</td>
         <td></td>
-        <td></td>
-        <td></td>
         <td>{{ filterDataByDate(date)[0]?.state }}</td>
+        <td></td>
         <td>{{ filterDataByDate(date)[0]?.attendance }}</td>
         <td>{{ filterDataByDate(date)[0]?.punch_in }}</td>
         <td>{{ filterDataByDate(date)[0]?.punch_out }}</td>
         <td>{{ filterDataByDate(date)[0]?.break_time }}</td>
         <td>{{ filterDataByDate(date)[0]?.work_hour }}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{ filterDataByDate(date)[0]?.overtime }}</td>
+        <td>{{ filterDataByDate(date)[0]?.midnight }}</td>
+        <td>{{ filterDataByDate(date)[0]?.midnightOvertime }}</td>
+        <td>{{ filterDataByDate(date)[0]?.timePaidHoliday }}</td>
+        <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave }}</td>
         <td>{{ filterDataByDate(date)[0]?.tardiness }}</td>
         <td>{{ filterDataByDate(date)[0]?.comment }}</td>
       </tr>
