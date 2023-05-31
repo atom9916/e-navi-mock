@@ -26,6 +26,11 @@
     <br />
     <label>状態:ここに表示(未入力・登録済・依頼中)</label>
     <br/>
+    <label>シフト:</label>
+    <select v-model="defaultShift">
+      <option :value="shift" :key="shift" v-for="shift in shifts">{{ shift }}</option>
+    </select>
+    <br>
     <label>就業開始時間:</label>
     <select v-model="startHour">
       <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
@@ -77,6 +82,11 @@
     </div>
     分 -->
     <br />
+    <label>時有給:</label>
+    <select v-model="timePaidHoliday">
+      <option :value="timePaidHoliday" :key="timePaidHoliday" v-for="timePaidHoliday in timePaidHolidays">{{ timePaidHoliday }}</option>
+    </select>時間
+    <br>
     <label>休憩時間:</label>
     <select v-model="restHour">
       <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
@@ -134,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+// import { onUnmounted } from 'vue'
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import CalenderTable from '../components/CalenderTable.vue'
@@ -150,6 +160,7 @@ const endMinute = ref('')
 const restHour = ref('')
 const restMinute = ref('')
 const comment = ref('')
+const timePaidHoliday = ref('')
 
 // 初期値遅刻理由
 const defaultTardinessStatus = ref('')
@@ -157,21 +168,26 @@ const defaultTardinessStatus = ref('')
 // 初期値出欠
 const defaultAttendantStatus = ref('')
 
+// 初期値シフト
+const defaultShift = ref('')
+
 // ドロップダウンリスト表示非表示
-const showStartHourOptions = ref(false)
-const showStartMinuteOptions = ref(false)
-const showEndHourOptions = ref(false)
-const showEndMinuteOptions = ref(false)
-const showRestHourOptions = ref(false)
-const showRestMinuteOptions = ref(false)
-const showTardinessStatusOptions = ref(false)
-const showAttendantStatusOptions = ref(false)
+// const showStartHourOptions = ref(false)
+// const showStartMinuteOptions = ref(false)
+// const showEndHourOptions = ref(false)
+// const showEndMinuteOptions = ref(false)
+// const showRestHourOptions = ref(false)
+// const showRestMinuteOptions = ref(false)
+// const showTardinessStatusOptions = ref(false)
+// const showAttendantStatusOptions = ref(false)
 
 // ドロップダウンリストの選択肢
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
 const attendantStatuses = ['出勤', '有給', '半休', '慶弔休', '欠勤', '休日出勤']
 const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他']
+const shifts = ['1日社内業務','定時後社内業務','午前社内業務','午後社内業務','オフピーク勤務']
+const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
 
 //選択時のアクション
 // const selectStartHour = (hour) => {
@@ -211,13 +227,14 @@ const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他'
 
 let totalWorkHours = ''
 
-watch([startHour, startMinute, endHour, endMinute, restHour, restMinute], () => {
+watch([startHour, startMinute, endHour, endMinute, restHour, restMinute,timePaidHoliday], () => {
   const start = Number(startHour.value) * 60 + Number(startMinute.value)
   const end = Number(endHour.value) * 60 + Number(endMinute.value)
   const rest = Number(restHour.value) * 60 + Number(restMinute.value)
+  const time = Number(timePaidHoliday.value)*60
 
   if (start && end && end >= start) {
-    const diff = end - (rest + start)
+    const diff = (end + time) - (rest + start)
 
     const hours = Math.floor(diff / 60)
     const minutes = diff % 60
@@ -229,28 +246,30 @@ watch([startHour, startMinute, endHour, endMinute, restHour, restMinute], () => 
 })
 
 // ドロップダウンリスト消すやつ
-const handleDocumentClick = (event) => {
-  const target = event.target
-  if (!target.closest('.dropdown')) {
-    showStartHourOptions.value = false
-    showStartMinuteOptions.value = false
-    showEndHourOptions.value = false
-    showEndMinuteOptions.value = false
-    showRestHourOptions.value = false
-    showRestMinuteOptions.value = false
-    showAttendantStatusOptions.value = false
-    showTardinessStatusOptions.value = false
-  }
-}
-onMounted(() => {
-  document.addEventListener('click', handleDocumentClick)
-})
-onUnmounted(() => {
-  document.removeEventListener('click', handleDocumentClick)
-})
+// const handleDocumentClick = (event) => {
+//   const target = event.target
+//   if (!target.closest('.dropdown')) {
+//     showStartHourOptions.value = false
+//     showStartMinuteOptions.value = false
+//     showEndHourOptions.value = false
+//     showEndMinuteOptions.value = false
+//     showRestHourOptions.value = false
+//     showRestMinuteOptions.value = false
+//     showAttendantStatusOptions.value = false
+//     showTardinessStatusOptions.value = false
+//   }
+// }
+// onMounted(() => {
+//   document.addEventListener('click', handleDocumentClick)
+// })
+// onUnmounted(() => {
+//   document.removeEventListener('click', handleDocumentClick)
+// })
 
 // ユーザー情報をストアから取得
+
 const userInfoStore = useUserInfoStore()
+//ストアからユーザーID取得 
 const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
@@ -275,24 +294,29 @@ const submitForm = async (event) => {
     userId: userId,
     date: selectedDate.value,
     state: '依頼中',
+    shift:defaultShift.value,
     attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
     punch_out: `${endHour.value}:${endMinute.value}`,
     break_time: `${restHour.value}:${restMinute.value}`,
     work_hour:
       Number(endHour.value) +
-      endMinuteForCalculation -
+      endMinuteForCalculation +
+      Number(timePaidHoliday.value)
+      -
       (Number(restHour.value) + restMinuteForCalculation) -
       (Number(startHour.value) + startMinuteForCalculation),
     overtime:
       Number(endHour.value) +
-      endMinuteForCalculation -
+      endMinuteForCalculation +
+      Number(timePaidHoliday.value)
+      -
       (Number(restHour.value) + restMinuteForCalculation) -
       (Number(startHour.value) + startMinuteForCalculation) -
       8,
       midnight:'00:00',
     midnightOvertime: '00:00',
-    timePaidHoliday: 0,
+    timePaidHoliday: Number(timePaidHoliday.value),
     lateOrEarlyLeave:
       8 -
       (Number(endHour.value) +
