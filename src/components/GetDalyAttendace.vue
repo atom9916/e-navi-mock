@@ -8,6 +8,7 @@ interface DailyAttendanceData {
   userId: string
   date: Date
   state: string
+  shift:string
   attendance: string
   punch_in: string
   punch_out: string
