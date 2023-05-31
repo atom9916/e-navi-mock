@@ -3,8 +3,10 @@
 erDiagram
 
 users||--|{ department: "userは１つ以上の部署に所属"
-users||--|{ daily_attendance: "userは複数の日次勤怠データをもつ"
 users||--|{ monthly_attendance: "userは複数の月次勤怠データを持つ"
+users||--|{ paid_off: "userは１つの有給日数データをもつ"
+users||--|{ daily_attendance: "userは複数の日次勤怠データをもつ"
+users||--|{ notification: "userは0以上のお知らせデータをもつ"
 daily_attendance||--|{ state: "stateのデータから選択"
 daily_attendance||--|{ attendance: "attendanceのデータから選択"
 daily_attendance||--|{ tardiness: "tardinessのデータから選択"
@@ -62,6 +64,23 @@ attendance {
 tardiness {
   serial id
   string name "なし | 電車遅延 | 自己都合 | その他 "
+}
+
+paid_off {
+  serial  id "PK"
+  uuid    user_id "FK from users"
+  int     total_amount "有給付与日数"
+  int     used_amount  "消化済み日数"
+  int     remaining_amount  "残日数"
+}
+
+notification {
+  serial      id "PK"
+  timestamp   created_at
+  timestamp   deleted_at
+  string      content "お知らせの内容"
+  uuid        create_user "作成者のuser_id"
+  uuid        read_user "既読者のuser_id"
 }
 
 ```
