@@ -2,7 +2,7 @@
   <CalenderTable />
   <br />
   <form @submit="submitForm">
-    <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください'  }}</p>
+    <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください' }}</p>
     <label>出欠:</label>
     <div class="dropdown">
       <input
@@ -110,8 +110,8 @@ import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
-import { useUserInfoStore } from '@/stores/userInfo' 
-import {DateTime} from 'luxon'
+import { useUserInfoStore } from '@/stores/userInfo'
+import { DateTime } from 'luxon'
 
 // 初期値勤務時間
 const startHour = ref('')
@@ -243,7 +243,7 @@ const submitForm = async (event) => {
 
   const formData = {
     userId: userId,
-    date:selectedDate.value,
+    date: selectedDate.value,
     state: '',
     attendance: defaultAttendantStatus.value,
     punch_in: `${startHour.value}:${startMinute.value}`,
@@ -254,6 +254,20 @@ const submitForm = async (event) => {
       endMinuteForCalculation -
       (Number(restHour.value) + restMinuteForCalculation) -
       (Number(startHour.value) + startMinuteForCalculation),
+    overtime:
+      Number(endHour.value) +
+      endMinuteForCalculation -
+      (Number(restHour.value) + restMinuteForCalculation) -
+      (Number(startHour.value) + startMinuteForCalculation) -
+      8,
+    midnightOvertime: '00:00',
+    timePaidHoliday: 0,
+    lateOrEarlyLeave:
+      8 -
+      (Number(endHour.value) +
+        endMinuteForCalculation -
+        (Number(restHour.value) + restMinuteForCalculation) -
+        (Number(startHour.value) + startMinuteForCalculation)),
     tardiness: defaultTardinessStatus.value,
     comment: comment.value
   }

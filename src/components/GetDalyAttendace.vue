@@ -13,9 +13,12 @@ interface DailyAttendanceData {
   punch_out: string
   break_time: string
   work_hour: number
+  overtime:number
+  midnightOvertime:string
+  timePaidHoliday:number
+  lateOrEarlyLeave:number
   tardiness: string
   comment: string
-  formattedDate: string
 }
 
 // DBデータ初期化
