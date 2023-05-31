@@ -12,7 +12,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Hello Vue.js!\n' })
 })
 
-// app.use('/users', userController)
 app.use('/day', dailyAttendanceController)
 app.use('/month', monthlyAttendanceController)
 

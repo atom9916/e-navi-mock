@@ -21,3 +21,20 @@ model Tardiness {
   id        Int       @id @default(autoincrement())
   name      String
 }
+
+model Paid_off {
+  id                Int       @id @default(autoincrement())
+  user_id           String    @unique
+  total_amount      Int       @default(10)
+  used_amount       Int       @default(0)
+  remaining_amount  Int       @default(10)
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime
+  deleted_at  DateTime
+  content     String?
+  create_user Int
+  read_user   Int[]
+}
