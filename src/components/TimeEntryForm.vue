@@ -82,6 +82,11 @@
     </div>
     分 -->
     <br />
+    <label>時有給:</label>
+    <select v-model="timePaidHoliday">
+      <option :value="timePaidHoliday" :key="timePaidHoliday" v-for="timePaidHoliday in timePaidHolidays">{{ timePaidHoliday }}</option>
+    </select>時間
+    <br>
     <label>休憩時間:</label>
     <select v-model="restHour">
       <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
@@ -155,6 +160,7 @@ const endMinute = ref('')
 const restHour = ref('')
 const restMinute = ref('')
 const comment = ref('')
+const timePaidHoliday = ref('')
 
 // 初期値遅刻理由
 const defaultTardinessStatus = ref('')
@@ -181,6 +187,7 @@ const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(
 const attendantStatuses = ['出勤', '有給', '半休', '慶弔休', '欠勤', '休日出勤']
 const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他']
 const shifts = ['1日社内業務','定時後社内業務','午前社内業務','午後社内業務','オフピーク勤務']
+const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
 
 //選択時のアクション
 // const selectStartHour = (hour) => {
@@ -220,13 +227,14 @@ const shifts = ['1日社内業務','定時後社内業務','午前社内業務',
 
 let totalWorkHours = ''
 
-watch([startHour, startMinute, endHour, endMinute, restHour, restMinute], () => {
+watch([startHour, startMinute, endHour, endMinute, restHour, restMinute,timePaidHoliday], () => {
   const start = Number(startHour.value) * 60 + Number(startMinute.value)
   const end = Number(endHour.value) * 60 + Number(endMinute.value)
   const rest = Number(restHour.value) * 60 + Number(restMinute.value)
+  const time = Number(timePaidHoliday.value)*60
 
   if (start && end && end >= start) {
-    const diff = end - (rest + start)
+    const diff = (end + time) - (rest + start)
 
     const hours = Math.floor(diff / 60)
     const minutes = diff % 60
@@ -293,18 +301,22 @@ const submitForm = async (event) => {
     break_time: `${restHour.value}:${restMinute.value}`,
     work_hour:
       Number(endHour.value) +
-      endMinuteForCalculation -
+      endMinuteForCalculation +
+      Number(timePaidHoliday.value)
+      -
       (Number(restHour.value) + restMinuteForCalculation) -
       (Number(startHour.value) + startMinuteForCalculation),
     overtime:
       Number(endHour.value) +
-      endMinuteForCalculation -
+      endMinuteForCalculation +
+      Number(timePaidHoliday.value)
+      -
       (Number(restHour.value) + restMinuteForCalculation) -
       (Number(startHour.value) + startMinuteForCalculation) -
       8,
       midnight:'00:00',
     midnightOvertime: '00:00',
-    timePaidHoliday: 0,
+    timePaidHoliday: Number(timePaidHoliday.value),
     lateOrEarlyLeave:
       8 -
       (Number(endHour.value) +
