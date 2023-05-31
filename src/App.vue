@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import UserStatus from './components/UserStatus.vue';
 import LogoutButton from './components/LogoutButton.vue';
 import { useStoreAuth } from './stores/login';
+import UserStatus from './components/UserStatus.vue';
 
 const store = useStoreAuth()
 
