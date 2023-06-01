@@ -31,6 +31,18 @@ async function main() {
   })
 
   console.log(`tardinessテーブルにデータを作成しました ${tardiness}`)
+
+  const paidOff = await prisma.paid_off.createMany({
+    data: [
+      { user_email: 'admin123@example.com' },
+      { user_email: 'soumu1@example.com' },
+      { user_email: 'soumu2@example.com' },
+      { user_email: 'soumu3@example.com' },
+      { user_email: 'soumu@example.com' }
+    ]
+  })
+
+  console.log(`paid_offテーブルにデータを追加しました${paidOff}`)
 }
 
 main()

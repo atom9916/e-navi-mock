@@ -24,7 +24,7 @@ model Tardiness {
 
 model Paid_off {
   id                Int       @id @default(autoincrement())
-  user_id           String    @unique
+  user_email        String    @unique
   total_amount      Int       @default(10)
   used_amount       Int       @default(0)
   remaining_amount  Int       @default(10)
