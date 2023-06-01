@@ -4,6 +4,7 @@ import NotFound from '../views/NotFound.vue'
 import Login from '../views/LoginView.vue'
 import { useStoreAuth } from '@/stores/login'
 import Logout from '../views/LogoutView.vue'
+import Admin from '@/views/AdministratorView.vue'
 
 
 
@@ -57,6 +58,11 @@ const router = createRouter({
       path:'/logout',
       name:'logout',
       component:Logout
+    },
+    {
+      path:'/admin',
+      name:'/admin',
+      component:Admin
     }
   ]
 })
