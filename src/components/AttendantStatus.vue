@@ -1,15 +1,22 @@
 <template>
-    <label>出欠:</label>
-    <div class="dropdown">
-      <input type="text" v-model="defaultAttendantStatus" @click="showAttendantStatusOptions=true" />
-      <ul v-show="showAttendantStatusOptions" class="dropdown-menu">
-        <li
-          v-for="attendantStatus in attendantStatuses"
-          :key="attendantStatus"
-          @click="selectAttendantStatus(attendantStatus)"
-        >{{ attendantStatus }}</li>
-      </ul>
-    </div>
+  <label for="attendance">出欠:</label>
+  <div class="dropdown">
+    <input
+      id="attendance"
+      type="text"
+      v-model="defaultAttendantStatus"
+      @click="showAttendantStatusOptions = true"
+    />
+    <ul v-show="showAttendantStatusOptions" class="dropdown-menu">
+      <li
+        v-for="attendantStatus in attendantStatuses"
+        :key="attendantStatus"
+        @click="selectAttendantStatus(attendantStatus)"
+      >
+        {{ attendantStatus }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -20,7 +27,7 @@ const defaultAttendantStatus = ref('')
 const showAttendantStatusOptions = ref(false)
 
 // 選択肢
-const attendantStatuses = ['出勤','有給','半休','慶弔休','欠勤','休日出勤']
+const attendantStatuses = ['出勤', '有給', '半休', '慶弔休', '欠勤', '休日出勤']
 
 const selectAttendantStatus = (attendantStatus) => {
   defaultAttendantStatus.value = attendantStatus
@@ -44,7 +51,7 @@ onUnmounted(() => {
 })
 
 // コンポーネント間の橋渡し
-provide('attendantStatusData',{defaultAttendantStatus})
+provide('attendantStatusData', { defaultAttendantStatus })
 </script>
 
 <style scoped>

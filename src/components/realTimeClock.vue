@@ -4,10 +4,12 @@ import { ref, onMounted } from 'vue'
 const currentDate = ref('')
 const currentTime = ref('')
 
+
+
 const updateDateTime = () => {
   const now = new Date()
-  currentDate.value = now.toLocaleDateString()
-  currentTime.value = now.toLocaleTimeString()
+  currentDate.value = now.toLocaleDateString() 
+  currentTime.value = now.toLocaleTimeString() 
 }
 
 onMounted(() => {
@@ -17,7 +19,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+    <div>
     <p>
       今日は&nbsp;<span style="font-weight: 500; font-size: 1.4em; color: red">{{
         currentDate

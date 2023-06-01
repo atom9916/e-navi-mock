@@ -1,29 +1,40 @@
 import prisma from '../../client'
 
-interface CreateUser {
-  name: string
-  email: string
-  password: string
-  departmentId: number
+interface createDailyAttendance {
+  id: number
+  userId: number
+  date: Date
+  state: string
+  attendance: string
+  punch_in: number
+  punch_out: number
+  break_time: number
+  work_hour: number
+  tardiness: string
+  comment: string
 }
 
-export async function createUser(user: CreateUser) {
-  return await prisma.user.create({
-    data: user
+export async function createDailyAttendance(work: createDailyAttendance) {
+  return await prisma.daily_attendance.create({
+    data: work
   })
 }
 
-interface UpdateUser {
+interface UpdateDailyAttendance {
   id: number
-  name: string
-  email: string
-  password: string
-  departmentId: number
+  state?: string
+  attendance?: string
+  punch_in?: number
+  punch_out?: number
+  break_time?: number
+  work_hour?: number
+  tardiness?: string
+  comment?: string
 }
 
-export async function updateUser(user: UpdateUser) {
-  return await prisma.user.update({
-    where: { id: user.id },
-    data: user
+export async function updateDailyAttendance(work: UpdateDailyAttendance) {
+  return await prisma.daily_attendance.update({
+    where: { id: work.id },
+    data: work
   })
 }

@@ -4,6 +4,7 @@ import NotFound from '../views/NotFound.vue'
 import Login from '../views/LoginView.vue'
 import { useStoreAuth } from '@/stores/login'
 import Logout from '../views/LogoutView.vue'
+import Admin from '@/views/AdministratorView.vue'
 
 
 
@@ -20,22 +21,22 @@ const router = createRouter({
       path: '/monthly',
       name: 'monthlyt',
       component: () => import('../views/MonthlyView.vue'),
+      meta:{requiresAuth:false}
+    },
+    {
+      path: '/daily',
+      name: 'daily',
+      component: () => import('../views/DailyView.vue'),
       meta:{requiresAuth:true}
     },
     {
-      path: '/dayly',
-      name: 'dayly',
-      component: () => import('../views/DaylyView.vue'),
-      meta:{requiresAuth:true}
-    },
-    {
-      path: '/dayly/attendanceRegistration',
+      path: '/daily/attendanceRegistration',
       name: 'attendanceRegistration',
       component: () => import('../views/AttendanceRegistrationVeiw.vue'),
       meta:{requiresAuth:true}
     },
     {
-      path: '/dayly/attendanceRegistration/attendanceCompleted',
+      path: '/daily/attendanceRegistration/attendanceCompleted',
       name: 'attendanceCompleted',
       component: () => import('../views/AttendanceCompletedView.vue'),
       meta:{requiresAuth:true}
@@ -57,6 +58,11 @@ const router = createRouter({
       path:'/logout',
       name:'logout',
       component:Logout
+    },
+    {
+      path:'/admin',
+      name:'/admin',
+      component:Admin
     }
   ]
 })
