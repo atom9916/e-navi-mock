@@ -25,6 +25,7 @@ const signUp = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       setDoc(doc(db, 'users', userCredential.user.uid), {
+        user_id: userCredential.user.uid,
         name: name.value,
         department_id: departmentId.value,
         email: email.value,
