@@ -13,7 +13,7 @@ const isLoading = ref(true)
 const isAuthenticated = ref(false)
 
 // storeをインポートしまして、userInfoをstoreに格納してます
-const store =useUserInfoStore()
+const store = useUserInfoStore()
 
 // logoutを他で実施のためコメントアウト
 // const logout = () => {
