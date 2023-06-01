@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 // import { useRouter } from 'vue-router'
 import { getAuth, /*signOut,*/ onAuthStateChanged } from '@firebase/auth'
-import { getFirestore, getDocs, collection, query, where } from 'firebase/firestore'
+import { getFirestore, getDoc, doc } from 'firebase/firestore'
 
 const auth = getAuth()
 // const router = useRouter()
@@ -30,12 +30,10 @@ onMounted(() => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       isAuthenticated.value = true
-      const usersRef = collection(db, 'users')
-      const q = query(usersRef, where('email', '==', user.email))
-      const querySnapshot = await getDocs(q)
-      querySnapshot.forEach((doc) => {
-        userInfo.value = doc.data()
-      })
+      // ドキュメント名(Auth登録時の自動生成ID)からユーザー情報を取得
+      const docRef = doc(db, 'users', user.uid)
+      const docSnap = await getDoc(docRef)
+      userInfo.value = docSnap.data()
       isLoading.value = false
     } else {
       userInfo.value = null
@@ -46,7 +44,7 @@ onMounted(() => {
 
 <template>
   <div v-if="isLoading"></div>
-  
+
   <div v-else>
     <div v-if="isAuthenticated">
       <p>{{ userInfo ? `${userInfo.name}さんがログイン中` : ' ' }}</p>

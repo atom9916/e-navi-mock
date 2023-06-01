@@ -8,7 +8,7 @@ import {
   signOut,
   onAuthStateChanged
 } from '@firebase/auth'
-import { collection, addDoc, getFirestore } from 'firebase/firestore'
+import { setDoc, doc, getFirestore } from 'firebase/firestore'
 import axios from 'axios'
 
 const auth = getAuth()
@@ -19,24 +19,24 @@ const email = ref('')
 const password = ref('')
 const loginEmail = ref('')
 const loginPassword = ref('')
+const admin = ref(false)
 
 const signUp = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
-      addDoc(collection(db, 'users'), {
+      setDoc(doc(db, 'users', userCredential.user.uid), {
         name: name.value,
-        departmentId: departmentId.value,
+        department_id: departmentId.value,
         email: email.value,
-        password: password.value
+        password: password.value,
+        admin: admin.value
+      }).then(() => {
+        name.value = ''
+        departmentId.value = null
+        email.value = ''
+        password.value = ''
+        admin.value = false
       })
-        .then((docRef) => {
-          const user = userCredential.user
-          console.log('Sign Up!', user)
-          console.log('Document written with ID: ', docRef.id)
-        })
-        .catch((error) => {
-          console.error('Error adding document: ', error)
-        })
     })
     .catch((error) => {
       console.log(error.code, error.message)
@@ -110,6 +110,7 @@ onMounted(() => {
       <input type="number" v-model="departmentId" placeholder="Department" /><br />
       <input type="text" v-model="email" placeholder="Email" /><br />
       <input type="password" v-model="password" placeholder="Password" /><br />
+      <input type="checkbox" v-model="admin" /><br />
       <button @click="signUp">Sign Up</button>
       <button @click="awsPostTest('1')">AWS Post Test</button>
     </p>
