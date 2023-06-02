@@ -7,22 +7,6 @@
     <select v-model="defaultAttendantStatus">
       <option :value="attendantStatus" :key="attendantStatus" v-for="attendantStatus in attendantStatuses">{{ attendantStatus }}</option>
     </select>
-    <!-- <div class="dropdown">
-      <input
-        type="text"
-        v-model="defaultAttendantStatus"
-        @click="showAttendantStatusOptions = true"
-      />
-      <ul v-show="showAttendantStatusOptions" class="dropdown-menu">
-        <li
-          v-for="attendantStatus in attendantStatuses"
-          :key="attendantStatus"
-          @click="selectAttendantStatus(attendantStatus)"
-        >
-          {{ attendantStatus }}
-        </li>
-      </ul>
-    </div> -->
     <br />
     <label>状態:ここに表示(未入力・登録済・依頼中)</label>
     <br/>
@@ -35,27 +19,9 @@
     <select v-model="startHour">
       <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option>
     </select>時
-    
-    <!-- <div class="dropdown">
-      <input type="text" v-model="startHour" @click="showStartHourOptions = true" />
-      <ul v-show="showStartHourOptions" class="dropdown-menu">
-        <li v-for="hour in hours" :key="hour" @click="selectStartHour(hour)">{{ hour }}</li>
-      </ul>
-    </div>
-    時 -->
     <select v-model="startMinute">
       <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option>
     </select>分
-   
-    <!-- <div class="dropdown">
-      <input type="text" v-model="startMinute" @click="showStartMinuteOptions = true" />
-      <ul v-show="showStartMinuteOptions" class="dropdown-menu">
-        <li v-for="minute in minutes" :key="minute" @click="selectStartMinute(minute)">
-          {{ minute }}
-        </li>
-      </ul>
-    </div>
-    分 -->
     <br />
     <label>就業終了時間:</label>
     <select v-model="endHour">
@@ -64,23 +30,6 @@
     <select v-model="endMinute">
       <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option>
     </select>分
-
-    <!-- <div class="dropdown">
-      <input type="text" v-model="endHour" @click="showEndHourOptions = true" />
-      <ul v-show="showEndHourOptions" class="dropdown-menu">
-        <li v-for="hour in hours" :key="hour" @click="selectEndHour(hour)">{{ hour }}</li>
-      </ul>
-    </div>
-    時
-    <div class="dropdown">
-      <input type="text" v-model="endMinute" @click="showEndMinuteOptions = true" />
-      <ul v-show="showEndMinuteOptions" class="dropdown-menu">
-        <li v-for="minute in minutes" :key="minute" @click="selectEndMinute(minute)">
-          {{ minute }}
-        </li>
-      </ul>
-    </div>
-    分 -->
     <br />
     <label>時有給:</label>
     <select v-model="timePaidHoliday">
@@ -94,43 +43,11 @@
     <select v-model="restMinute">
       <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option>
     </select>分
-    <!-- <div class="dropdown">
-      <input type="text" v-model="restHour" @click="showRestHourOptions = true" />
-      <ul v-show="showRestHourOptions" class="dropdown-menu">
-        <li v-for="hour in hours" :key="hour" @click="selectRestHour(hour)">{{ hour }}</li>
-      </ul>
-    </div>
-    時間
-    <div class="dropdown">
-      <input type="text" v-model="restMinute" @click="showRestMinuteOptions = true" />
-      <ul v-show="showRestMinuteOptions" class="dropdown-menu">
-        <li v-for="minute in minutes" :key="minute" @click="selectRestMinute(minute)">
-          {{ minute }}
-        </li>
-      </ul>
-    </div> 
-    分-->
     <br />
     <label>遅刻理由:</label>
     <select v-model="defaultTardinessStatus">
       <option :value="tardinessStatus" :key="tardinessStatus" v-for="tardinessStatus in tardinessStatuses">{{ tardinessStatus }}</option>
     </select>
-    <!-- <div class="dropdown">
-      <input
-        type="text"
-        v-model="defaultTardinessStatus"
-        @click="showTardinessStatusOptions = true"
-      />
-      <ul v-show="showTardinessStatusOptions" class="dropdown-menu">
-        <li
-          v-for="tardinessStatus in tardinessStatuses"
-          :key="tardinessStatus"
-          @click="selectTardinessStatus(tardinessStatus)"
-        >
-          {{ tardinessStatus }}
-        </li>
-      </ul>
-    </div> -->
     <br />
     <label>コメント:</label>
     <textarea name="comment" v-model="comment" cols="30" rows="1" />
@@ -144,8 +61,7 @@
 </template>
 
 <script setup lang="ts">
-// import { onUnmounted } from 'vue'
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import axios from 'axios'
 import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
@@ -171,16 +87,6 @@ const defaultAttendantStatus = ref('')
 // 初期値シフト
 const defaultShift = ref('')
 
-// ドロップダウンリスト表示非表示
-// const showStartHourOptions = ref(false)
-// const showStartMinuteOptions = ref(false)
-// const showEndHourOptions = ref(false)
-// const showEndMinuteOptions = ref(false)
-// const showRestHourOptions = ref(false)
-// const showRestMinuteOptions = ref(false)
-// const showTardinessStatusOptions = ref(false)
-// const showAttendantStatusOptions = ref(false)
-
 // ドロップダウンリストの選択肢
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
@@ -188,40 +94,6 @@ const attendantStatuses = ['出勤', '有給', '半休', '慶弔休', '欠勤', 
 const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他']
 const shifts = ['1日社内業務','定時後社内業務','午前社内業務','午後社内業務','オフピーク勤務']
 const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
-
-//選択時のアクション
-// const selectStartHour = (hour) => {
-//   startHour.value = hour
-//   showStartHourOptions.value = false
-// }
-// const selectStartMinute = (minute) => {
-//   startMinute.value = minute
-//   showStartMinuteOptions.value = false
-// }
-// const selectEndHour = (hour) => {
-//   endHour.value = hour
-//   showEndHourOptions.value = false
-// }
-// const selectEndMinute = (minute) => {
-//   endMinute.value = minute
-//   showEndMinuteOptions.value = false
-// }
-// const selectRestHour = (hour) => {
-//   restHour.value = hour
-//   showRestHourOptions.value = false
-// }
-// const selectRestMinute = (minute) => {
-//   restMinute.value = minute
-//   showRestMinuteOptions.value = false
-// }
-// const selectAttendantStatus = (attendantStatus) => {
-//   defaultAttendantStatus.value = attendantStatus
-//   showAttendantStatusOptions.value = false
-// }
-// const selectTardinessStatus = (tardinessStatus) => {
-//   defaultTardinessStatus.value = tardinessStatus
-//   showTardinessStatusOptions.value = false
-// }
 
 // 勤務合計時間の規定
 
@@ -245,31 +117,9 @@ watch([startHour, startMinute, endHour, endMinute, restHour, restMinute,timePaid
   }
 })
 
-// ドロップダウンリスト消すやつ
-// const handleDocumentClick = (event) => {
-//   const target = event.target
-//   if (!target.closest('.dropdown')) {
-//     showStartHourOptions.value = false
-//     showStartMinuteOptions.value = false
-//     showEndHourOptions.value = false
-//     showEndMinuteOptions.value = false
-//     showRestHourOptions.value = false
-//     showRestMinuteOptions.value = false
-//     showAttendantStatusOptions.value = false
-//     showTardinessStatusOptions.value = false
-//   }
-// }
-// onMounted(() => {
-//   document.addEventListener('click', handleDocumentClick)
-// })
-// onUnmounted(() => {
-//   document.removeEventListener('click', handleDocumentClick)
-// })
 
 // ユーザー情報をストアから取得
-
-const userInfoStore = useUserInfoStore()
-//ストアからユーザーID取得 
+const userInfoStore = useUserInfoStore() 
 const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
@@ -338,35 +188,3 @@ const submitForm = async (event) => {
   }
 }
 </script>
-
-<style scoped>
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown input {
-  width: 100px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  z-index: 1;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.dropdown-menu li {
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
-.dropdown-menu li:hover {
-  background-color: #f5f5f5;
-}
-</style>
