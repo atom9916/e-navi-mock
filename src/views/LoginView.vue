@@ -47,15 +47,46 @@ const checkError = (code: string) => {
 </script>
 
 <template>
-  <div>
-    <form @submit.prevent="login">
-      <h2>ログイン</h2>
-      <input type="email" v-model="email" placeholder="メールアドレス" required />
-      <br />
-      <input type="password" v-model="password" placeholder="パスワード" required />
-      <br />
-      <button type="submit" :disabled="disabled">ログイン</button>
-      <p>{{ error }}</p>
-    </form>
+  <div class="loginFormArea">
+    <div class="loginFormItems">
+      <form @submit.prevent="login">
+        <h2>ログイン</h2>
+        <input type="email" v-model="email" placeholder="メールアドレス" required />
+        <br />
+        <input type="password" v-model="password" placeholder="パスワード" required />
+        <br />
+        <button type="submit" :disabled="disabled">ログイン</button>
+        <p>{{ error }}</p>
+      </form>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.loginFormArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+.loginFormItems {
+  text-align: center;
+}
+
+.loginFormItems input {
+  margin: 2%;
+}
+.loginFormItems button {
+  margin: 3%;
+  border: none;
+  background-color: rgb(13, 102, 102);
+  color: rgb(255, 255, 255);
+  border-radius: 10%;
+  cursor: pointer;
+}
+.loginFormItems button:hover {
+  
+  background-color: rgb(140, 183, 183) 
+}
+</style>
