@@ -1,4 +1,5 @@
-<template>
+のちに削除
+<!-- <template>
   
     <label>遅刻理由:</label>
     <div class="dropdown">
@@ -85,4 +86,4 @@ provide('tardinessStatusData', { defaultTardinessStatus })
 .dropdown-menu li:hover {
   background-color: #f5f5f5;
 }
-</style>
+</style> -->
