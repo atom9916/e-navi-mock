@@ -56,7 +56,6 @@
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
     <button type="submit">承認依頼</button>
-    <!-- <button>登録</button> -->
   </form>
 </template>
 
