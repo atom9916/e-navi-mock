@@ -8,7 +8,7 @@ export async function createNotification(input: CreateNotification) {
       orderBy: { id: 'desc' }
     })
     if (newNotification === undefined || null) {
-      throw new Error('登録したデータが見つかりませんでした')
+      throw new Error('データを登録できませんでした')
     }
     return newNotification
   } catch (error) {

@@ -1,9 +1,12 @@
-import prisma from 'client'
-import type { DeleteDailyAttendance } from '@/types/daily_attendance.type'
+import prisma from '../../../../client'
+import type { DeleteNotification } from '@/types/notification.type'
 
-export async function deleteDailyAttendance(input: DeleteDailyAttendance) {
+export async function deleteNotification(input: DeleteNotification) {
   try {
-    await prisma.daily_attendance.delete({
+    if (!input.id) {
+      throw new Error('idを指定してください')
+    }
+    await prisma.notification.delete({
       where: { id: input.id }
     })
   } catch (error) {

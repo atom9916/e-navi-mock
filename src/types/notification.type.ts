@@ -1,3 +1,12 @@
+export interface Notification {
+  id: number
+  created_at: Date
+  deleted_at: Date
+  content: string
+  create_user: string
+  read_user: string[]
+}
+
 export interface CreateNotification {
   created_at: Date
   deleted_at: Date

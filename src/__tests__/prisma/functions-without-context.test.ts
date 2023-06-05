@@ -1,61 +1,49 @@
-import {
-  createDailyAttendance,
-  updateDailyAttendance
-} from '@/prisma_test/functions-without-context'
+import { createNotification, updateNotification } from '@/prisma_test/functions-without-context'
 import { prismaMock } from '../../../singleton'
 
 const today = new Date()
+const nextWeek = new Date(today.setDate(today.getDate() + 7))
 
-test('should create new daily_attendance', async () => {
-  const dailyWork = {
-    id: 99999,
-    userId: 999,
-    date: today,
-    state: '入力済',
-    attendance: '出勤',
-    punch_in: 9,
-    punch_out: 18,
-    break_time: 1,
-    work_hour: 8,
-    tardiness: 'なし',
-    comment: ''
-  }
+describe('prismaのモックを使用したテスト', () => {
+  test('新しいお知らせデータが作成される', async () => {
+    const notification = {
+      id: 1,
+      created_at: today,
+      deleted_at: nextWeek,
+      content: 'テスト用のコンテンツです',
+      create_user: 'test99999',
+      read_user: []
+    }
 
-  prismaMock.daily_attendance.create.mockResolvedValue(dailyWork)
+    prismaMock.notification.create.mockResolvedValue(notification)
 
-  await expect(createDailyAttendance(dailyWork)).resolves.toEqual({
-    id: 1,
-    name: 'John',
-    email: 'john@prisma.io',
-    password: 'john',
-    departmentId: 1
+    await expect(createNotification(notification)).resolves.toEqual({
+      id: 1,
+      created_at: today,
+      deleted_at: nextWeek,
+      content: 'テスト用のコンテンツです',
+      create_user: 'test99999',
+      read_user: []
+    })
   })
-})
 
-test('should update user name', async () => {
-  const updatedWork = {
-    id: 99999,
-    userId: 999,
-    date: today,
-    state: '入力済',
-    attendance: '出勤',
-    punch_in: 9,
-    punch_out: 20,
-    break_time: 2,
-    work_hour: 10,
-    tardiness: 'なし',
-    comment: '編集しました'
-  }
+  test('お知らせデータが更新される', async () => {
+    const updatedNotification = {
+      id: 1,
+      created_at: today,
+      deleted_at: nextWeek,
+      content: '更新後のコンテンツです',
+      create_user: 'test99999',
+      read_user: []
+    }
 
-  const updateData = {
-    id: 99999,
-    punch_out: 20,
-    break_time: 2,
-    work_hour: 10,
-    comment: '編集しました'
-  }
+    const updateData = {
+      id: 1,
+      comment: '更新後のコンテンツです'
+    }
 
-  prismaMock.daily_attendance.update.mockResolvedValue(updatedWork)
+    prismaMock.notification.update.mockResolvedValue(updatedNotification)
 
-  await expect(updateDailyAttendance(updateData)).resolves.toEqual(updatedWork)
+    await expect(updateNotification(updateData)).resolves.toEqual(updatedNotification)
+  })
 })
