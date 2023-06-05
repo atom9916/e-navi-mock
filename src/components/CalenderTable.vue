@@ -159,4 +159,13 @@ function generateCalendar() {
   background-color: #fff;
   cursor: pointer;
 }
+
+table {
+  border-collapse: none;
+}
+
+th, td {
+  border: none;
+  padding: 8px;
+}
 </style>
