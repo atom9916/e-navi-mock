@@ -53,7 +53,6 @@ onMounted(() => {
   <div v-else>
     <div v-if="isAuthenticated">
       <p>{{ store.userInfo ? `ログイン中:${store.userInfo.name}さん` : ' ' }}</p>
-      <p>{{ store.userInfo?.user_id }}</p>
     </div>
     <div v-else>
       <p>ログインしていません</p>

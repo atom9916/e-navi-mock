@@ -39,8 +39,8 @@ const fetchDailyAttendanceData = async () => {
   try {
     const response = await axios.get(`http://localhost:4242/day/${id}`)
     dailyAttendanceData.value = response.data.dailyWorkDataByUserId
-    console.log('こちら！',id)
-    console.log('こちらも',response.data.dailyWorkDataByUserId)
+    console.log('現ユーザーiD',id)
+    console.log('現ユーザーの勤怠情報',response.data.dailyWorkDataByUserId)
   } catch (error) {
     console.error(error)
   }

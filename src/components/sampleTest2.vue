@@ -47,7 +47,7 @@ const defaultAttendantStatus = ref('')
 </script>
 
 <template>
-    <p>getした選択肢</p>
+    <p>【後で消す】getした選択肢</p>
 <div>
     <select v-model="defaultAttendantStatus">
         <option v-for="data in dailyAttendanceData" :key="data.comment" >{{ data.comment }}</option>
