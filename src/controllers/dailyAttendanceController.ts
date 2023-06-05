@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Router } from 'express'
-import { createDailyAttendance } from '@/lib/prisma/daily_attendance/create'
+import { createDailyAttendance } from '@/lib/prisma/notification/create'
 
 const prisma = new PrismaClient()
 const router = Router()
