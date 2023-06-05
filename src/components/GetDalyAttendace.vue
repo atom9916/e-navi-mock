@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
+import { useUserInfoStore } from '@/stores/userInfo'
+
 
 // 型定義
 interface DailyAttendanceData {
@@ -26,13 +28,19 @@ interface DailyAttendanceData {
 // DBデータ初期化
 const dailyAttendanceData = ref([] as DailyAttendanceData[])
 
+// user_id取得
+const userInfoStore = useUserInfoStore() 
+const id = userInfoStore.userInfo?.user_id
+
 
 // 非同期処理
 const fetchDailyAttendanceData = async () => {
+  
   try {
-    const response = await axios.get('http://localhost:4242/day')
-    dailyAttendanceData.value = response.data.allDailyWorkData
-    console.log(response.data)
+    const response = await axios.get(`http://localhost:4242/day/${id}`)
+    dailyAttendanceData.value = response.data.dailyWorkDataByUserId
+    console.log('こちら！',id)
+    console.log('こちらも',response.data.dailyWorkDataByUserId)
   } catch (error) {
     console.error(error)
   }
@@ -109,10 +117,11 @@ const showTargetMonth = () => {
       <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
     </select>
     <br />
-    <button>対象月を表示</button>
+    <button>勤怠データを取得</button>
   </form>
-  <br />
-  <button @click="fetchDailyAttendanceData">勤怠データを取得</button>
+
+  <br>
+  <div class="monthlyAttendance">
   <table>
     <thead>
       <tr>
@@ -157,4 +166,18 @@ const showTargetMonth = () => {
       </tr>
     </tbody>
   </table>
+</div>
 </template>
+
+
+<style>
+.monthlyAttendance table {
+  border-collapse: collapse;
+}
+
+.monthlyAttendance th,td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+</style>
