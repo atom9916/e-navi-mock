@@ -143,6 +143,7 @@ function generateCalendar() {
   border: 1px solid #ccc;
   max-height: 200px;
   overflow-y: auto;
+  display: none;
 }
 
 .dropdown-menu li {
