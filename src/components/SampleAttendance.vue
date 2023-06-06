@@ -35,8 +35,8 @@ const tardinessData = ref([] as TardinessData[])
 const fetchTardinessClass = async () => {
   try {
     const response = await axios.get('http://localhost:4242/tardiness')
-    tardinessData.value = response.data.allTardinessClass
-    console.log('遅刻項目', response.data.allTardinessClass)
+    tardinessData.value = response.data
+    console.log('遅刻項目', response.data)
   } catch (error) {
     console.error(error)
   }
@@ -56,6 +56,9 @@ const defaultTardinessStatus = ref('')
       <option v-for="data in attendanceData" :key="data.name">{{ data.name }}</option>
     </select>
   </div>
+  <ul>
+    <li v-for="data in tardinessData" :key="data.name">{{ data.name }}</li>
+  </ul>
   <div>
     <select v-model="defaultTardinessStatus">
       <option v-for="data in tardinessData" :key="data.name">{{ data.name }}</option>
