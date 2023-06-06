@@ -98,27 +98,16 @@ const awsPostTest = async (userId: string) => {
     })
 }
 
-const dynamoGetTest = async () => {
-  fetch('https://2zrdh8abfj.execute-api.ap-northeast-1.amazonaws.com/prod/getdaily', {
-    method: 'POST',
+const dynamoGetData = async (userId: string, year: number, month: number) => {
+  const url = import.meta.env.VITE_AWS_API_URL
+  const response = await axios.get(`${url}/daily?id=${userId}&year=${year}&month=${month}`, {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': import.meta.env.VITE_AWS_API_KEY
-    },
-    body: JSON.stringify({
-      userId: 'onGE8VNwcFSUj6JB64rK83J5SEA3',
-      year: 2023,
-      month: 5
-    })
+    }
   })
-    .then((response) => response.json())
-    .then((data) => {
-      const parseData = JSON.parse(data.body)
-      console.log(parseData.Items[0])
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  const data = await response.data
+  console.log(data)
 }
 
 const dynamoPostTest = async () => {
@@ -133,12 +122,18 @@ const dynamoPostTest = async () => {
       userId: 'onGE8VNwcFSUj6JB64rK83J5SEA3',
       date: date,
       state: '承認済',
+      shift: '一日社内業務',
       attendance: '出勤',
-      punchIn: '09:00',
-      punchOut: '18:00',
-      breakTime: '01:00',
-      workHour: 8,
-      tardiness: 'なし',
+      punch_in: '09:00',
+      punch_out: '18:00',
+      break_time: '01:00',
+      work_hour: 8,
+      overtime: 0,
+      midnight: '00:00',
+      midnightOvertime: '00:00',
+      timePaidHoliday: 0,
+      lateOrEarlyLeave: 0,
+      tardiness: '',
       comment: ''
     })
   })
@@ -167,7 +162,9 @@ onMounted(() => {
       <input type="checkbox" v-model="admin" /><br />
       <button @click="signUp">Sign Up</button>
       <button @click="awsPostTest('1')">AWS Post Test</button>
-      <button @click="dynamoGetTest()">DynamoDB Get Test</button>
+      <button @click="dynamoGetData('onGE8VNwcFSUj6JB64rK83J5SEA3', 2023, 5)">
+        DynamoDB GET Test
+      </button>
       <button @click="dynamoPostTest()">DynamoDB POST Test</button>
     </p>
   </div>
