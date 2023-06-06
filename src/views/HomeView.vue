@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // import TheWelcome from '../components/TheWelcome.vue'
 import RealTimeClock from '../components/realTimeClock.vue'
+import LoginTest from '@/components/LoginTest.vue';
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'メインページ'
@@ -11,5 +12,6 @@ useHead({
   <main>
     <h3>ホーム</h3>
     <div><RealTimeClock /></div>
+    <div><LoginTest /></div>
   </main>
 </template>

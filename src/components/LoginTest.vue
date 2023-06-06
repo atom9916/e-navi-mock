@@ -98,6 +98,29 @@ const awsPostTest = async (userId: string) => {
     })
 }
 
+const dynamoGetTest = async (userId: string) => {
+  fetch('https://2zrdh8abfj.execute-api.ap-northeast-1.amazonaws.com/prod/daily', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': import.meta.env.VITE_AWS_API_KEY
+    },
+    body: JSON.stringify({
+      userId: userId,
+      year: 2023,
+      month: 5
+    })
+  })
+  .then((response) => response.json())
+    .then((data) => {
+      const parseData = JSON.parse(data.body)
+      console.log(parseData.Items[0])
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
 onMounted(() => {
   console.log('LoginTest.vue is mounted!')
 })
@@ -114,6 +137,7 @@ onMounted(() => {
       <input type="checkbox" v-model="admin" /><br />
       <button @click="signUp">Sign Up</button>
       <button @click="awsPostTest('1')">AWS Post Test</button>
+      <button @click="dynamoGetTest('onGE8VNwcFSUj6JB64rK83J5SEA3')">DynamoDB Get Test</button>
     </p>
   </div>
 
