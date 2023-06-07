@@ -13,7 +13,7 @@ const isLoading = ref(true)
 const isAuthenticated = ref(false)
 
 // storeをインポートしまして、userInfoをstoreに格納してます
-const store =useUserInfoStore()
+const store = useUserInfoStore()
 
 // logoutを他で実施のためコメントアウト
 // const logout = () => {
@@ -52,7 +52,7 @@ onMounted(() => {
 
   <div v-else>
     <div v-if="isAuthenticated">
-      <p>{{ store.userInfo ? `${store.userInfo.name}さんがログイン中` : ' ' }}</p>
+      <p>{{ store.userInfo ? `ログイン中:${store.userInfo.name}さん` : ' ' }}</p>
     </div>
     <div v-else>
       <p>ログインしていません</p>

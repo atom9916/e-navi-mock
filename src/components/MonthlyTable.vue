@@ -1,24 +1,27 @@
-<template>
+
+あとで消す
+
+<!-- <template>
   <form @submit.prevent="updateCalendar">
     <label>年:</label>
-    <div class="dropdown">
+    <div class="dropdown">    
       <select v-model="defaultYears">
       <option :value="year" :key="year" v-for="year in years">{{ year }}</option>
       </select>
-      <!-- <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" /> -->
+      <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" /> -->
       <!-- <ul v-show="showDefaultYearOptions" class="dropdown-menu">
         <li v-for="year in years" :key="year" @click="selectYear(year)">{{ year }}</li>
-      </ul> -->
+      </ul>
     </div>
     <label>月:</label>
     <div class="dropdown">
       <select v-model="defaultMonths">
       <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
       </select>
-      <!-- <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
+      <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
       <ul v-show="showDefaultMonthsOptions" class="dropdown-menu">
         <li v-for="month in months" :key="month" @click="selectMonth(month)">{{ month }}</li>
-      </ul> -->
+      </ul> 
     </div>
     <br />
     <button type="submit">確認</button> 
@@ -197,4 +200,4 @@ const updateCalendar = () => {
 .dropdown-menu li:hover {
   background-color: #f5f5f5;
 }
-</style>
+</style> -->

@@ -143,6 +143,7 @@ function generateCalendar() {
   border: 1px solid #ccc;
   max-height: 200px;
   overflow-y: auto;
+  display: none;
 }
 
 .dropdown-menu li {
@@ -158,5 +159,14 @@ function generateCalendar() {
   border: none;
   background-color: #fff;
   cursor: pointer;
+}
+
+table {
+  border-collapse: none;
+}
+
+th, td {
+  border: none;
+  padding: 8px;
 }
 </style>

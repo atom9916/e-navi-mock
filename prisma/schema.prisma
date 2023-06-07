@@ -38,3 +38,8 @@ model Notification {
   create_user String //ユーザーIDと紐付け
   read_user   String[] //ユーザーIDと紐付け
 }
+
+model Shift {
+  id         Int    @id @default(autoincrement())
+  name String
+}

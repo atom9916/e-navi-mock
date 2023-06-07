@@ -1,88 +1,64 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import LogoutButton from './components/LogoutButton.vue';
-import { useStoreAuth } from './stores/login';
-import UserStatus from './components/UserStatus.vue';
+import LogoutButton from './components/LogoutButton.vue'
+import { useStoreAuth } from './stores/login'
+import UserStatus from './components/UserStatus.vue'
+import { useUserInfoStore } from './stores/userInfo'
 
 const store = useStoreAuth()
-
+const userInfoStore = useUserInfoStore()
 </script>
 
 <template>
   <header v-if="store.isLoggedIn">
-    <nav>
-      <RouterLink to="/">ホーム</RouterLink><br />
-      <RouterLink to="/monthly">月次勤怠</RouterLink><br />
-      <RouterLink to="/daily">日次勤怠</RouterLink><br />
-      <UserStatus/>
-      <LogoutButton/>
+    <nav class="nav-menu">
+      <RouterLink to="/" class="nav-link">ホーム</RouterLink><br />
+      <RouterLink to="/monthly" class="nav-link">月次勤怠</RouterLink><br />
+      <RouterLink to="/daily" class="nav-link">日次勤怠</RouterLink><br />
+      <span v-if="userInfoStore.userInfo?.admin">
+        <RouterLink to="/admin" class="nav-link">管理者画面</RouterLink><br />
+      </span>
+      <div class="nav-user">
+        <UserStatus class="status"/>
+        <span class="spacer"></span>
+        <LogoutButton class="button"/>
+      </div>
     </nav>
   </header>
-<h2>e-navi-mock</h2>
-<RouterView/>
+  <h2>e-navi-mock</h2>
+  <RouterView />
 </template>
 
-<!-- 後学のためとりあえず一旦、残してますが後で消す -->
-<!-- <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style scoped>
+.nav-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.nav-link {
+  margin-right: 10px;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.nav-link:last-child {
+  margin-right: 0;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.nav-user{
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.button{
+  background-color: rgb(12, 233, 167);
+  border: none;
+  cursor: pointer;
 }
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.button:hover{
+  background-color: rgb(183, 241, 223);
 }
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.spacer{
+  margin-right: 10px;
 }
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style> -->
+</style>
