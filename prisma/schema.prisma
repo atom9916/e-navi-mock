@@ -38,3 +38,8 @@ model Notification {
   create_user Int
   read_user   Int[]
 }
+
+model Shift {
+  id         Int    @id @default(autoincrement())
+  name String
+}

@@ -14,11 +14,14 @@
       </option>
     </select>
     <br />
-    <label>状態:ここに表示(未入力・登録済・依頼中)</label>
+    <label>状態:ここに表示(エラー発生中)</label>
+    <select v-model="defaultState">
+      <option :value="state" :key="state.name" v-for="state in states">{{ state.name }}</option>
+    </select>
     <br />
     <label>シフト:</label>
     <select v-model="defaultShift">
-      <option :value="shift" :key="shift" v-for="shift in shifts">{{ shift }}</option>
+      <option :value="shift" :key="shift.name" v-for="shift in shifts">{{ shift.name }}</option>
     </select>
     <br />
     <label>就業開始時間:</label>
@@ -60,10 +63,10 @@
     <select v-model="defaultTardinessStatus">
       <option
         :value="tardinessStatus"
-        :key="tardinessStatus"
+        :key="tardinessStatus.name"
         v-for="tardinessStatus in tardinessStatuses"
       >
-        {{ tardinessStatus }}
+        {{ tardinessStatus.name }}
       </option>
     </select>
     <br />
@@ -85,15 +88,16 @@ import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 
+
 // 初期値勤務時間
-const startHour = ref('')
-const startMinute = ref('')
-const endHour = ref('')
-const endMinute = ref('')
-const restHour = ref('')
-const restMinute = ref('')
+const startHour = ref('09')
+const startMinute = ref('00')
+const endHour = ref('18')
+const endMinute = ref('00')
+const restHour = ref('01')
+const restMinute = ref('00')
 const comment = ref('')
-const timePaidHoliday = ref('')
+const timePaidHoliday = ref('0')
 
 // 初期値遅刻理由
 const defaultTardinessStatus = ref('')
@@ -104,6 +108,10 @@ const defaultAttendantStatus = ref('')
 // 初期値シフト
 const defaultShift = ref('')
 
+// 初期値状態
+const defaultState = ref('')
+
+
 // ドロップダウンリストの選択肢(出欠)
 interface AttedanceData {
   name: string
@@ -113,7 +121,7 @@ const fetchAttendantClass = async () => {
   try {
     const response = await axios.get('http://localhost:4242/attendance')
     attendantStatuses.value = response.data.allAttendantClass
-    console.log('項目', response.data)
+    console.log('出欠項目', response.data.allAttendantClass)
   } catch (error) {
     console.error(error)
   }
@@ -123,34 +131,73 @@ onMounted(() => {
 })
 
 // ドロップダウンリストの選択肢(遅刻理由)
-// interface Tardiness {
-//   name: string
-// }
-// const tardinessStatuses = ref([] as Tardiness[])
-// const fetchTardinessStatuses = async () => {
-//   try {
-//     const response = await axios.get('http://localhost:4242/tardiness')
-//     tardinessStatuses.value = response.data.allTardinessClass
-//     console.log('項目', response.data.allTardinessClass)
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-// onMounted(() => {
-//   fetchTardinessStatuses()
-// })
+interface TardinessData {
+  name: string
+}
 
+const tardinessStatuses = ref([] as TardinessData[])
 
-// ドロップダウンリストの選択肢
+const fetchTardinessClass = async () => {
+  try {
+    const response = await axios.get('http://localhost:4242/tardiness')
+    tardinessStatuses.value = response.data.allTardinessClass
+    console.log('遅刻項目', response.data.allTardinessClass)
+  } catch (error) {
+    console.error(error)
+  }
+}
+onMounted(() => {
+  fetchTardinessClass()
+})
+
+// ドロップダウンリストの選択肢(状態・いまエラー中)
+interface State {
+  name: string
+}
+
+const states= ref([] as State[])
+
+const fetchState = async () => {
+  try {
+    const response = await axios.get('http://localhost:4242/state')
+    states.value = response.data.allState
+    console.log('状態項目', response.data.allState)
+  } catch (error) {
+    console.error(error)
+  }
+}
+onMounted(() => {
+  fetchState()
+})
+
+// ドロップダウンリストの選択肢(シフト・いまエラー中)
+interface Shift {
+  name:string
+}
+
+const shifts = ref([ ] as Shift[] )
+
+const fetchShift = async () => {
+  try {
+    const response = await axios.get('http://localhost:4242/shift')
+    shifts.value = response.data.allShiftData
+    console.log('シフト項目', response.data.allShiftData)
+  } catch (error) {
+    console.error(error)
+  }
+}
+onMounted(() => {
+  fetchShift()
+})
+
+// ドロップダウンリストの選択肢(数字)
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
-const tardinessStatuses = ['なし', '電車遅延', '自己都合', 'その他']
-const shifts = ['1日社内業務', '定時後社内業務', '午前社内業務', '午後社内業務', 'オフピーク勤務']
 const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
 
 // 勤務合計時間の規定
 
-let totalWorkHours = ''
+let totalWorkHours = '8時間0分'
 
 watch([startHour, startMinute, endHour, endMinute, restHour, restMinute, timePaidHoliday], () => {
   const start = Number(startHour.value) * 60 + Number(startMinute.value)
