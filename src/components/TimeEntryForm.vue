@@ -14,12 +14,8 @@
       </option>
     </select>
     <br />
-    <label>状態:ここに表示(エラー発生中)</label>
-    <select v-model="defaultState">
-      <option :value="state.name" :key="state.name" v-for="state in states">
-        {{ state.name }}
-      </option>
-    </select>
+    <label>状態:ここはセレクタグではなく現状をdbから取ってくるように変更する</label>
+
     <br />
     <label>シフト:</label>
     <select v-model="defaultShift">
@@ -106,13 +102,13 @@ const timePaidHoliday = ref('0')
 const defaultTardinessStatus = ref('')
 
 // 初期値出欠
-const defaultAttendantStatus = ref('')
+const defaultAttendantStatus = ref('出勤')
 
 // 初期値シフト
 const defaultShift = ref('')
 
 // 初期値状態
-const defaultState = ref('')
+// const defaultState = ref('')
 
 // ドロップダウンリストの選択肢(出欠)
 interface AttedanceData {
@@ -152,27 +148,7 @@ onMounted(() => {
   fetchTardinessData()
 })
 
-// ドロップダウンリストの選択肢(状態・いまエラー中)
-interface State {
-  name: string
-}
-
-const states = ref([] as State[])
-
-const fetchStateData = async () => {
-  try {
-    const response = await axios.get('http://localhost:4242/state')
-    states.value = response.data.allStateData
-    console.log('状態項目', response.data.allStateData)
-  } catch (error) {
-    console.error(error)
-  }
-}
-onMounted(() => {
-  fetchStateData()
-})
-
-// ドロップダウンリストの選択肢(シフト・いまエラー中)
+// ドロップダウンリストの選択肢(シフト)
 interface Shift {
   name: string
 }
