@@ -6,22 +6,26 @@
     <label>出欠:</label>
     <select v-model="defaultAttendantStatus">
       <option
-        :value="attendantStatus"
+        :value="attendantStatus.name"
         :key="attendantStatus.name"
         v-for="attendantStatus in attendantStatuses"
       >
-        {{ attendantStatus.name  }}
+        {{ attendantStatus.name }}
       </option>
     </select>
     <br />
     <label>状態:ここに表示(エラー発生中)</label>
     <select v-model="defaultState">
-      <option :value="state" :key="state.name" v-for="state in states">{{ state.name }}</option>
+      <option :value="state.name" :key="state.name" v-for="state in states">
+        {{ state.name }}
+      </option>
     </select>
     <br />
     <label>シフト:</label>
     <select v-model="defaultShift">
-      <option :value="shift" :key="shift.name" v-for="shift in shifts">{{ shift.name }}</option>
+      <option :value="shift.name" :key="shift.name" v-for="shift in shifts">
+        {{ shift.name }}
+      </option>
     </select>
     <br />
     <label>就業開始時間:</label>
@@ -62,7 +66,7 @@
     <label>遅刻理由:</label>
     <select v-model="defaultTardinessStatus">
       <option
-        :value="tardinessStatus"
+        :value="tardinessStatus.name"
         :key="tardinessStatus.name"
         v-for="tardinessStatus in tardinessStatuses"
       >
@@ -88,7 +92,6 @@ import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 
-
 // 初期値勤務時間
 const startHour = ref('09')
 const startMinute = ref('00')
@@ -111,23 +114,22 @@ const defaultShift = ref('')
 // 初期値状態
 const defaultState = ref('')
 
-
 // ドロップダウンリストの選択肢(出欠)
 interface AttedanceData {
   name: string
 }
 const attendantStatuses = ref([] as AttedanceData[])
-const fetchAttendantClass = async () => {
+const fetchAttendanceData = async () => {
   try {
     const response = await axios.get('http://localhost:4242/attendance')
-    attendantStatuses.value = response.data.allAttendantClass
-    console.log('出欠項目', response.data.allAttendantClass)
+    attendantStatuses.value = response.data.allAttendanceData
+    console.log('出欠項目', response.data.allAttendanceData)
   } catch (error) {
     console.error(error)
   }
 }
 onMounted(() => {
-  fetchAttendantClass()
+  fetchAttendanceData()
 })
 
 // ドロップダウンリストの選択肢(遅刻理由)
@@ -137,17 +139,17 @@ interface TardinessData {
 
 const tardinessStatuses = ref([] as TardinessData[])
 
-const fetchTardinessClass = async () => {
+const fetchTardinessData = async () => {
   try {
     const response = await axios.get('http://localhost:4242/tardiness')
-    tardinessStatuses.value = response.data.allTardinessClass
-    console.log('遅刻項目', response.data.allTardinessClass)
+    tardinessStatuses.value = response.data.allTardinessData
+    console.log('遅刻項目', response.data.allTardinessData)
   } catch (error) {
     console.error(error)
   }
 }
 onMounted(() => {
-  fetchTardinessClass()
+  fetchTardinessData()
 })
 
 // ドロップダウンリストの選択肢(状態・いまエラー中)
@@ -155,29 +157,29 @@ interface State {
   name: string
 }
 
-const states= ref([] as State[])
+const states = ref([] as State[])
 
-const fetchState = async () => {
+const fetchStateData = async () => {
   try {
     const response = await axios.get('http://localhost:4242/state')
-    states.value = response.data.allState
-    console.log('状態項目', response.data.allState)
+    states.value = response.data.allStateData
+    console.log('状態項目', response.data.allStateData)
   } catch (error) {
     console.error(error)
   }
 }
 onMounted(() => {
-  fetchState()
+  fetchStateData()
 })
 
 // ドロップダウンリストの選択肢(シフト・いまエラー中)
 interface Shift {
-  name:string
+  name: string
 }
 
-const shifts = ref([ ] as Shift[] )
+const shifts = ref([] as Shift[])
 
-const fetchShift = async () => {
+const fetchShiftData = async () => {
   try {
     const response = await axios.get('http://localhost:4242/shift')
     shifts.value = response.data.allShiftData
@@ -187,7 +189,7 @@ const fetchShift = async () => {
   }
 }
 onMounted(() => {
-  fetchShift()
+  fetchShiftData()
 })
 
 // ドロップダウンリストの選択肢(数字)
@@ -273,7 +275,14 @@ const submitForm = async (event) => {
   }
   try {
     const response = await axios.post('http://localhost:4242/day', formData)
-    if (response.status === 200) {
+    const url = import.meta.env.VITE_AWS_API_URL
+    const responseDynamo = await axios.post(`${url}/daily`, formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    })
+    if (response.status === 200 && responseDynamo.status === 200) {
       console.log('勤怠データが保存されました')
     } else {
       console.error('勤怠データは保存出来ていません')
