@@ -98,28 +98,86 @@ const awsPostTest = async (userId: string) => {
     })
 }
 
-const dynamoGetTest = async (userId: string) => {
-  fetch('https://2zrdh8abfj.execute-api.ap-northeast-1.amazonaws.com/prod/daily', {
-    method: 'POST',
+const dynamoGetData = async (userId: string, year: number, month: number) => {
+  const url = import.meta.env.VITE_AWS_API_URL
+  const response = await axios.get(`${url}/daily?id=${userId}&year=${year}&month=${month}`, {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': import.meta.env.VITE_AWS_API_KEY
-    },
-    body: JSON.stringify({
-      userId: userId,
-      year: 2023,
-      month: 5
-    })
+    }
   })
-  .then((response) => response.json())
-    .then((data) => {
-      const parseData = JSON.parse(data.body)
-      console.log(parseData.Items[0])
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  const data = await response.data
+  console.log(data)
 }
+
+const dynamoPostData = async () => {
+  const date = new Date()
+  const url = import.meta.env.VITE_AWS_API_URL
+  const response = await axios.post(
+    `${url}/daily`,
+    {
+      userId: 'onGE8VNwcFSUj6JB64rK83J5SEA3',
+      date: date,
+      state: '承認済',
+      shift: '一日社内業務',
+      attendance: '出勤',
+      punch_in: '09:00',
+      punch_out: '18:00',
+      break_time: '01:00',
+      work_hour: 8,
+      overtime: 0,
+      midnight: '00:00',
+      midnightOvertime: '00:00',
+      timePaidHoliday: 0,
+      lateOrEarlyLeave: 0,
+      tardiness: '',
+      comment: ''
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    }
+  )
+  console.log(response.status)
+}
+
+// const dynamoPostTest = async () => {
+//   const date = new Date()
+//   fetch('https://2zrdh8abfj.execute-api.ap-northeast-1.amazonaws.com/prod/postdaily', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'x-api-key': import.meta.env.VITE_AWS_API_KEY
+//     },
+//     body: JSON.stringify({
+//       userId: 'onGE8VNwcFSUj6JB64rK83J5SEA3',
+//       date: date,
+//       state: '承認済',
+//       shift: '一日社内業務',
+//       attendance: '出勤',
+//       punch_in: '09:00',
+//       punch_out: '18:00',
+//       break_time: '01:00',
+//       work_hour: 8,
+//       overtime: 0,
+//       midnight: '00:00',
+//       midnightOvertime: '00:00',
+//       timePaidHoliday: 0,
+//       lateOrEarlyLeave: 0,
+//       tardiness: '',
+//       comment: ''
+//     })
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data)
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     })
+// }
 
 onMounted(() => {
   console.log('LoginTest.vue is mounted!')
@@ -137,7 +195,10 @@ onMounted(() => {
       <input type="checkbox" v-model="admin" /><br />
       <button @click="signUp">Sign Up</button>
       <button @click="awsPostTest('1')">AWS Post Test</button>
-      <button @click="dynamoGetTest('onGE8VNwcFSUj6JB64rK83J5SEA3')">DynamoDB Get Test</button>
+      <button @click="dynamoGetData('onGE8VNwcFSUj6JB64rK83J5SEA3', 2023, 5)">
+        DynamoDB GET Test
+      </button>
+      <button @click="dynamoPostData()">DynamoDB POST Test</button>
     </p>
   </div>
 

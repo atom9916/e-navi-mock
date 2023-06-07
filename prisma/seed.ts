@@ -43,6 +43,18 @@ async function main() {
   })
 
   console.log(`paid_offテーブルにデータを追加しました${paidOff}`)
+
+  const shift = await prisma.shift.createMany({
+    data: [
+      { name: '一日社内業務' },
+      { name: '定時後社内業務' },
+      { name: '午前社内業務' },
+      { name: '午後社内業務' },
+      { name: 'オフピーク勤務' }
+    ]
+  })
+
+  console.log(`shiftテーブルにデータを作成しました ${shift}`)
 }
 
 main()
