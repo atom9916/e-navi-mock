@@ -1,5 +1,5 @@
 const request = require('supertest')
-import { server } from '../server'
+import { server } from '../../server'
 
 describe('/にリクエストを送信する', () => {
   test('GETメソッド', () => {

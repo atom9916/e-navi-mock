@@ -6,6 +6,7 @@ export const getAllNotification = async () => {
     if (allNotification === undefined || null) {
       throw new Error('お知らせデータの取得に失敗しました')
     }
+    console.log(`allNotification ${allNotification}`)
     return allNotification
   } catch (error) {
     return error

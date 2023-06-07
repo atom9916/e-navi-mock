@@ -1,43 +1,20 @@
 const request = require('supertest')
 import { server } from '../../server'
-import prisma from '../../../client'
-import { createNotification } from '@/lib/prisma/notification/create'
 
 const today = new Date()
 const nextWeek = new Date(today.setDate(today.getDate() + 7))
 
-beforeEach(async () => {
-  const testData = {
-    id: 99999,
-    created_at: today,
-    deleted_at: nextWeek,
-    content: 'すべてのテストで仕様するお知らせデータです。',
-    create_user: 'test99999',
-    read_user: []
-  }
-  await createNotification(testData)
-})
-
-afterEach(async () => {
-  await prisma.notification.deleteMany()
-})
-
-afterAll(async () => {
-  await prisma.notification.deleteMany()
-
-  await prisma.$disconnect()
-})
-
 describe('notificationControllerのテスト', () => {
-  test('GETメソッドが成功するとステータス200が返される', () => {
-    return request(server)
+  test('GETメソッドが成功するとステータス200が返される', async () => {
+    return await request(server)
       .get('/notification/')
       .then((res) => {
+        console.log('GET Data', res.data)
         expect(res.statusCode).toBe(200)
       })
   })
-  test('GETメソッドが失敗するとステータス404が返される', () => {
-    return request(server)
+  test('GETメソッドが失敗するとステータス404が返される', async () => {
+    return await request(server)
       .get('/notificatio/') // URLのスペルミス
       .then((res) => {
         expect(res.statusCode).toBe(404)
@@ -46,6 +23,7 @@ describe('notificationControllerのテスト', () => {
 
   test('POSTメソッドが成功するとステータス200が返される', () => {
     const newNotification = {
+      id: 99999,
       created_at: today,
       deleted_at: nextWeek,
       content: 'テスト用の新しいお知らせです。',
@@ -58,19 +36,18 @@ describe('notificationControllerのテスト', () => {
         body: newNotification
       })
       .then((res) => {
+        console.log(res.body.message)
         expect(res.statusCode).toBe(200)
       })
   })
 
-  test('POSTメソッドが失敗すると、ステータス400が返される', () => {
+  test('POSTメソッドが失敗すると、ステータス400が返される', async () => {
     const errorData = {
       deleted_at: 'nextWeek', //Date型ではなく文字列型になっている
-      content: 'エラーが発生するデータです。',
-      create_user: 'test99999',
-      read_user: []
+      content: 'エラーが発生するデータです。'
     }
 
-    return request(server)
+    return await request(server)
       .post('/notification/', {
         body: errorData
       })
@@ -79,51 +56,52 @@ describe('notificationControllerのテスト', () => {
       })
   })
 
-  test('PUTメソッドに成功するとステータス200が返ってくる', () => {
+  test('PUTメソッドに成功するとステータス200が返ってくる', async () => {
     const updateData = {
       id: 99999,
       content: '更新後のデータです'
     }
 
-    return request(server)
+    return await request(server)
       .put('/notification/', {
-        body: updateData
+        body: JSON.stringify(updateData)
       })
       .then((res) => {
         expect(res.statusCode).toBe(200)
       })
   })
 
-  test('PUTメソッドに失敗するとステータス400が返ってくる', () => {
+  test('PUTメソッドに失敗するとステータス400が返ってくる', async () => {
     const errorData = {
       id: 12345, //存在しないid
       content: '更新に失敗するデータです'
     }
 
-    return request(server)
+    return await request(server)
       .put('/notification/', {
-        body: errorData
+        body: JSON.stringify(errorData)
       })
       .then((res) => {
         expect(res.statusCode).toBe(400)
       })
   })
 
-  test('DELETEメソッドに成功するとステータス200が返ってくる', () => {
-    return request(server)
+  test('DELETEメソッドに成功するとステータス200が返ってくる', async () => {
+    return await request(server)
       .delete('/notification/', {
-        id: 99999
+        body: JSON.stringify({ id: 99999 })
       })
       .then((res) => {
+        console.log('レスポンスメッセージ', res.body.message)
         expect(res.statusCode).toBe(200)
       })
   })
 
-  test('DELETEメソッドに失敗するとステータス400が返ってくる', () => {
-    return request(server)
+  test('DELETEメソッドに失敗するとステータス400が返ってくる', async () => {
+    return await request(server)
       .delete('/notification/') //idを指定しない
       .then((res) => {
-        console.log(res.message)
+        console.log('レスポンスメッセージ', res.body.message)
         expect(res.statusCode).toBe(400)
       })
   })
