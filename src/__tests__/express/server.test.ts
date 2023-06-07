@@ -1,5 +1,5 @@
 const request = require('supertest')
-import { server } from '../server'
+import { server } from '../../server'
 
 describe('/にリクエストを送信する', () => {
   test('GETメソッド', () => {
@@ -12,10 +12,10 @@ describe('/にリクエストを送信する', () => {
   })
 })
 
-describe('/monthにリクエストを送信する', () => {
+describe('/notificationにリクエストを送信する', () => {
   test('GETメソッド', () => {
     return request(server)
-      .get('/month/')
+      .get('/notification/')
       .then((res) => {
         console.log('データ', res.body)
         expect(res.statusCode).toBe(200)
@@ -24,7 +24,7 @@ describe('/monthにリクエストを送信する', () => {
 
   test('POSTメソッド', () => {
     return request(server)
-      .post('/month/')
+      .post('/notification/')
       .then((res) => {
         expect(res.statusCode).toBe(200)
       })
@@ -32,16 +32,15 @@ describe('/monthにリクエストを送信する', () => {
 
   test('PUTメソッド', () => {
     return request(server)
-      .put('/month/')
+      .put('/notification/')
       .then((res) => {
         expect(res.statusCode).toBe(200)
       })
   })
 
   test('DELETEメソッド', () => {
-    const userId = 999
     return request(server)
-      .delete(`/month/${userId}`)
+      .delete(`/notification/`)
       .then((res) => {
         expect(res.statusCode).toBe(200)
       })

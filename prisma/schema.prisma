@@ -35,8 +35,8 @@ model Notification {
   created_at  DateTime
   deleted_at  DateTime
   content     String?
-  create_user Int
-  read_user   Int[]
+  create_user String //ユーザーIDと紐付け
+  read_user   String[] //ユーザーIDと紐付け
 }
 
 model Shift {
