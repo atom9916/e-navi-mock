@@ -170,7 +170,7 @@ onMounted(() => {
   fetchState()
 })
 
-// ドロップダウンリストの選択肢(シフト・いまエラー中)
+// ドロップダウンリストの選択肢(シフト)
 interface Shift {
   name:string
 }
