@@ -148,9 +148,9 @@ const showTargetMonth = () => {
       <tr v-for="date in dailyAttendanceDates" :key="date">
         <td>{{ date }}</td>
         <td>{{ formatWeekday(date) }}</td>
-        <td></td>
+        <td>平日or休日表示方法要検討</td>
         <td>{{ filterDataByDate(date)[0]?.state }}</td>
-        <td></td>
+        <td>{{ filterDataByDate(date)[0]?.shift }}</td>
         <td>{{ filterDataByDate(date)[0]?.attendance }}</td>
         <td>{{ filterDataByDate(date)[0]?.punch_in }}</td>
         <td>{{ filterDataByDate(date)[0]?.punch_out }}</td>
