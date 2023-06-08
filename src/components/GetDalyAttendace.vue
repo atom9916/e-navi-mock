@@ -6,23 +6,24 @@ import { useUserInfoStore } from '@/stores/userInfo'
 
 
 // 型定義
+// DynamoDBでは型情報も含んだオブジェクトとして取得
 interface DailyAttendanceData {
-  userId: string
-  date: Date
-  state: string
-  shift:string
-  attendance: string
-  punch_in: string
-  punch_out: string
-  break_time: string
-  work_hour: number
-  overtime:number
-  midnight:string
-  midnightOvertime:string
-  timePaidHoliday:number
-  lateOrEarlyLeave:number
-  tardiness: string
-  comment: string
+  userId: { S: string }
+  date: { S: Date }
+  state: { S: string }
+  shift:{ S: string }
+  attendance: { S: string }
+  punch_in: { S: string }
+  punch_out: { S: string }
+  break_time: { S: string }
+  work_hour: { N: number }
+  overtime: { N: number }
+  midnight: { S: string }
+  midnightOvertime: { S: string }
+  timePaidHoliday: { N: number }
+  lateOrEarlyLeave: { N: number }
+  tardiness: { S: string }
+  comment: { S: string }
 }
 
 // DBデータ初期化
@@ -35,12 +36,17 @@ const id = userInfoStore.userInfo?.user_id
 
 // 非同期処理
 const fetchDailyAttendanceData = async () => {
-  
+  const url = import.meta.env.VITE_AWS_API_URL
   try {
-    const response = await axios.get(`http://localhost:4242/day/${id}`)
-    dailyAttendanceData.value = response.data.dailyWorkDataByUserId
+    const response = await axios.get(`${url}/daily?id=${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': import.meta.env.VITE_AWS_API_KEY
+    }
+  })
+    dailyAttendanceData.value = response.data.Items
     console.log('現ユーザーiD',id)
-    console.log('現ユーザーの勤怠情報',response.data.dailyWorkDataByUserId)
+    console.log('現ユーザーの勤怠情報',response.data.Items)
   } catch (error) {
     console.error(error)
   }
@@ -52,7 +58,7 @@ onMounted(() => {
 // フィルター
 const filterDataByDate = (date) => {
   return dailyAttendanceData.value.filter((data) => {
-    const dataDate = new Date(data.date)
+    const dataDate = new Date(data.date.S)
     const formattedDate = formatDate(dataDate)
     return formattedDate === date
   })
@@ -149,20 +155,20 @@ const showTargetMonth = () => {
         <td>{{ date }}</td>
         <td>{{ formatWeekday(date) }}</td>
         <td></td>
-        <td>{{ filterDataByDate(date)[0]?.state }}</td>
+        <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
         <td></td>
-        <td>{{ filterDataByDate(date)[0]?.attendance }}</td>
-        <td>{{ filterDataByDate(date)[0]?.punch_in }}</td>
-        <td>{{ filterDataByDate(date)[0]?.punch_out }}</td>
-        <td>{{ filterDataByDate(date)[0]?.break_time }}</td>
-        <td>{{ filterDataByDate(date)[0]?.work_hour }}</td>
-        <td>{{ filterDataByDate(date)[0]?.overtime }}</td>
-        <td>{{ filterDataByDate(date)[0]?.midnight }}</td>
-        <td>{{ filterDataByDate(date)[0]?.midnightOvertime }}</td>
-        <td>{{ filterDataByDate(date)[0]?.timePaidHoliday }}</td>
-        <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave }}</td>
-        <td>{{ filterDataByDate(date)[0]?.tardiness }}</td>
-        <td>{{ filterDataByDate(date)[0]?.comment }}</td>
+        <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.punch_out.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.break_time.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.work_hour.N }}</td>
+        <td>{{ filterDataByDate(date)[0]?.overtime.N }}</td>
+        <td>{{ filterDataByDate(date)[0]?.midnight.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.midnightOvertime.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.timePaidHoliday.N }}</td>
+        <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
+        <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
+        <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
       </tr>
     </tbody>
   </table>
