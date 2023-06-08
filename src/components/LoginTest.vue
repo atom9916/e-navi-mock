@@ -98,9 +98,14 @@ const awsPostTest = async (userId: string) => {
     })
 }
 
-const dynamoGetData = async (userId: string, year: number, month: number) => {
+const dynamoGetData = async (
+  userId: string,
+  // year: number,
+  // month: number
+) => {
   const url = import.meta.env.VITE_AWS_API_URL
-  const response = await axios.get(`${url}/daily?id=${userId}&year=${year}&month=${month}`, {
+  // const response = await axios.get(`${url}/daily?id=${userId}&year=${year}&month=${month}`, {
+  const response = await axios.get(`${url}/daily?id=${userId}`, {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': import.meta.env.VITE_AWS_API_KEY
@@ -195,7 +200,7 @@ onMounted(() => {
       <input type="checkbox" v-model="admin" /><br />
       <button @click="signUp">Sign Up</button>
       <button @click="awsPostTest('1')">AWS Post Test</button>
-      <button @click="dynamoGetData('onGE8VNwcFSUj6JB64rK83J5SEA3', 2023, 5)">
+      <button @click="dynamoGetData('onGE8VNwcFSUj6JB64rK83J5SEA3')">
         DynamoDB GET Test
       </button>
       <button @click="dynamoPostData()">DynamoDB POST Test</button>
