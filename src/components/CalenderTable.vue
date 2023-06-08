@@ -1,18 +1,13 @@
 <template>
   <label>年:</label>
-  <div class="dropdown">
-    <input type="text" v-model="defaultYears" @click="showDefaultYearOptions = true" />
-    <ul v-show="showDefaultYearOptions" class="dropdown-menu">
-      <li v-for="year in years" :key="year" @click="selectYear(year)">{{ year }}</li>
-    </ul>
-  </div>
+  <select v-model="defaultYears">
+    <option :value="year" :key="year" v-for="year in years">{{ year }}</option>
+  </select>
+  <span>&nbsp;</span>
   <label>月:</label>
-  <div class="dropdown">
-    <input type="text" v-model="defaultMonths" @click="showDefaultMonthsOptions = true" />
-    <ul v-show="showDefaultMonthsOptions" class="dropdown-menu">
-      <li v-for="month in months" :key="month" @click="selectMonth(month)">{{ month }}</li>
-    </ul>
-  </div>
+  <select v-model="defaultMonths">
+    <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
+  </select>
   <br />
   <button type="submit" @click="generateCalendar">確認</button>
 
@@ -38,11 +33,11 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useStoreSelectedDate } from '@/stores/selectedDate';
+import { useStoreSelectedDate } from '@/stores/selectedDate'
 
 // 初期値
 const defaultYears = ref(dayjs().year())
-const defaultMonths = ref(dayjs().month() +1)
+const defaultMonths = ref(dayjs().month() + 1)
 const selectedDate = ref<Date | null>(null)
 
 // ドロップダウンリストの表示非表示
@@ -52,16 +47,6 @@ const showDefaultMonthsOptions = ref(false)
 // 選択肢
 const years = [2022, 2023, 2024]
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-// 選択時のアクション
-const selectYear = (year) => {
-  defaultYears.value = year
-  showDefaultYearOptions.value = false
-}
-const selectMonth = (month) => {
-  defaultMonths.value = month
-  showDefaultMonthsOptions.value = false
-}
 
 const selectDate = (day) => {
   const year = defaultYears.value
@@ -87,7 +72,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleDocumentClick)
 })
-
 
 // カレンダー作成
 
@@ -165,7 +149,8 @@ table {
   border-collapse: none;
 }
 
-th, td {
+th,
+td {
   border: none;
   padding: 8px;
 }

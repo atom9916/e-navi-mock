@@ -14,8 +14,7 @@
       </option>
     </select>
     <br />
-    <label>状態:ここはセレクタグではなく現状をdbから取ってくるように変更する</label>
-
+    <label>状態:</label>
     <br />
     <label>シフト:</label>
     <select v-model="defaultShift">
@@ -95,20 +94,21 @@ const endHour = ref('18')
 const endMinute = ref('00')
 const restHour = ref('01')
 const restMinute = ref('00')
+
+// 初期値コメント
 const comment = ref('')
+
+// 初期値時有給ポ
 const timePaidHoliday = ref('0')
 
 // 初期値遅刻理由
-const defaultTardinessStatus = ref('')
+const defaultTardinessStatus = ref('なし')
 
 // 初期値出欠
 const defaultAttendantStatus = ref('出勤')
 
 // 初期値シフト
-const defaultShift = ref('')
-
-// 初期値状態
-// const defaultState = ref('')
+const defaultShift = ref('1日社内業務')
 
 // ドロップダウンリストの選択肢(出欠)
 interface AttedanceData {
@@ -172,6 +172,44 @@ onMounted(() => {
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
 const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
+
+// 状態の取得
+interface DailyAttendanceData {
+  userId: string
+  date: Date
+  state: string
+  shift:string
+  attendance: string
+  punch_in: string
+  punch_out: string
+  break_time: string
+  work_hour: number
+  overtime:number
+  midnight:string
+  midnightOvertime:string
+  timePaidHoliday:number
+  lateOrEarlyLeave:number
+  tardiness: string
+  comment: string
+}
+
+const dailyAttendanceData = ref([] as DailyAttendanceData[])
+
+const fetchDailyAttendanceData = async () => {
+  
+  try {
+    const response = await axios.get(`http://localhost:4242/day/${userId}`)
+    dailyAttendanceData.value = response.data.dailyWorkDataByUserId
+    
+    console.log('現ユーザーiD',userId)
+    console.log('現ユーザーの勤怠情報',response.data.dailyWorkDataByUserId)
+  } catch (error) {
+    console.error(error)
+  }
+}
+onMounted(() => {
+  fetchDailyAttendanceData()
+})
 
 // 勤務合計時間の規定
 

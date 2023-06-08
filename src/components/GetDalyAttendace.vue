@@ -156,7 +156,7 @@ const showTargetMonth = () => {
         <td>{{ formatWeekday(date) }}</td>
         <td></td>
         <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
-        <td></td>
+        <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.punch_out.S }}</td>
