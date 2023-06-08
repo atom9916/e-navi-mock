@@ -10,9 +10,9 @@ router.get('/', async (req, res) => {
   try {
     const allNotification = await getAllNotification()
     res.status(200).json({ message: 'お知らせデータを取得しました', data: allNotification })
-  } catch (error) {
+  } catch (error: any) {
     console.log(error)
-    res.status(400).json({ message: error })
+    res.status(400).json({ message: error.message })
   }
 })
 
@@ -35,9 +35,9 @@ router.put('/', async (req, res) => {
       throw new Error('お知らせデータの更新に失敗しました')
     }
     res.status(200).json({ message: 'お知らせデータを更新しました', data: updateData })
-  } catch (error) {
+  } catch (error: any) {
     console.log(error)
-    res.status(400).json({ message: error })
+    res.status(400).json({ message: error.message })
   }
 })
 
