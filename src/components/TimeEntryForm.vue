@@ -200,6 +200,7 @@ const fetchDailyAttendanceData = async () => {
   try {
     const response = await axios.get(`http://localhost:4242/day/${userId}`)
     dailyAttendanceData.value = response.data.dailyWorkDataByUserId
+    
     console.log('現ユーザーiD',userId)
     console.log('現ユーザーの勤怠情報',response.data.dailyWorkDataByUserId)
   } catch (error) {
@@ -209,23 +210,6 @@ const fetchDailyAttendanceData = async () => {
 onMounted(() => {
   fetchDailyAttendanceData()
 })
-
-const filterDataByDate = (selectedDate) => {
-  return dailyAttendanceData.value.filter((data) => {
-    const dataDate = new Date(data.date)
-    const formattedDate = formatDate(dataDate)
-    return formattedDate === selectedDate.toFormat('D')
-  })
-}
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  return `${month}/${day}`
-}
-
-
 
 // 勤務合計時間の規定
 
