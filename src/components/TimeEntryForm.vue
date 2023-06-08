@@ -99,13 +99,13 @@ const comment = ref('')
 const timePaidHoliday = ref('0')
 
 // 初期値遅刻理由
-const defaultTardinessStatus = ref('')
+const defaultTardinessStatus = ref('なし')
 
 // 初期値出欠
 const defaultAttendantStatus = ref('出勤')
 
 // 初期値シフト
-const defaultShift = ref('')
+const defaultShift = ref('1日社内業務')
 
 // 初期値状態
 // const defaultState = ref('')
