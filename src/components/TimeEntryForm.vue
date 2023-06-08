@@ -250,7 +250,7 @@ const submitForm = async (event) => {
     comment: comment.value
   }
   try {
-    const response = await axios.post('http://localhost:4242/day', formData)
+    // const response = await axios.post('http://localhost:4242/day', formData)
     const url = import.meta.env.VITE_AWS_API_URL
     const responseDynamo = await axios.post(`${url}/daily`, formData, {
       headers: {
@@ -258,7 +258,7 @@ const submitForm = async (event) => {
         'x-api-key': import.meta.env.VITE_AWS_API_KEY
       }
     })
-    if (response.status === 200 && responseDynamo.status === 200) {
+    if (responseDynamo.status === 200) {
       console.log('勤怠データが保存されました')
     } else {
       console.error('勤怠データは保存出来ていません')
