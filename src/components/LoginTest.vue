@@ -148,6 +148,35 @@ const dynamoPostData = async () => {
   console.log(response.status)
 }
 
+// ひとまずstateを承認済に変更するPATCHを作成
+const dynamoPatchData = async () => {
+  const url = import.meta.env.VITE_AWS_API_URL
+  const userResponse = await axios.get(`${url}/daily?id=onGE8VNwcFSUj6JB64rK83J5SEA3&date=2023-06-07`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': import.meta.env.VITE_AWS_API_KEY
+    }
+  })
+  const data = await userResponse.data
+
+  console.log(data)
+  const response = await axios.patch(
+    `${url}/daily`,
+    {
+      user_id: data.Items[0].user_id,
+      date: data.Items[0].date
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    }
+  )
+
+  console.log(response.status)
+}
+
 // const dynamoPostTest = async () => {
 //   const date = new Date()
 //   fetch('https://2zrdh8abfj.execute-api.ap-northeast-1.amazonaws.com/prod/postdaily', {
@@ -204,6 +233,7 @@ onMounted(() => {
         DynamoDB GET Test
       </button>
       <button @click="dynamoPostData()">DynamoDB POST Test</button>
+      <button @click="dynamoPatchData()">DynamoDB PATCH Test</button>
     </p>
   </div>
 
