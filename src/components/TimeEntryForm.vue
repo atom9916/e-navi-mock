@@ -173,44 +173,6 @@ const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2,
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
 const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
 
-// 状態の取得
-interface DailyAttendanceData {
-  userId: string
-  date: Date
-  state: string
-  shift:string
-  attendance: string
-  punch_in: string
-  punch_out: string
-  break_time: string
-  work_hour: number
-  overtime:number
-  midnight:string
-  midnightOvertime:string
-  timePaidHoliday:number
-  lateOrEarlyLeave:number
-  tardiness: string
-  comment: string
-}
-
-const dailyAttendanceData = ref([] as DailyAttendanceData[])
-
-const fetchDailyAttendanceData = async () => {
-  
-  try {
-    const response = await axios.get(`http://localhost:4242/day/${userId}`)
-    dailyAttendanceData.value = response.data.dailyWorkDataByUserId
-    
-    console.log('現ユーザーiD',userId)
-    console.log('現ユーザーの勤怠情報',response.data.dailyWorkDataByUserId)
-  } catch (error) {
-    console.error(error)
-  }
-}
-onMounted(() => {
-  fetchDailyAttendanceData()
-})
-
 // 勤務合計時間の規定
 
 let totalWorkHours = '8時間0分'
