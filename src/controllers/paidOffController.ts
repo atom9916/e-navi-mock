@@ -68,3 +68,5 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({ message: `有給データの削除に失敗しました：${error.message}` })
   }
 })
+
+export default router
