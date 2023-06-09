@@ -1,12 +1,13 @@
 <template>
+     <div class="paidOff">
      <table>
     <thead>
       <tr>
         <th>ID</th>
-        <th>User ID</th>
-        <th>Total Amount</th>
-        <th>Used Amount</th>
-        <th>Remaining Amount</th>
+        <th>ユーザーID</th>
+        <th>総有給数</th>
+        <th>使用有給数</th>
+        <th>残有給数</th>
       </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -50,3 +52,15 @@ onMounted(()=>{
     fetchPaidOffData()
 })
 </script>
+
+<style>
+.paidOff table {
+  border-collapse: collapse;
+}
+
+.paidOff th,td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+</style>
