@@ -80,6 +80,16 @@ const formatWeekday = (dateString) => {
   return `(${weekdays[weekday]})`
 }
 
+const formatPatternOfWeekday = (dateString) =>{
+  const date = new Date(dateString)
+  const dayOfWeek = date.getDay()
+  if(dayOfWeek === 0 || dayOfWeek === 1){
+    return('土日')
+  }else{
+    return('平日')
+  }
+}
+
 // 年月取得用フォーム規定
 const defaultYears = ref(dayjs().year())
 const defaultMonths = ref(dayjs().month() + 1)
@@ -154,7 +164,7 @@ const showTargetMonth = () => {
       <tr v-for="date in dailyAttendanceDates" :key="date">
         <td>{{ date }}</td>
         <td>{{ formatWeekday(date) }}</td>
-        <td></td>
+        <td>{{ formatPatternOfWeekday(date) }}</td>
         <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>

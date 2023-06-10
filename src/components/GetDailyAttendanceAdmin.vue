@@ -3,14 +3,13 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
 
-
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
 interface DailyAttendanceData {
   userId: { S: string }
   date: { S: Date }
   state: { S: string }
-  shift:{ S: string }
+  shift: { S: string }
   attendance: { S: string }
   punch_in: { S: string }
   punch_out: { S: string }
@@ -23,24 +22,26 @@ interface DailyAttendanceData {
   lateOrEarlyLeave: { N: number }
   tardiness: { S: string }
   comment: { S: string }
+  isEditing: { B: boolean }
 }
 
 // DBデータ初期化
 const dailyAttendanceData = ref([] as DailyAttendanceData[])
-
 
 // ユーザーID関連
 
 const defaultUser = ref('')
 const id = ref('')
 
-const users = [{name:'楽須太郎',userId:'onGE8VNwcFSUj6JB64rK83J5SEA3'},
-{name:'総務太郎',userId:'j4Rew73n6zSKE9r4xeZVR37zL2h2'},
-{name:'総務次郎',userId:'iJ0AsA1wKheniH4v2Wea93f9JL33'},
-{name:'総務三郎',userId:'TOJ49p6hdwbA6fDxBeI0AfHMGhg2'}]
+const users = [
+  { name: '楽須太郎', userId: 'onGE8VNwcFSUj6JB64rK83J5SEA3' },
+  { name: '総務太郎', userId: 'j4Rew73n6zSKE9r4xeZVR37zL2h2' },
+  { name: '総務次郎', userId: 'iJ0AsA1wKheniH4v2Wea93f9JL33' },
+  { name: '総務三郎', userId: 'TOJ49p6hdwbA6fDxBeI0AfHMGhg2' }
+]
 
 function getUserNameById(userId: string): string {
-  const user = users.find(user => user.userId === userId)
+  const user = users.find((user) => user.userId === userId)
   return user ? user.name : ''
 }
 
@@ -49,24 +50,26 @@ const fetchDailyAttendanceData = async () => {
   const url = import.meta.env.VITE_AWS_API_URL
   try {
     const response = await axios.get(`${url}/daily?id=${id.value}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': import.meta.env.VITE_AWS_API_KEY
-    }
-  })
-    dailyAttendanceData.value = response.data.Items
-    console.log('現ユーザーiD',id)
-    console.log('現ユーザーの勤怠情報',response.data.Items)
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    })
+    const newArray = response.data.Items
+    const newArrayAddIsEditing = newArray.map((obj) => ({ ...obj, isEditing: { B: false } }))
+    dailyAttendanceData.value = newArrayAddIsEditing
+
+    console.log('現ユーザーiD', id)
+    console.log('現ユーザーの勤怠情報', newArrayAddIsEditing)
   } catch (error) {
     console.error(error)
   }
 }
 
 const handleUserSelection = (event) => {
-  id.value = event.target.value 
-  fetchDailyAttendanceData() 
+  id.value = event.target.value
+  fetchDailyAttendanceData()
 }
-
 
 onMounted(() => {
   fetchDailyAttendanceData()
@@ -92,9 +95,18 @@ const formatDate = (dateString) => {
 // 曜日を表示
 const formatWeekday = (dateString) => {
   const date = new Date(dateString)
-  const weekday = (date.getDay()+6)%7 
+  const weekday = (date.getDay() + 6) % 7
   const weekdays = ['日', '月', '火', '水', '木', '金', '土'] // 曜日の配列
   return `(${weekdays[weekday]})`
+}
+const formatPatternOfWeekday = (dateString) =>{
+  const date = new Date(dateString)
+  const dayOfWeek = date.getDay()
+  if(dayOfWeek === 0 || dayOfWeek === 6){
+    return('土日')
+  }else{
+    return('平日')
+  }
 }
 
 // 年月取得用フォーム規定
@@ -125,9 +137,38 @@ const showTargetMonth = () => {
 
   // 日付を表示
   dailyAttendanceDates.value = dates
-
   console.log(dates)
 }
+
+// 編集用
+// const editFormData = ref({} as DailyAttendanceData)
+
+// const handleEditClick = (date) => {
+//   const data = filterDataByDate(date)[0]
+//   if (data) {
+//     data.isEditing = { B: true }
+//     editFormData.value = { ...data }
+//   }
+// }
+
+// const updateAttendanceData = async (date) => {
+//   const data = filterDataByDate(date)[0]
+
+//   if (data) {
+//     const url = import.meta.env.VITE_AWS_API_URL
+//     try {
+//       const response = await axios.put(`${url}/daily?id=${id.value}`, data, {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'x-api-key': import.meta.env.VITE_AWS_API_KEY
+//         }
+//       })
+//       console.log('データが更新されました', response.data)
+//     } catch (error) {
+//       console.error('データの更新に失敗しました', error)
+//     }
+//   }
+// }
 </script>
 <template>
   <form @submit.prevent="showTargetMonth">
@@ -142,74 +183,91 @@ const showTargetMonth = () => {
     <br />
     <button>勤怠データを取得</button>
   </form>
-  <br>
+  <br />
   <label>ユーザー選択:</label>
-    <select v-model="defaultUser" @change="handleUserSelection">
-      <option
-        :value="user.userId"
-        :key="user.userId"
-        v-for="user in users"
-      >
-        {{ user.userId }} 
-      </option>
-    </select>
-    <p>名前:{{ getUserNameById(defaultUser) }}</p>
-  <br>
+  <select v-model="defaultUser" @change="handleUserSelection">
+    <option :value="user.userId" :key="user.userId" v-for="user in users">
+      {{ user.userId }}
+    </option>
+  </select>
+  <p>名前:{{ getUserNameById(defaultUser) }}</p>
+  <br />
   <div class="monthlyAttendance">
-  <table>
-    <thead>
-      <tr>
-        <th>日時</th>
-        <th>曜日</th>
-        <th>種別</th>
-        <th>状態</th>
-        <th>シフト</th>
-        <th>出欠</th>
-        <th>開始</th>
-        <th>終了</th>
-        <th>休憩</th>
-        <th>基本</th>
-        <th>残業</th>
-        <th>深夜</th>
-        <th>深夜残</th>
-        <th>時有給</th>
-        <th>遅早</th>
-        <th>理由</th>
-        <th>コメント</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="date in dailyAttendanceDates" :key="date">
-        <td>{{ date }}</td>
-        <td>{{ formatWeekday(date) }}</td>
-        <td></td>
-        <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.punch_out.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.break_time.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.work_hour.N }}</td>
-        <td>{{ filterDataByDate(date)[0]?.overtime.N }}</td>
-        <td>{{ filterDataByDate(date)[0]?.midnight.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.midnightOvertime.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.timePaidHoliday.N }}</td>
-        <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
-        <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
-        <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <table>
+      <thead>
+        <tr>
+          <th>日時</th>
+          <th>曜日</th>
+          <th>種別</th>
+          <th>状態</th>
+          <th>シフト</th>
+          <th>出欠</th>
+          <th>開始</th>
+          <th>終了</th>
+          <th>休憩</th>
+          <th>基本</th>
+          <th>残業</th>
+          <th>深夜</th>
+          <th>深夜残</th>
+          <th>時有給</th>
+          <th>遅早</th>
+          <th>理由</th>
+          <th>コメント</th>
+          <!-- <th></th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="date in dailyAttendanceDates" :key="date">
+          <td>{{ date }}</td>
+          <td>{{ formatWeekday(date) }}</td>
+          <td>{{ formatPatternOfWeekday(date) }}</td>
+          <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
+          <!-- <td v-if="filterDataByDate(date)[0].isEditing = {B:false}">
+            {{ filterDataByDate(date)[0]?.state.S }}
+          </td>
+          <td v-else>
+            <form @submit.prevent="updateAttendanceData(date)">
+              <input v-model="editFormData.state" />
+              <br />
+              <button type="submit">保存</button>
+              <span>&nbsp;</span>
+              <button @click="filterDataByDate(date)[0].isEditing = { B: false }">
+                キャンセル
+              </button>
+            </form>
+          </td> -->
+          <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.punch_out.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.break_time.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.work_hour.N }}</td>
+          <td>{{ filterDataByDate(date)[0]?.overtime.N }}</td>
+          <td>{{ filterDataByDate(date)[0]?.midnight.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.midnightOvertime.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.timePaidHoliday.N }}</td>
+          <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
+          <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
+          <!-- <td>
+            <div>
+              <button v-if="!filterDataByDate(date)[0]?.isEditing" @click="handleEditClick">編集</button>
+              <button v-else @click="filterDataByDate(date)[0].isEditing = { B: false }">編集中</button>
+            </div>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
-
 
 <style>
 .monthlyAttendance table {
   border-collapse: collapse;
 }
 
-.monthlyAttendance th,td {
+.monthlyAttendance th,
+td {
   border: 1px solid black;
   padding: 8px;
   text-align: center;
