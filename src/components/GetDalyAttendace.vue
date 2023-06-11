@@ -80,6 +80,32 @@ const formatWeekday = (dateString) => {
   return `(${weekdays[weekday]})`
 }
 
+// 平日or土日
+const formatPatternOfWeekday = (dateString) =>{
+  const date = new Date(dateString)
+  const dayOfWeek = date.getDay()
+  if(dayOfWeek === 0 || dayOfWeek === 1){
+    return('土日')
+  }else{
+    return('平日')
+  }
+}
+
+// 土日の彩り
+const getColorStyle = (dateString) => {
+    const date = new Date(dateString);
+    const dayOfWeek = date.getDay();
+
+    if (dayOfWeek === 0 || dayOfWeek === 1) {
+      return 'weekend'; 
+    } else {
+      return 'weekday'; 
+    }
+  }
+
+
+
+
 // 年月取得用フォーム規定
 const defaultYears = ref(dayjs().year())
 const defaultMonths = ref(dayjs().month() + 1)
@@ -154,7 +180,7 @@ const showTargetMonth = () => {
       <tr v-for="date in dailyAttendanceDates" :key="date">
         <td>{{ date }}</td>
         <td>{{ formatWeekday(date) }}</td>
-        <td></td>
+        <td :class="getColorStyle(date)">{{ formatPatternOfWeekday(date) }}</td>
         <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
         <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
@@ -186,4 +212,17 @@ const showTargetMonth = () => {
   padding: 8px;
   text-align: center;
 }
+
+.monthlyAttendance th {
+  background-color: rgb(92, 247, 175);
+}
+
+.weekend {
+  background-color: rgb(254, 228, 228);
+}
+
+.weekday{
+background-color: rgb(236, 247, 248);
+}
+
 </style>
