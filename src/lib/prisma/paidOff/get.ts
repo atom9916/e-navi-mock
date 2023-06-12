@@ -16,7 +16,7 @@ export const getAllPaidOff = async () => {
 
 export const getPaidOffByUserId = async (user: string) => {
   try {
-    await prisma.$transaction(async (prisma) => {
+    return await prisma.$transaction(async (prisma) => {
       const usersPaidOff = await prisma.paid_off.findFirst({
         where: { user_id: user }
       })

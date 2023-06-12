@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json({
       message: `ID${req.params.id}のユーザーの有給データを取得しました`,
-      data: usersPaidOff
+      paidOff: usersPaidOff
     })
   } catch (error: any) {
     res.status(400).json({ message: `有給データの取得に失敗しました:${error.message}` })
