@@ -29,8 +29,10 @@ const usePaidOff = async () => {
     const number = parseInt(selectedNumber.value)
     try{
         const response = await axios.get(`http://localhost:4242/paidOff/${id}`)
-        const paidOff = response.data
+        const paidOff = response.data.paidOff
         console.log('現在有給内訳',response.data)
+        console.log('使用予定有給',paidOff.used_amount + number)
+        console.log('残予定有給',paidOff.remaining_amount - number)
 
         if(paidOff.remaining_amount >= number){
             const usedAmount = paidOff.used_amount + number
@@ -42,7 +44,7 @@ const usePaidOff = async () => {
             })
             console.log(`${number}日の有給を使用しました`)
         }else{
-            console.error('有給が不足しています')
+            console.error('エラー')
         }
     }catch(error){
       console.error(error)
