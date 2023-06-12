@@ -3,20 +3,16 @@
      <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>ユーザーID</th>
-        <th>総有給数</th>
-        <th>使用有給数</th>
+        <th>支給総有給数</th>
+        <th>使用済有給数</th>
         <th>残有給数</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in paidOffData" :key="item.id" :value="item">
-        <td>{{ item.id }}</td>
-        <td>{{ item.user_id }}</td>
-        <td>{{ item.total_amount }}</td>
-        <td>{{ item.used_amount }}</td>
-        <td>{{ item.remaining_amount }}</td>
+      <tr>
+        <td>{{ paidOffData.total_amount }}</td>
+        <td>{{ paidOffData.used_amount }}</td>
+        <td>{{ paidOffData.remaining_amount }}</td>
       </tr>
     </tbody>
   </table>
@@ -27,7 +23,9 @@
 
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
+import { useUserInfoStore } from '@/stores/userInfo'
 
+// 型定義
 interface PaidOff{
 
   id:number             
@@ -37,13 +35,17 @@ interface PaidOff{
   remaining_amount:number     
 }
 
-const paidOffData = ref([]as PaidOff[] )
+// user_id取得
+const userInfoStore = useUserInfoStore() 
+const id = userInfoStore.userInfo?.user_id 
+
+const paidOffData = ref({}as PaidOff )
 
 const fetchPaidOffData = async ()=>{
     try{
-        const response = await axios.get('http://localhost:4242/paidOff')
-        paidOffData.value = response.data.allPaidOff
-        console.log('取得した有給データ',response.data.allPaidOff)
+        const response = await axios.get(`http://localhost:4242/paidOff/${id}`)
+        paidOffData.value = response.data.paidOff
+        console.log('取得した有給データ',paidOffData)
     }catch(error){
         console.error(error)
     }
