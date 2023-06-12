@@ -151,20 +151,19 @@ const dynamoPostData = async () => {
 // ひとまずstateを承認済に変更するPATCHを作成
 const dynamoPatchData = async () => {
   const url = import.meta.env.VITE_AWS_API_URL
-  const userResponse = await axios.get(`${url}/daily?id=onGE8VNwcFSUj6JB64rK83J5SEA3&date=2023-06-07`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': import.meta.env.VITE_AWS_API_KEY
-    }
-  })
-  const data = await userResponse.data
+  // DBで更新したいデータ（完全一致のみ）
+  const userId = 'j4Rew73n6zSKE9r4xeZVR37zL2h2'
+  const date = '2023-06-05T10:27:03.233+09:00'
 
-  console.log(data)
+  // 第二引数に渡すオブジェクトのcontentに変更したいデータを入れる
   const response = await axios.patch(
     `${url}/daily`,
     {
-      user_id: data.Items[0].user_id,
-      date: data.Items[0].date
+      user_id: userId,
+      date: date,
+      content: {
+        state: '承認済'
+      }
     },
     {
       headers: {
