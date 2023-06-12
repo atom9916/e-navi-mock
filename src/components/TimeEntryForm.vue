@@ -1,5 +1,7 @@
 <template>
   <CalenderTable />
+  <br>
+  <getPaidOff/>
   <br />
   <form @submit="submitForm">
     <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください' }}</p>
@@ -86,6 +88,7 @@ import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
+import getPaidOff from './getPaidOff.vue'
 
 // 初期値勤務時間
 const startHour = ref('09')
@@ -108,7 +111,7 @@ const defaultTardinessStatus = ref('なし')
 const defaultAttendantStatus = ref('出勤')
 
 // 初期値シフト
-const defaultShift = ref('1日社内業務')
+const defaultShift = ref('一日社内業務')
 
 // ドロップダウンリストの選択肢(出欠)
 interface AttedanceData {
