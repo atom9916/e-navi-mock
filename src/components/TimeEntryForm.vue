@@ -269,6 +269,8 @@ const submitForm = async (event) => {
     console.error('エラーが発生しました', error)
   }
 
+
+  //有給を消費する 
   if(defaultAttendantStatus.value !== '有給'){
     return;
   }
