@@ -138,6 +138,7 @@ const showTargetMonth = () => {
 
   console.log(dates)
 }
+
 </script>
 <template>
   <form @submit.prevent="showTargetMonth">

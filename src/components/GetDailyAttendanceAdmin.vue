@@ -198,7 +198,7 @@ const showTargetMonth = () => {
           <th>遅早</th>
           <th>理由</th>
           <th>コメント</th>
-          <!-- <th></th> -->
+          <th>承認</th>
         </tr>
       </thead>
       <tbody>
@@ -206,7 +206,7 @@ const showTargetMonth = () => {
           <td>{{ date }}</td>
           <td>{{ formatWeekday(date) }}</td>
           <td :class="getColorStyle(date)">{{ formatPatternOfWeekday(date) }}</td>
-          <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
@@ -220,6 +220,7 @@ const showTargetMonth = () => {
           <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
           <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
+          <td><ComponentButton buttonText="承認"/></td>
         </tr>
       </tbody>
     </table>
