@@ -154,35 +154,6 @@ const showTargetMonth = () => {
   console.log(dates)
 }
 
-// 編集用
-// const editFormData = ref({} as DailyAttendanceData)
-
-// const handleEditClick = (date) => {
-//   const data = filterDataByDate(date)[0]
-//   if (data) {
-//     data.isEditing = { B: true }
-//     editFormData.value = { ...data }
-//   }
-// }
-
-// const updateAttendanceData = async (date) => {
-//   const data = filterDataByDate(date)[0]
-
-//   if (data) {
-//     const url = import.meta.env.VITE_AWS_API_URL
-//     try {
-//       const response = await axios.put(`${url}/daily?id=${id.value}`, data, {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'x-api-key': import.meta.env.VITE_AWS_API_KEY
-//         }
-//       })
-//       console.log('データが更新されました', response.data)
-//     } catch (error) {
-//       console.error('データの更新に失敗しました', error)
-//     }
-//   }
-// }
 </script>
 <template>
   <form @submit.prevent="showTargetMonth">
@@ -236,18 +207,6 @@ const showTargetMonth = () => {
           <td>{{ formatWeekday(date) }}</td>
           <td :class="getColorStyle(date)">{{ formatPatternOfWeekday(date) }}</td>
           <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
-          <!-- <td v-if="filterDataByDate(date)[0].isEditing = {B:false}">
-            {{ filterDataByDate(date)[0]?.state.S }}
-          </td>
-          <td v-else>
-            <form @submit.prevent="updateAttendanceData(date)">
-              <input v-model="editFormData.state" />
-              <br />
-              <ComponentButton buttonText="保存" type="submit"/>
-              <span>&nbsp;</span>
-              <ComponentButton buttonText="キャンセル" @click="filterDataByDate(date)[0].isEditing = { B: false }"/>
-            </form>
-          </td> -->
           <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
@@ -261,12 +220,6 @@ const showTargetMonth = () => {
           <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
           <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
-          <!-- <td>
-            <div>
-              <ComponentButton buttonText="編集" v-if="!filterDataByDate(date)[0]?.isEditing" @click="handleEditClick"/>
-              <ComponentButton buttonText="編集中" v-else @click="filterDataByDate(date)[0].isEditing = { B: false }"/>
-            </div>
-          </td> -->
         </tr>
       </tbody>
     </table>
