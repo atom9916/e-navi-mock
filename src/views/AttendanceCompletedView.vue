@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import HomeButton from '../components/HomeButton.vue'
+import ComponentButton from '../components/ComponentButton.vue'
 </script>
 
 <template>
   <p>登録完了しました</p>
   <div>
-    <HomeButton/>
+    <ComponentButton buttonText="ホーム" @click="$router.push({ path: '/' })"/>
   </div>
 </template>

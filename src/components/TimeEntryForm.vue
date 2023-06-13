@@ -1,5 +1,7 @@
 <template>
   <CalenderTable />
+  <br>
+  <getPaidOff/>
   <br />
   <form @submit="submitForm">
     <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください' }}</p>
@@ -75,7 +77,8 @@
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
-    <button type="submit">承認依頼</button>
+    <ComponentButton buttonText="承認依頼" type="submit" @click="$router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })"/>
+
   </form>
 </template>
 
@@ -86,6 +89,8 @@ import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
+import getPaidOff from './getPaidOff.vue'
+import ComponentButton from './ComponentButton.vue'
 
 // 初期値勤務時間
 const startHour = ref('09')
@@ -108,7 +113,7 @@ const defaultTardinessStatus = ref('なし')
 const defaultAttendantStatus = ref('出勤')
 
 // 初期値シフト
-const defaultShift = ref('1日社内業務')
+const defaultShift = ref('一日社内業務')
 
 // ドロップダウンリストの選択肢(出欠)
 interface AttedanceData {
@@ -250,7 +255,6 @@ const submitForm = async (event) => {
     comment: comment.value
   }
   try {
-    // const response = await axios.post('http://localhost:4242/day', formData)
     const url = import.meta.env.VITE_AWS_API_URL
     const responseDynamo = await axios.post(`${url}/daily`, formData, {
       headers: {
@@ -266,5 +270,33 @@ const submitForm = async (event) => {
   } catch (error) {
     console.error('エラーが発生しました', error)
   }
-}
+
+
+  //有給を消費する 
+  if(defaultAttendantStatus.value !== '有給'){
+    return;
+  }
+  try{
+    const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
+        const paidOff = response.data.paidOff
+        console.log('現在有給内訳',response.data)
+        console.log('使用予定有給',paidOff.used_amount + 1)
+        console.log('残予定有給',paidOff.remaining_amount - 1)
+
+        if(paidOff.remaining_amount >= 0){
+            const usedAmount = paidOff.used_amount + 1
+            const remainingAmount = paidOff.remaining_amount -1
+            await axios.put(`http://localhost:4242/paidOff/${userId}`,{
+                used_amount:usedAmount,
+                remaining_amount:remainingAmount
+            })
+            console.log(`有給を使用しました`)
+  }else{
+    console.error('有給取得でエラーが発生しました')
+  }
+
+}catch(error){console.error(error)}
+
+}  
+ 
 </script>

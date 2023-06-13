@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useUserInfoStore } from '@/stores/userInfo'
+import ComponentButton from './ComponentButton.vue'
 
 
 // 型定義
@@ -149,7 +150,7 @@ const showTargetMonth = () => {
       <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
     </select>
     <br />
-    <button>勤怠データを取得</button>
+    <ComponentButton buttonText="勤怠データを取得" type="submit"/>
   </form>
 
   <br>

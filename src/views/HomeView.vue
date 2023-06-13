@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import RealTimeClock from '../components/realTimeClock.vue'
 import { useHead } from '@vueuse/head'
-import getPaidOff from '@/components/getPaidOff.vue';
-import UsePaidOff from '@/components/UsePaidOff.vue';
 useHead({
   title: 'メインページ'
 })
@@ -12,9 +10,5 @@ useHead({
   <main>
     <h3>ホーム</h3>
     <RealTimeClock />
-    <getPaidOff/>
-    <br>
-    <UsePaidOff/>
-    <br>
   </main>
 </template>
