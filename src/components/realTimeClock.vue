@@ -33,5 +33,5 @@ onMounted(() => {
       >&nbsp;です
     </p>
   </div>
-  <div><p>今日もお仕事、がんばりましょう…</p></div>
+  <div><p>今日もお仕事、がんばりましょう</p></div>
 </template>
