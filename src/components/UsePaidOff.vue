@@ -1,3 +1,4 @@
+<!-- サンプルで作ったやつなので後でけします -->
 <template>
     <select v-model="selectedNumber">
         <option :value="number" :key="number" v-for="number in numbers">{{ number }}</option>

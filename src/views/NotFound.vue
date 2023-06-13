@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
-import HomeButton from '../components/HomeButton.vue';
+import ComponentButton from '@/components/ComponentButton.vue';
 useHead({
   title:'存在しないページ'
 })
@@ -9,5 +9,5 @@ useHead({
 <template>
     <h2>Not Found</h2>
     <p>アクセスしたページは存在しません</p>
-    <HomeButton/>
+    <ComponentButton buttonText="ホーム" @click="$router.push({ path: '/' })"/>
 </template>

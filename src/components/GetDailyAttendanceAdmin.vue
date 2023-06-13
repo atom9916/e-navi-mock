@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
+import ComponentButton from './ComponentButton.vue';
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -194,7 +195,7 @@ const showTargetMonth = () => {
       <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
     </select>
     <br />
-    <button>勤怠データを取得</button>
+    <ComponentButton buttonText="勤怠データを取得"/>
   </form>
   <br />
   <label>ユーザー選択:</label>
@@ -242,11 +243,9 @@ const showTargetMonth = () => {
             <form @submit.prevent="updateAttendanceData(date)">
               <input v-model="editFormData.state" />
               <br />
-              <button type="submit">保存</button>
+              <ComponentButton buttonText="保存" type="submit"/>
               <span>&nbsp;</span>
-              <button @click="filterDataByDate(date)[0].isEditing = { B: false }">
-                キャンセル
-              </button>
+              <ComponentButton buttonText="キャンセル" @click="filterDataByDate(date)[0].isEditing = { B: false }"/>
             </form>
           </td> -->
           <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
@@ -264,8 +263,8 @@ const showTargetMonth = () => {
           <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
           <!-- <td>
             <div>
-              <button v-if="!filterDataByDate(date)[0]?.isEditing" @click="handleEditClick">編集</button>
-              <button v-else @click="filterDataByDate(date)[0].isEditing = { B: false }">編集中</button>
+              <ComponentButton buttonText="編集" v-if="!filterDataByDate(date)[0]?.isEditing" @click="handleEditClick"/>
+              <ComponentButton buttonText="編集中" v-else @click="filterDataByDate(date)[0].isEditing = { B: false }"/>
             </div>
           </td> -->
         </tr>
