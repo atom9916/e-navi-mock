@@ -10,7 +10,6 @@ useHead({
 <template>
 <main>
 <h2>管理者画面</h2>
-<p>これから実装します！</p>
 <GetDailyAttendanceAdmin/>
 </main>
 </template>

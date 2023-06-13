@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import { useStoreAuth } from '../stores/login'
+import ComponentButton from '@/components/ComponentButton.vue'
 
 useHead({
   title: 'ログイン'
@@ -50,12 +51,12 @@ const checkError = (code: string) => {
   <div class="loginFormArea">
     <div class="loginFormItems">
       <form @submit.prevent="login">
-        <h2>ログイン</h2>
+        <h2>ログインしてください</h2>
         <input type="email" v-model="email" placeholder="メールアドレス" required />
         <br />
         <input type="password" v-model="password" placeholder="パスワード" required />
         <br />
-        <button type="submit" :disabled="disabled">ログイン</button>
+        <ComponentButton buttonText="ログイン" type="submit" :disabled="disabled"/>
         <p>{{ error }}</p>
       </form>
     </div>
@@ -77,16 +78,5 @@ const checkError = (code: string) => {
 .loginFormItems input {
   margin: 2%;
 }
-.loginFormItems button {
-  margin: 3%;
-  border: none;
-  background-color: rgb(13, 102, 102);
-  color: rgb(255, 255, 255);
-  border-radius: 10%;
-  cursor: pointer;
-}
-.loginFormItems button:hover {
   
-  background-color: rgb(140, 183, 183) 
-}
 </style>

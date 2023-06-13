@@ -77,7 +77,8 @@
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
-    <button type="submit">承認依頼</button>
+    <ComponentButton buttonText="承認依頼" type="submit" @click="$router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })"/>
+
   </form>
 </template>
 
@@ -89,6 +90,7 @@ import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 import getPaidOff from './getPaidOff.vue'
+import ComponentButton from './ComponentButton.vue'
 
 // 初期値勤務時間
 const startHour = ref('09')

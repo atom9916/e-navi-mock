@@ -2,6 +2,7 @@
 import router from '../router'
 import { useStoreAuth } from '../stores/login'
 import { signOut, getAuth } from 'firebase/auth'
+import ComponentButton from './ComponentButton.vue';
 
 const auth = getAuth()
 
@@ -17,5 +18,5 @@ const logout = () => {
 </script>
 
 <template>
-  <button @click="logout">ログアウト</button>
+  <ComponentButton buttonText="ログアウト" @click="logout"/>
 </template>
