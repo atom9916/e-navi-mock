@@ -253,7 +253,6 @@ const submitForm = async (event) => {
     comment: comment.value
   }
   try {
-    // const response = await axios.post('http://localhost:4242/day', formData)
     const url = import.meta.env.VITE_AWS_API_URL
     const responseDynamo = await axios.post(`${url}/daily`, formData, {
       headers: {
@@ -269,5 +268,31 @@ const submitForm = async (event) => {
   } catch (error) {
     console.error('エラーが発生しました', error)
   }
-}
+
+  if(defaultAttendantStatus.value !== '有給'){
+    return;
+  }
+  try{
+    const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
+        const paidOff = response.data.paidOff
+        console.log('現在有給内訳',response.data)
+        console.log('使用予定有給',paidOff.used_amount + 1)
+        console.log('残予定有給',paidOff.remaining_amount - 1)
+
+        if(paidOff.remaining_amount >= 0){
+            const usedAmount = paidOff.used_amount + 1
+            const remainingAmount = paidOff.remaining_amount -1
+            await axios.put(`http://localhost:4242/paidOff/${userId}`,{
+                used_amount:usedAmount,
+                remaining_amount:remainingAmount
+            })
+            console.log(`有給を使用しました`)
+  }else{
+    console.error('有給取得でエラーが発生しました')
+  }
+
+}catch(error){console.error(error)}
+
+}  
+ 
 </script>

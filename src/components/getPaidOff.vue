@@ -45,7 +45,7 @@ const fetchPaidOffData = async ()=>{
     try{
         const response = await axios.get(`http://localhost:4242/paidOff/${id}`)
         paidOffData.value = response.data.paidOff
-        console.log('取得した有給データ',paidOffData)
+        console.log('取得した有給データ',response.data.paidOff)
     }catch(error){
         console.error(error)
     }
