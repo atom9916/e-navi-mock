@@ -77,8 +77,7 @@
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
-    <ComponentButton buttonText="承認依頼" type="submit" @click="$router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })"/>
-
+    <ComponentButton buttonText="承認依頼" type="submit"/>
   </form>
 </template>
 
@@ -91,6 +90,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 import getPaidOff from './getPaidOff.vue'
 import ComponentButton from './ComponentButton.vue'
+import { useRouter } from 'vue-router'
 
 // 初期値勤務時間
 const startHour = ref('09')
@@ -297,6 +297,7 @@ const submitForm = async (event) => {
 
 }catch(error){console.error(error)}
 
+const router = useRouter()
+router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })
 }  
- 
 </script>
