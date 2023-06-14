@@ -12,7 +12,11 @@ module.exports = {
     '^~/(.*)$': '<rootDir>/$1'
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
-  setupFilesAfterEnv: ['<rootDir>/singleton.ts', '@testing-library/jest-dom/extend-expect'],
+  setupFilesAfterEnv: [
+    '<rootDir>/singleton.ts',
+    '@testing-library/jest-dom/extend-expect',
+    '<rootDir>/jest.setup.ts'
+  ],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
     '^.+\\.vue$': '@vue/vue3-jest',

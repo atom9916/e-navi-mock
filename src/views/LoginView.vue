@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import { useStoreAuth } from '../stores/login'
 import ComponentButton from '@/components/ComponentButton.vue'
+import FormInput from '@/components/FormInput.vue'
 
 useHead({
   title: 'ログイン'
@@ -49,15 +50,27 @@ const checkError = (code: string) => {
 
 <template>
   <div class="loginFormArea">
-    <div class="loginFormItems">
+    <div class="loginFormContents">
       <form @submit.prevent="login">
-        <h2>ログインしてください</h2>
-        <input type="email" v-model="email" placeholder="メールアドレス" required />
-        <br />
-        <input type="password" v-model="password" placeholder="パスワード" required />
-        <br />
-        <ComponentButton buttonText="ログイン" type="submit" :disabled="disabled"/>
-        <p>{{ error }}</p>
+        <fieldset>
+          <legend>ログインしてください</legend>
+          <FormInput
+            inputType="email"
+            placeholder="メールアドレス"
+            v-model="email"
+            inputName="メールアドレス"
+          />
+          <br />
+          <FormInput
+            inputType="password"
+            placeholder="パスワード"
+            v-model="password"
+            inputName="パスワード"
+          />
+          <br />
+          <ComponentButton buttonText="ログイン" type="submit" :disabled="disabled" />
+          <p>{{ error }}</p>
+        </fieldset>
       </form>
     </div>
   </div>
@@ -65,18 +78,22 @@ const checkError = (code: string) => {
 
 <style scoped>
 .loginFormArea {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
+  width: 100vw;
+  height: 100%;
 }
 
-.loginFormItems {
+.loginFormContents {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 40%;
+  height: auto;
+}
+
+legend {
   text-align: center;
+  font-weight: 700;
+  font-size: 20px;
 }
-
-.loginFormItems input {
-  margin: 2%;
-}
-  
 </style>
