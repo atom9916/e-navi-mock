@@ -10,55 +10,59 @@ const userInfoStore = useUserInfoStore()
 </script>
 
 <template>
-  <header v-if="store.isLoggedIn">
-    <nav class="nav-menu">
-      <RouterLink to="/" class="nav-link">ホーム</RouterLink><br />
-      <RouterLink to="/monthly" class="nav-link">月次勤怠</RouterLink><br />
-      <RouterLink to="/daily" class="nav-link">日次勤怠</RouterLink><br />
-      <span v-if="userInfoStore.userInfo?.admin">
-        <RouterLink to="/admin" class="nav-link">管理者画面</RouterLink><br />
-      </span>
-      <div class="nav-user">
-        <UserStatus class="status"/>
-        <span class="spacer"></span>
-        <LogoutButton class="button"/>
-      </div>
-    </nav>
-  </header>
-  <h2>e-navi-mock</h2>
-  <RouterView />
+  <div class="wrapper">
+    <header v-if="store.isLoggedIn">
+      <nav>
+        <RouterLink to="/" class="nav-left">ホーム</RouterLink><br />
+        <RouterLink to="/monthly" class="nav-left">月次勤怠</RouterLink><br />
+        <RouterLink to="/daily" class="nav-left">日次勤怠</RouterLink><br />
+        <span v-if="userInfoStore.userInfo?.admin">
+          <RouterLink to="/admin" class="nav-left">管理者画面</RouterLink><br />
+        </span>
+        <div class="nav-right">
+          <UserStatus class="nav-user" />
+          <LogoutButton />
+        </div>
+      </nav>
+    </header>
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
-.nav-menu {
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fae8b5;
+}
+
+nav {
+  background-color: #1b5e20;
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-.nav-link {
-  margin-right: 10px;
-}
-
-.nav-link:last-child {
-  margin-right: 0;
+  position: relative;
+  height: 80px;
+  width: 100vw;
 }
 
-.nav-user{
-  margin-left: auto;
+.nav-left {
+  color: #fae8b5;
+  text-decoration: none;
+  margin: 10px;
+  font-size: 18px;
+}
+
+.nav-right {
+  position: absolute;
+  right: 20px;
+  width: 25%;
   display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
-.button{
-  background-color: rgb(12, 233, 167);
-  border: none;
-  cursor: pointer;
-}
-.button:hover{
-  background-color: rgb(183, 241, 223);
-}
-.spacer{
-  margin-right: 10px;
+.nav-user {
+  margin-right: 20px;
+  color: #fae8b5;
+  font-size: 18px;
 }
 </style>
