@@ -4,7 +4,7 @@
   <getPaidOff/>
   <br />
   <form @submit="submitForm">
-    <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください' }}</p>
+    <p>日付:{{ selectedDate ? DateTime.fromFormat(selectedDate, 'yyyy-MM-dd').toFormat('M/d') : '日付を選択してください' }}</p>
     <label>出欠:</label>
     <select v-model="defaultAttendantStatus">
       <option
@@ -90,7 +90,9 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 import getPaidOff from './getPaidOff.vue'
 import ComponentButton from './ComponentButton.vue'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router' 
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type';
+
 
 // 初期値勤務時間
 const startHour = ref('09')
@@ -206,11 +208,38 @@ const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
 const store = useStoreSelectedDate()
-const selectedDate = ref(store.selectedDate ? DateTime.fromJSDate(store.selectedDate) : null)
+const selectedDate = ref(store.selectedDate ? DateTime.fromJSDate(store.selectedDate).toFormat('yyyy-MM-dd') : null)
 const updateSelectedDate = (date) => {
-  selectedDate.value = DateTime.fromJSDate(date)
+  selectedDate.value = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd')
 }
 store.setSelectedDate = updateSelectedDate
+
+// 状態を取得or未入
+const submittedDailyAttendanceData = ref([] as DailyAttendanceData[])
+
+const fetchSubmittedDailyAttendanceData = async () => {
+  const url = import.meta.env.VITE_AWS_API_URL
+  try {
+    const response = await axios.get(`${url}/daily?id=${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    })
+    submittedDailyAttendanceData.value = response.data.Items
+
+    console.log(`登録済の勤怠情報`, response.data.Items)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+onMounted(() => {
+  fetchSubmittedDailyAttendanceData()
+})
+
+
+
 
 // 非同期通信(ポスト)
 const submitForm = async (event) => {

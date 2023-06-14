@@ -9,7 +9,7 @@
     <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
   </select>
   <br />
-  <ComponentButton buttonText="確認" type="submit" @click="generateCalendar"/>
+  <ComponentButton buttonText="カレンダーを更新" type="submit" @click="generateCalendar"/>
 
   <table>
     <thead>
@@ -42,8 +42,8 @@ const defaultMonths = ref(dayjs().month() + 1)
 const selectedDate = ref<Date | null>(null)
 
 // ドロップダウンリストの表示非表示
-const showDefaultYearOptions = ref(false)
-const showDefaultMonthsOptions = ref(false)
+// const showDefaultYearOptions = ref(false)
+// const showDefaultMonthsOptions = ref(false)
 
 // 選択肢
 const years = [2022, 2023, 2024]
@@ -56,23 +56,23 @@ const selectDate = (day) => {
   selectedDate.value = selected.toDate()
   const store = useStoreSelectedDate()
   store.setSelectedDate(selected.toDate())
-  console.log(selectedDate.value)
+  console.log('カレンダーから取得した日付',selectedDate.value)
 }
 
-const handleDocumentClick = (event) => {
-  const target = event.target
-  if (!target.closest('.dropdown')) {
-    showDefaultYearOptions.value = false
-    showDefaultMonthsOptions.value = false
-  }
-}
+// const handleDocumentClick = (event) => {
+//   const target = event.target
+//   if (!target.closest('.dropdown')) {
+//     showDefaultYearOptions.value = false
+//     showDefaultMonthsOptions.value = false
+//   }
+// }
 
-onMounted(() => {
-  document.addEventListener('click', handleDocumentClick)
-})
-onUnmounted(() => {
-  document.removeEventListener('click', handleDocumentClick)
-})
+// onMounted(() => {
+//   document.addEventListener('click', handleDocumentClick)
+// })
+// onUnmounted(() => {
+//   document.removeEventListener('click', handleDocumentClick)
+// })
 
 // カレンダー作成
 
