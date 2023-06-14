@@ -23,7 +23,6 @@ interface DailyAttendanceData {
   lateOrEarlyLeave: { N: number }
   tardiness: { S: string }
   comment: { S: string }
-  isEditing: { B: boolean }
 }
 
 // DBデータ初期化
@@ -56,12 +55,10 @@ const fetchDailyAttendanceData = async () => {
         'x-api-key': import.meta.env.VITE_AWS_API_KEY
       }
     })
-    const newArray = response.data.Items
-    const newArrayAddIsEditing = newArray.map((obj) => ({ ...obj, isEditing: { B: false } }))
-    dailyAttendanceData.value = newArrayAddIsEditing
+    dailyAttendanceData.value = response.data.Items
 
-    console.log('現ユーザーiD', id)
-    console.log('現ユーザーの勤怠情報', newArrayAddIsEditing)
+    console.log('現ユーザーiD', id.value)
+    console.log(`現ユーザーの勤怠情報`, response.data.Items)
   } catch (error) {
     console.error(error)
   }
@@ -153,6 +150,35 @@ const showTargetMonth = () => {
   dailyAttendanceDates.value = dates
   console.log(dates)
 }
+  
+// 締め作業 依頼中→承認済み
+const apprpveAttendance = async(date) =>{
+  const selectedDate = filterDataByDate(date)[0]?.date.S
+  await dynamoPatchData(selectedDate)
+}
+
+const dynamoPatchData = async (date) => {
+  const url = import.meta.env.VITE_AWS_API_URL
+  const userId = id.value
+
+  const response = await axios.patch(
+    `${url}/daily`,
+    {
+      user_id: userId,
+      date: '2023-06-01T16:31:25.471+09:00',
+      content: {
+        state: '承認済'
+      }
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    }
+  )
+  console.log(response.status,'承認',date)
+}
 
 </script>
 <template>
@@ -220,7 +246,7 @@ const showTargetMonth = () => {
           <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
           <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
-          <td><ComponentButton buttonText="承認"/></td>
+          <td><ComponentButton buttonText="承認" @click="apprpveAttendance(date)"/></td>
         </tr>
       </tbody>
     </table>
