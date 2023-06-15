@@ -5,6 +5,8 @@ import Login from '../views/LoginView.vue'
 import { useStoreAuth } from '@/stores/login'
 import Logout from '../views/LogoutView.vue'
 import Admin from '@/views/AdministratorView.vue'
+import Approve from '../views/AdminApproveView.vue'
+import PaidOff from '../views/AdminPaidOffView.vue'
 
 
 
@@ -63,7 +65,18 @@ const router = createRouter({
       path:'/admin',
       name:'/admin',
       component:Admin
+    },
+    {
+      path:'/admin/paidOff',
+      name:'paidOff',
+      component:PaidOff
+    },
+    {
+      path:'/admin/approve',
+      name:'approve',
+      component:Approve
     }
+
   ]
 })
 
