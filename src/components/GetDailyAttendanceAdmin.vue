@@ -2,29 +2,30 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import ComponentButton from './atoms/ComponentButton.vue'
+import ComponentButton from './ComponentButton.vue'
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
+import router from '@/router'
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
-interface DailyAttendanceData {
-  userId: { S: string }
-  date: { S: Date }
-  state: { S: string }
-  shift: { S: string }
-  attendance: { S: string }
-  punch_in: { S: string }
-  punch_out: { S: string }
-  break_time: { S: string }
-  work_hour: { N: number }
-  overtime: { N: number }
-  midnight: { S: string }
-  midnightOvertime: { S: string }
-  timePaidHoliday: { N: number }
-  lateOrEarlyLeave: { N: number }
-  tardiness: { S: string }
-  comment: { S: string }
-  isEditing: { B: boolean }
-}
+// interface DailyAttendanceData {
+//   userId: { S: string }
+//   date: { S: Date }
+//   state: { S: string }
+//   shift: { S: string }
+//   attendance: { S: string }
+//   punch_in: { S: string }
+//   punch_out: { S: string }
+//   break_time: { S: string }
+//   work_hour: { N: number }
+//   overtime: { N: number }
+//   midnight: { S: string }
+//   midnightOvertime: { S: string }
+//   timePaidHoliday: { N: number }
+//   lateOrEarlyLeave: { N: number }
+//   tardiness: { S: string }
+//   comment: { S: string }
+// }
 
 // DBデータ初期化
 const dailyAttendanceData = ref([] as DailyAttendanceData[])
@@ -56,12 +57,10 @@ const fetchDailyAttendanceData = async () => {
         'x-api-key': import.meta.env.VITE_AWS_API_KEY
       }
     })
-    const newArray = response.data.Items
-    const newArrayAddIsEditing = newArray.map((obj) => ({ ...obj, isEditing: { B: false } }))
-    dailyAttendanceData.value = newArrayAddIsEditing
+    dailyAttendanceData.value = response.data.Items
 
-    console.log('現ユーザーiD', id)
-    console.log('現ユーザーの勤怠情報', newArrayAddIsEditing)
+    console.log('現ユーザーiD', id.value)
+    console.log(`現ユーザーの勤怠情報`, response.data.Items)
   } catch (error) {
     console.error(error)
   }
@@ -90,13 +89,14 @@ const formatDate = (dateString) => {
   const date = new Date(dateString)
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${month}/${day}`
+  const year = date.getFullYear()
+  return `${year}/${month}/${day}`
 }
 
 // 曜日を表示
 const formatWeekday = (dateString) => {
   const date = new Date(dateString)
-  const weekday = (date.getDay() + 6) % 7
+  const weekday = date.getDay()
   const weekdays = ['日', '月', '火', '水', '木', '金', '土'] // 曜日の配列
   return `(${weekdays[weekday]})`
 }
@@ -116,7 +116,7 @@ const getColorStyle = (dateString) => {
   const date = new Date(dateString)
   const dayOfWeek = date.getDay()
 
-  if (dayOfWeek === 0 || dayOfWeek === 1) {
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
     return 'weekend'
   } else {
     return 'weekday'
@@ -151,7 +151,37 @@ const showTargetMonth = () => {
 
   // 日付を表示
   dailyAttendanceDates.value = dates
-  console.log(dates)
+  console.log('datesの値', dates)
+}
+
+// 締め作業 依頼中→承認済み
+const apprpveAttendance = async (date) => {
+  const selectedDate = filterDataByDate(date)[0]?.date.S
+  await dynamoPatchData(selectedDate)
+  router.push('/admin')
+}
+
+const dynamoPatchData = async (date) => {
+  const url = import.meta.env.VITE_AWS_API_URL
+  const userId = id.value
+
+  const response = await axios.patch(
+    `${url}/daily`,
+    {
+      user_id: userId,
+      date: date,
+      content: {
+        state: '承認済'
+      }
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': import.meta.env.VITE_AWS_API_KEY
+      }
+    }
+  )
+  console.log(response.status, '承認', date)
 }
 </script>
 <template>
@@ -197,7 +227,7 @@ const showTargetMonth = () => {
           <th>遅早</th>
           <th>理由</th>
           <th>コメント</th>
-          <!-- <th></th> -->
+          <th>承認</th>
         </tr>
       </thead>
       <tbody>
@@ -205,7 +235,7 @@ const showTargetMonth = () => {
           <td>{{ date }}</td>
           <td>{{ formatWeekday(date) }}</td>
           <td :class="getColorStyle(date)">{{ formatPatternOfWeekday(date) }}</td>
-          <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
+          <td>{{ filterDataByDate(date)[0]?.state.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.shift.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.attendance.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
@@ -219,6 +249,7 @@ const showTargetMonth = () => {
           <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
           <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
+          <td><ComponentButton buttonText="承認" @click="apprpveAttendance(date)" /></td>
         </tr>
       </tbody>
     </table>
