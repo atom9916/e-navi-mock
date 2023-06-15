@@ -10,6 +10,9 @@ import router from '@/router';
 const defaultUser = ref('')
 const id = ref('')
 
+const defaultNewPaidOff = ref(null)
+const newPaidOffDays = [1,2,3,4,5,6,7,8,9,10]
+
 const users = [
   { name: '楽須太郎', userId: 'onGE8VNwcFSUj6JB64rK83J5SEA3' },
   { name: '総務太郎', userId: 'j4Rew73n6zSKE9r4xeZVR37zL2h2' },
@@ -35,4 +38,10 @@ const handleUserSelection = (event) => {
     </option>
   </select>
   <p>名前:{{ getUserNameById(defaultUser) }}</p>
+  <label>新規有給:</label>
+  <select v-model="defaultNewPaidOff">
+  <option :value="newPaidOffDay" :key="newPaidOffDay" v-for="newPaidOffDay in newPaidOffDays">{{ newPaidOffDay }}</option>
+  </select>
+  <br>
+  <ComponentButton buttonText="付与"/>
 </template>
