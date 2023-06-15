@@ -8,6 +8,5 @@ useHead({
 </script>
 
 <template>
-  <h2>日次勤怠</h2>
   <TimeEntryForm />
 </template>
