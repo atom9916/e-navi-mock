@@ -96,7 +96,7 @@ const formatDate = (dateString) => {
 // 曜日を表示
 const formatWeekday = (dateString) => {
   const date = new Date(dateString)
-  const weekday = (date.getDay() + 6) % 7
+  const weekday = (date.getDay()) 
   const weekdays = ['日', '月', '火', '水', '木', '金', '土'] // 曜日の配列
   return `(${weekdays[weekday]})`
 }
@@ -116,7 +116,7 @@ const getColorStyle = (dateString) => {
     const date = new Date(dateString);
     const dayOfWeek = date.getDay();
 
-    if (dayOfWeek === 0 || dayOfWeek === 1) {
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
       return 'weekend'; 
     } else {
       return 'weekday'; 
