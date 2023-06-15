@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RealTimeClock from '../components/realTimeClock.vue'
+import HomeTable from '@/components/HomeTable.vue'
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'メインページ'
@@ -8,7 +8,18 @@ useHead({
 
 <template>
   <main>
-    <h3>ホーム</h3>
-    <RealTimeClock />
+    <HomeTable />
   </main>
+  <img src="image/greet.png" alt="今日も1日がんばりましょう" />
 </template>
+
+<style scoped>
+main {
+  margin-top: 100px;
+}
+
+img {
+  width: 25%;
+  height: auto;
+}
+</style>

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import ComponentButton from './ComponentButton.vue';
+import ComponentButton from './atoms/ComponentButton.vue'
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -101,27 +101,27 @@ const formatWeekday = (dateString) => {
   return `(${weekdays[weekday]})`
 }
 // 平日or土日
-const formatPatternOfWeekday = (dateString) =>{
+const formatPatternOfWeekday = (dateString) => {
   const date = new Date(dateString)
   const dayOfWeek = date.getDay()
-  if(dayOfWeek === 0 || dayOfWeek === 1){
-    return('土日')
-  }else{
-    return('平日')
+  if (dayOfWeek === 0 || dayOfWeek === 1) {
+    return '土日'
+  } else {
+    return '平日'
   }
 }
 
 // 土日の彩り
 const getColorStyle = (dateString) => {
-    const date = new Date(dateString);
-    const dayOfWeek = date.getDay();
+  const date = new Date(dateString)
+  const dayOfWeek = date.getDay()
 
-    if (dayOfWeek === 0 || dayOfWeek === 1) {
-      return 'weekend'; 
-    } else {
-      return 'weekday'; 
-    }
+  if (dayOfWeek === 0 || dayOfWeek === 1) {
+    return 'weekend'
+  } else {
+    return 'weekday'
   }
+}
 
 // 年月取得用フォーム規定
 const defaultYears = ref(dayjs().year())
@@ -153,7 +153,6 @@ const showTargetMonth = () => {
   dailyAttendanceDates.value = dates
   console.log(dates)
 }
-
 </script>
 <template>
   <form @submit.prevent="showTargetMonth">
@@ -166,7 +165,7 @@ const showTargetMonth = () => {
       <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
     </select>
     <br />
-    <ComponentButton buttonText="勤怠データを取得"/>
+    <ComponentButton buttonText="勤怠データを取得" />
   </form>
   <br />
   <label>ユーザー選択:</label>
@@ -246,7 +245,7 @@ td {
   background-color: rgb(254, 228, 228);
 }
 
-.weekday{
-background-color: rgb(236, 247, 248);
+.weekday {
+  background-color: rgb(236, 247, 248);
 }
 </style>

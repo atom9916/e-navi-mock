@@ -9,7 +9,7 @@
     <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
   </select>
   <br />
-  <ComponentButton buttonText="確認" type="submit" @click="generateCalendar"/>
+  <ComponentButton buttonText="確認" type="submit" @click="generateCalendar" />
 
   <table>
     <thead>
@@ -34,7 +34,7 @@
 import dayjs from 'dayjs'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useStoreSelectedDate } from '@/stores/selectedDate'
-import ComponentButton from './ComponentButton.vue';
+import ComponentButton from './atoms/ComponentButton.vue'
 
 // 初期値
 const defaultYears = ref(dayjs().year())

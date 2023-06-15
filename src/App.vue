@@ -33,7 +33,7 @@ const userInfoStore = useUserInfoStore()
 .wrapper {
   width: 100vw;
   height: 100vh;
-  background-color: #fae8b5;
+  background-color: white;
 }
 
 nav {
@@ -47,7 +47,7 @@ nav {
 }
 
 .nav-left {
-  color: #fae8b5;
+  color: #f7eccf;
   text-decoration: none;
   margin: 10px;
   font-size: 18px;
@@ -62,7 +62,7 @@ nav {
 
 .nav-user {
   margin-right: 20px;
-  color: #fae8b5;
+  color: #f7eccf;
   font-size: 18px;
 }
 </style>

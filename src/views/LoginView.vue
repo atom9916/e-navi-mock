@@ -4,8 +4,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import { useStoreAuth } from '../stores/login'
-import ComponentButton from '@/components/ComponentButton.vue'
-import FormInput from '@/components/FormInput.vue'
+import ComponentButton from '@/components/atoms/ComponentButton.vue'
+import FormInput from '@/components/atoms/FormInput.vue'
 
 useHead({
   title: 'ログイン'
@@ -89,6 +89,10 @@ const checkError = (code: string) => {
   transform: translateX(-50%) translateY(-50%);
   width: 40%;
   height: auto;
+}
+
+fieldset {
+  background-color: #f7eccf;
 }
 
 legend {
