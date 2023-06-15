@@ -1,8 +1,4 @@
 <template>
-  <CalenderTable />
-  <br />
-  <getPaidOff />
-  <br />
   <form @submit="submitForm">
     <p>日付:{{ selectedDate ? selectedDate.toFormat('D') : '日付を選択してください' }}</p>
     <label>出欠:</label>
@@ -88,11 +84,9 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
-import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
-import getPaidOff from './getPaidOff.vue'
 import ComponentButton from './atoms/ComponentButton.vue'
 
 // 初期値勤務時間
@@ -301,3 +295,10 @@ const submitForm = async (event) => {
   }
 }
 </script>
+
+<style scoped>
+form {
+  width: 30%;
+  margin: 50px auto;
+}
+</style>

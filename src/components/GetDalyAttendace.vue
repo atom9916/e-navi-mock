@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useUserInfoStore } from '@/stores/userInfo'
-import ComponentButton from './atoms/ComponentButton.vue'
+import GetDateComponent from './atoms/GetDateComponent.vue'
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -50,6 +50,7 @@ const fetchDailyAttendanceData = async () => {
     console.error(error)
   }
 }
+
 onMounted(() => {
   fetchDailyAttendanceData()
 })
@@ -113,6 +114,7 @@ const dailyAttendanceDates = ref([] as string[])
 const showTargetMonth = () => {
   // 選択された年月を取得
   const selectedYear = defaultYears.value
+  console.log('選択年', defaultYears.value)
   const selectedMonth = defaultMonths.value
 
   // 対象月の日付を計算
@@ -136,17 +138,15 @@ const showTargetMonth = () => {
 </script>
 
 <template>
-  <form @submit.prevent="showTargetMonth">
-    <label for="date">取得したい年月：</label>
-    <select id="date" v-model="defaultYears">
-      <option :value="year" :key="year" v-for="year in years">{{ year }}</option></select
-    ><span>年</span>
-    <select v-model="defaultMonths">
-      <option :value="month" :key="month" v-for="month in months">{{ month }}</option></select
-    ><span>月</span>
-    <br />
-    <ComponentButton buttonText="勤怠データを取得" type="submit" />
-  </form>
+  <GetDateComponent
+    :defaultYears="defaultYears"
+    :defaultMonths="defaultMonths"
+    :years="years"
+    :months="months"
+    @submit.prevent="showTargetMonth"
+    @update:defaultMonths="defaultMonths = $event"
+    @update:defaultYears="defaultYears = $event"
+  />
 
   <div class="monthlyAttendance">
     <table>
@@ -197,15 +197,6 @@ const showTargetMonth = () => {
 </template>
 
 <style scoped>
-form {
-  background-color: #f7eccf;
-  border: 2px solid #1b5e20;
-  border-radius: 5px;
-  padding: 10px;
-  width: 30%;
-  margin: 50px auto;
-}
-
 table {
   width: 90%;
   margin: 50px auto;
@@ -224,7 +215,7 @@ td {
   border: 1px solid #1b5e20;
   padding: 8px;
   font-size: 14px;
-  text-align: right;
+  text-align: center;
 }
 
 .weekend {

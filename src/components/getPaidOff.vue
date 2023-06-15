@@ -51,8 +51,9 @@ onMounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
 table {
+  margin: 50px auto;
   width: 80%;
   border-collapse: collapse;
   border: 2px solid #1b5e20;

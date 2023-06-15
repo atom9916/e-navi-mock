@@ -4,12 +4,16 @@
     <select
       id="date"
       :value="defaultYears"
-      @select="$emit('update:yearValue', $event.target.value)"
+      @change="emit('update:defaultYears', $event.target.value)"
     >
-      <option :value="year" :key="year" v-for="year in years">{{ year }}</option></select
+      <option :key="year" v-for="year in years" :selected="year === defaultYears">
+        {{ year }}
+      </option></select
     ><span>年</span>
-    <select :value="defaultMonths" @select="$emit('update:monthValue', $event.target.value)">
-      <option :value="month" :key="month" v-for="month in months">{{ month }}</option></select
+    <select :value="defaultMonths" @change="emit('update:defaultMonths', $event.target.value)">
+      <option :key="month" v-for="month in months" :selected="month === defaultMonths">
+        {{ month }}
+      </option></select
     ><span>月</span>
     <br />
     <ComponentButton buttonText="勤怠データを取得" type="submit" />
@@ -34,14 +38,22 @@ const props = defineProps({
   months: {
     type: Array as PropType<number[]>,
     required: true
-  },
-  yearlValue: {
-    type: String
   }
 })
 
-const emits = ['update:yearValue', 'update:monthValue']
+const emit = defineEmits(['update:defaultYears', 'update:defaultMonths'])
 
 props
-emits
+emit
 </script>
+
+<style scoped>
+form {
+  background-color: #f7eccf;
+  border: 2px solid #1b5e20;
+  border-radius: 5px;
+  padding: 10px;
+  width: 30%;
+  margin: 50px auto;
+}
+</style>
