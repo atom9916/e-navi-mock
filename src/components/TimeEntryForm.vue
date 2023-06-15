@@ -15,9 +15,8 @@
         {{ attendantStatus.name }}
       </option>
     </select>
-    <br />
+    <p>状態:</p>
     <!-- <p>状態:{{filteredSubmittedDailyAttendanceData}}</p> -->
-    <br />
     <label>シフト:</label>
     <select v-model="defaultShift">
       <option :value="shift.name" :key="shift.name" v-for="shift in shifts">

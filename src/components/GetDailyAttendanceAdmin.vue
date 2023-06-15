@@ -169,7 +169,7 @@ const dynamoPatchData = async (date) => {
     `${url}/daily`,
     {
       user_id: userId,
-      date: '2023-06-01T16:31:25.471+09:00',
+      date: date,
       content: {
         state: '承認済'
       }
