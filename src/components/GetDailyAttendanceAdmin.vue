@@ -3,27 +3,29 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import ComponentButton from './ComponentButton.vue';
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type';
+import router from '@/router';
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
-interface DailyAttendanceData {
-  userId: { S: string }
-  date: { S: Date }
-  state: { S: string }
-  shift: { S: string }
-  attendance: { S: string }
-  punch_in: { S: string }
-  punch_out: { S: string }
-  break_time: { S: string }
-  work_hour: { N: number }
-  overtime: { N: number }
-  midnight: { S: string }
-  midnightOvertime: { S: string }
-  timePaidHoliday: { N: number }
-  lateOrEarlyLeave: { N: number }
-  tardiness: { S: string }
-  comment: { S: string }
-}
+// interface DailyAttendanceData {
+//   userId: { S: string }
+//   date: { S: Date }
+//   state: { S: string }
+//   shift: { S: string }
+//   attendance: { S: string }
+//   punch_in: { S: string }
+//   punch_out: { S: string }
+//   break_time: { S: string }
+//   work_hour: { N: number }
+//   overtime: { N: number }
+//   midnight: { S: string }
+//   midnightOvertime: { S: string }
+//   timePaidHoliday: { N: number }
+//   lateOrEarlyLeave: { N: number }
+//   tardiness: { S: string }
+//   comment: { S: string }
+// }
 
 // DBデータ初期化
 const dailyAttendanceData = ref([] as DailyAttendanceData[])
@@ -87,13 +89,14 @@ const formatDate = (dateString) => {
   const date = new Date(dateString)
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${month}/${day}`
+  const year = date.getFullYear()
+  return `${year}/${month}/${day}`
 }
 
 // 曜日を表示
 const formatWeekday = (dateString) => {
   const date = new Date(dateString)
-  const weekday = (date.getDay() + 6) % 7
+  const weekday = (date.getDay()) 
   const weekdays = ['日', '月', '火', '水', '木', '金', '土'] // 曜日の配列
   return `(${weekdays[weekday]})`
 }
@@ -113,7 +116,7 @@ const getColorStyle = (dateString) => {
     const date = new Date(dateString);
     const dayOfWeek = date.getDay();
 
-    if (dayOfWeek === 0 || dayOfWeek === 1) {
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
       return 'weekend'; 
     } else {
       return 'weekday'; 
@@ -148,13 +151,14 @@ const showTargetMonth = () => {
 
   // 日付を表示
   dailyAttendanceDates.value = dates
-  console.log(dates)
+  console.log('datesの値',dates)
 }
   
 // 締め作業 依頼中→承認済み
 const apprpveAttendance = async(date) =>{
   const selectedDate = filterDataByDate(date)[0]?.date.S
   await dynamoPatchData(selectedDate)
+  router.push('/admin')
 }
 
 const dynamoPatchData = async (date) => {
@@ -165,7 +169,7 @@ const dynamoPatchData = async (date) => {
     `${url}/daily`,
     {
       user_id: userId,
-      date: '2023-06-01T16:31:25.471+09:00',
+      date: date,
       content: {
         state: '承認済'
       }
