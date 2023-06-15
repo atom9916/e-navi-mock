@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import ComponentButton from './ComponentButton.vue'
+import ComponentButton from './atoms/ComponentButton.vue'
 import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
 import router from '@/router'
 

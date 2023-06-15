@@ -19,6 +19,8 @@ main {
 }
 
 img {
+  position: fixed;
+  top: 55%;
   width: 25%;
   height: auto;
 }

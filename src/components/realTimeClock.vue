@@ -34,6 +34,7 @@ onMounted(() => {
 
 <style scoped>
 table {
+  margin: 0 auto;
   width: 60%;
   font-size: 18px;
   border: 2px solid #1b5e20;
