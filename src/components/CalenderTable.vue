@@ -39,7 +39,7 @@ import ComponentButton from './ComponentButton.vue';
 // 初期値
 const defaultYears = ref(dayjs().year())
 const defaultMonths = ref(dayjs().month() + 1)
-const selectedDate = ref<Date | null>(null)
+  const selectedDate = ref<Date | null>(null)
 
 // ドロップダウンリストの表示非表示
 // const showDefaultYearOptions = ref(false)

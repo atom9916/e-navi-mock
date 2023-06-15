@@ -16,7 +16,7 @@
       </option>
     </select>
     <br />
-    <label>状態:</label>
+    <!-- <p>状態:{{filteredSubmittedDailyAttendanceData}}</p> -->
     <br />
     <label>シフト:</label>
     <select v-model="defaultShift">
@@ -105,7 +105,7 @@ const restMinute = ref('00')
 // 初期値コメント
 const comment = ref('')
 
-// 初期値時有給ポ
+// 初期値時有給
 const timePaidHoliday = ref('0')
 
 // 初期値遅刻理由
@@ -229,6 +229,8 @@ const fetchSubmittedDailyAttendanceData = async () => {
     submittedDailyAttendanceData.value = response.data.Items
 
     console.log(`登録済の勤怠情報`, response.data.Items)
+    console.log(filteredSubmittedDailyAttendanceData.value)
+
   } catch (error) {
     console.error(error)
   }
@@ -238,8 +240,25 @@ onMounted(() => {
   fetchSubmittedDailyAttendanceData()
 })
 
+const filteredSubmittedDailyAttendanceData = ref([])
+
+watch([selectedDate, submittedDailyAttendanceData],([newSelectedDate,newSubmittedDailyAttendanceData])=>{
+  const filterByDate = (data, date) =>{
+    return data.filter(item => item.date = date)
+  }
+  filteredSubmittedDailyAttendanceData.value = filterByDate(newSubmittedDailyAttendanceData,newSelectedDate)
+})
 
 
+
+// const filterDataByDate = (date) => {
+//   return submittedDailyAttendanceData.value.filter((data) => {
+//     const dataDate = new Date(data.date.S)
+//     dataDate === date
+//   })
+// }
+
+// const submittedState = filterDataByDate(selectedDate.value)[0]?.state.S || '未入力'
 
 // 非同期通信(ポスト)
 const submitForm = async (event) => {

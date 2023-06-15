@@ -4,6 +4,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import ComponentButton from './ComponentButton.vue';
 import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type';
+import router from '@/router';
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -88,7 +89,8 @@ const formatDate = (dateString) => {
   const date = new Date(dateString)
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${month}/${day}`
+  const year = date.getFullYear()
+  return `${year}/${month}/${day}`
 }
 
 // 曜日を表示
@@ -149,13 +151,14 @@ const showTargetMonth = () => {
 
   // 日付を表示
   dailyAttendanceDates.value = dates
-  console.log(dates)
+  console.log('datesの値',dates)
 }
   
 // 締め作業 依頼中→承認済み
 const apprpveAttendance = async(date) =>{
   const selectedDate = filterDataByDate(date)[0]?.date.S
   await dynamoPatchData(selectedDate)
+  router.push('/admin')
 }
 
 const dynamoPatchData = async (date) => {
