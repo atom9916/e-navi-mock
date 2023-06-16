@@ -10,8 +10,8 @@ useHead({
 
 <template>
 <main>
-<h2>有給を付与するぜ</h2>
-<givePaidOff/>
+<h2>有給の付与</h2>
 <getPaidOffAll/>
+<givePaidOff/>
 </main>
 </template>

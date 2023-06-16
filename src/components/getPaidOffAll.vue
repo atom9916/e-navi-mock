@@ -1,5 +1,4 @@
 <template>
-    <div class="paidOff">
     <table>
    <thead>
      <tr>
@@ -18,7 +17,6 @@
      </tr>
    </tbody>
  </table>
- </div>
 </template>
 
 <script setup lang="ts"> 
@@ -48,14 +46,25 @@ onMounted(()=>{
 })
 </script>
 
-<style>
-.paidOff table {
- border-collapse: collapse;
+<style scoped>
+table {
+  margin: 50px auto;
+  width: 80%;
+  border-collapse: collapse;
+  border: 2px solid #1b5e20;
 }
 
-.paidOff th,td {
- border: 1px solid black;
- padding: 8px;
- text-align: center;
+th {
+  background-color: #1b5e20;
+  font-size: 18px;
+  color: #f7eccf;
+}
+
+td {
+  background-color: #f7eccf;
+  border: 1px solid #1b5e20;
+  padding: 8px;
+  font-size: 20px;
+  text-align: left;
 }
 </style>

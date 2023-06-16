@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import dayjs from 'dayjs'
-import ComponentButton from './ComponentButton.vue';
-import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type';
-import router from '@/router';
+import ComponentButton from '../components/atoms/ComponentButton.vue';
 
 
 const defaultUser = ref('')
@@ -28,11 +25,35 @@ function getUserNameById(userId: string): string {
 const handleUserSelection = (event) => {
   id.value = event.target.value
 }
+
+
+const givePaidOff = async()=>{
+  const response = await axios.get(`http://localhost:4242/paidOff/${id.value}`)
+  const paidOff = response.data.paidOff
+  console.log('げんざい有給内訳', response.data.paidOff)
+  console.log('ユーザーID',id.value)
+  if(paidOff){
+    const totalAmount = paidOff.total_amount 
+    const newPaidOff = defaultNewPaidOff.value
+    const remainingAmount = paidOff.remaining_amount
+
+    await axios.put(`http://localhost:4242/paidOff/${id.value}`,{
+      total_amount:totalAmount + newPaidOff,
+      remaining_amount:remainingAmount + newPaidOff
+    })
+    console.log(`新規有給を${newPaidOff}日、付与しました`)
+  }else{
+    console.log('これから考える')
+    console.log('ユーザーID',id.value)
+    console.log('付与日数',defaultNewPaidOff.value)
+  }
+}
 </script>
 
 <template>
   <label>ユーザー選択:</label>
   <select v-model="defaultUser" @change="handleUserSelection">
+  <!-- <select v-model="defaultUser"> -->
     <option :value="user.userId" :key="user.userId" v-for="user in users">
       {{ user.userId }}
     </option>
@@ -43,5 +64,5 @@ const handleUserSelection = (event) => {
   <option :value="newPaidOffDay" :key="newPaidOffDay" v-for="newPaidOffDay in newPaidOffDays">{{ newPaidOffDay }}</option>
   </select>
   <br>
-  <ComponentButton buttonText="付与"/>
+  <ComponentButton buttonText="付与" @click="givePaidOff()"/>
 </template>
