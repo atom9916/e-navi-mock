@@ -16,7 +16,7 @@
       </option></select
     ><span>月</span>
     <br />
-    <ComponentButton buttonText="勤怠データを取得" type="submit" />
+    <ComponentButton buttonText="データを取得" type="submit" />
   </form>
 </template>
 

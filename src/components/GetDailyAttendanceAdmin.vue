@@ -4,7 +4,9 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import ComponentButton from './atoms/ComponentButton.vue'
 import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
-import router from '@/router'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -104,7 +106,7 @@ const formatWeekday = (dateString) => {
 const formatPatternOfWeekday = (dateString) => {
   const date = new Date(dateString)
   const dayOfWeek = date.getDay()
-  if (dayOfWeek === 0 || dayOfWeek === 1) {
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
     return '土日'
   } else {
     return '平日'
@@ -158,7 +160,8 @@ const showTargetMonth = () => {
 const apprpveAttendance = async (date) => {
   const selectedDate = filterDataByDate(date)[0]?.date.S
   await dynamoPatchData(selectedDate)
-  router.push('/admin')
+  alert(`${selectedDate}の勤怠実績を承認しました`)
+  router.push({path:'/admin'})
 }
 
 const dynamoPatchData = async (date) => {

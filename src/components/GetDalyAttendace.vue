@@ -85,7 +85,7 @@ const formatWeekday = (dateString) => {
 const formatPatternOfWeekday = (dateString) => {
   const date = new Date(dateString)
   const dayOfWeek = date.getDay()
-  if (dayOfWeek === 0 || dayOfWeek === 1) {
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
     return '土日'
   } else {
     return '平日'

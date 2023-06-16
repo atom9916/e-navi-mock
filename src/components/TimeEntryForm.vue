@@ -113,6 +113,8 @@ import ComponentButton from './atoms/ComponentButton.vue'
 import { useRouter } from 'vue-router'
 import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type.ts'
 
+const router = useRouter()
+
 // 初期値勤務時間
 const startHour = ref('09')
 const startMinute = ref('00')
@@ -284,8 +286,6 @@ watch(
 
 // const submittedState = filterDataByDate(selectedDate.value)[0]?.state.S || '未入力'
 
-
-
 // 非同期通信(ポスト)
 const submitForm = async (event) => {
   event.preventDefault()
@@ -293,8 +293,6 @@ const submitForm = async (event) => {
   const startMinuteForCalculation = Number(startMinute.value) / 60
   const endMinuteForCalculation = Number(endMinute.value) / 60
   const restMinuteForCalculation = Number(restMinute.value) / 60
-
-
 
   //勤務時間を08:00と表示させるときに後で使いたい 
   let totalMinutes = (Number(endHour.value)*60 + endMinuteForCalculation) +
@@ -381,6 +379,7 @@ let totalMinutesOfLateOrEarlyLeave = 480 - (Number(endHour.value)*60 + endMinute
         'x-api-key': import.meta.env.VITE_AWS_API_KEY
       }
     })
+    router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })
     if (responseDynamo.status === 200) {
       console.log('勤怠データが保存されました')
     } else {
@@ -397,9 +396,9 @@ let totalMinutesOfLateOrEarlyLeave = 480 - (Number(endHour.value)*60 + endMinute
   try {
     const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
     const paidOff = response.data.paidOff
-    console.log('現在有給内訳', response.data)
-    console.log('使用予定有給', paidOff.used_amount + 1)
-    console.log('残予定有給', paidOff.remaining_amount - 1)
+    console.log('現在有給内訳', response.data.paidOff)
+    console.log('使用済有給(予定)', paidOff.used_amount + 1)
+    console.log('残有給(予定)', paidOff.remaining_amount - 1)
 
     if (paidOff.remaining_amount >= 0) {
       const usedAmount = paidOff.used_amount + 1
@@ -415,9 +414,6 @@ let totalMinutesOfLateOrEarlyLeave = 480 - (Number(endHour.value)*60 + endMinute
   } catch (error) {
     console.error(error)
   }
-
-  const router = useRouter()
-  router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })
 }
 </script>
 
