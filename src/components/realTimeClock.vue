@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import ComponentButton from './atoms/ComponentButton.vue';
 
 const currentDate = ref('')
 const currentTime = ref('')
@@ -29,7 +30,10 @@ onMounted(() => {
         {{ currentTime }}
       </td>
     </tr>
-  </table>
+  </table> 
+  <ComponentButton buttonText="出勤"/>
+  <ComponentButton buttonText="退勤"/>
+  
 </template>
 
 <style scoped>
