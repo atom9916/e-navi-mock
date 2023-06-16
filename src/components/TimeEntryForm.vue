@@ -284,6 +284,8 @@ watch(
 
 // const submittedState = filterDataByDate(selectedDate.value)[0]?.state.S || '未入力'
 
+
+
 // 非同期通信(ポスト)
 const submitForm = async (event) => {
   event.preventDefault()
@@ -291,6 +293,67 @@ const submitForm = async (event) => {
   const startMinuteForCalculation = Number(startMinute.value) / 60
   const endMinuteForCalculation = Number(endMinute.value) / 60
   const restMinuteForCalculation = Number(restMinute.value) / 60
+
+
+
+  //勤務時間を08:00と表示させるときに後で使いたい 
+  let totalMinutes = (Number(endHour.value)*60 + endMinuteForCalculation) +
+                     Number(timePaidHoliday.value)*60 -
+                     (Number(restHour.value)*60 + restMinuteForCalculation) -
+                     (Number(startHour.value)*60 + startMinuteForCalculation)
+  
+  let workHour = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+  let workMinute = (totalMinutes % 60).toString().padStart(2, '0');
+
+  let workHourResult = workHour + ':' + workMinute
+
+
+
+  let overtime = Number(endHour.value) +
+                 endMinuteForCalculation +
+                 Number(timePaidHoliday.value) -
+                 (Number(restHour.value) + restMinuteForCalculation) -
+                 (Number(startHour.value) + startMinuteForCalculation) - 8
+
+   //残業を00:00と表示させるときに後で使いたい 
+  let totalMinutesOfovertime = (Number(endHour.value)*60 + endMinuteForCalculation) +
+                                Number(timePaidHoliday.value)*60 -
+                               (Number(restHour.value)*60 + restMinuteForCalculation) -
+                               (Number(startHour.value)*60 + startMinuteForCalculation) - 480
+  
+  let overtimeHour = Math.floor(totalMinutesOfovertime / 60).toString().padStart(2, '0');
+  let overtimeMinute = (totalMinutesOfovertime % 60).toString().padStart(2, '0');
+
+  let overtimeResult = overtimeHour + ':' + overtimeMinute
+
+
+
+  let lateOrEarlyLeave = 8 -
+      (Number(endHour.value) +
+      endMinuteForCalculation -
+      (Number(restHour.value) + restMinuteForCalculation) -
+      (Number(startHour.value) + startMinuteForCalculation))
+
+
+// 時有給を00:00と表示させるときに後で使いたい
+let totalMinutesOfTimePaidHoliday = Number(timePaidHoliday.value)*60 
+let timePaidHolidayHour = Math.floor(totalMinutesOfTimePaidHoliday / 60).toString().padStart(2, '0');
+let timePaidHolidayResult = timePaidHolidayHour + ':00'
+
+
+
+// 遅刻早退を00:00と表示させるときに後で使いたい 
+let totalMinutesOfLateOrEarlyLeave = 480 - (Number(endHour.value)*60 + endMinuteForCalculation) +
+                     Number(timePaidHoliday.value)*60 -
+                     (Number(restHour.value)*60 + restMinuteForCalculation) -
+                     (Number(startHour.value)*60 + startMinuteForCalculation)
+  
+  let lateOrEarlyLeaveHour = Math.floor(totalMinutesOfLateOrEarlyLeave / 60).toString().padStart(2, '0');
+  let lateOrEarlyLeaveMinute = (totalMinutesOfLateOrEarlyLeave % 60).toString().padStart(2, '0');
+
+  let lateOrEarlyLeaveResult = lateOrEarlyLeaveHour + ':' + lateOrEarlyLeaveMinute
+
+
 
   const formData = {
     userId: userId,
@@ -301,28 +364,12 @@ const submitForm = async (event) => {
     punch_in: `${startHour.value}:${startMinute.value}`,
     punch_out: `${endHour.value}:${endMinute.value}`,
     break_time: `${restHour.value}:${restMinute.value}`,
-    work_hour:
-      Number(endHour.value) +
-      endMinuteForCalculation +
-      Number(timePaidHoliday.value) -
-      (Number(restHour.value) + restMinuteForCalculation) -
-      (Number(startHour.value) + startMinuteForCalculation),
-    overtime:
-      Number(endHour.value) +
-      endMinuteForCalculation +
-      Number(timePaidHoliday.value) -
-      (Number(restHour.value) + restMinuteForCalculation) -
-      (Number(startHour.value) + startMinuteForCalculation) -
-      8,
+    work_hour:workHour,
+    overtime:overtime,
     midnight: '00:00',
     midnightOvertime: '00:00',
     timePaidHoliday: Number(timePaidHoliday.value),
-    lateOrEarlyLeave:
-      8 -
-      (Number(endHour.value) +
-        endMinuteForCalculation -
-        (Number(restHour.value) + restMinuteForCalculation) -
-        (Number(startHour.value) + startMinuteForCalculation)),
+    lateOrEarlyLeave:lateOrEarlyLeave,
     tardiness: defaultTardinessStatus.value,
     comment: comment.value
   }
