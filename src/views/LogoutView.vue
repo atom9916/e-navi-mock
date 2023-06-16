@@ -1,17 +1,16 @@
-<template >
+<template>
   <div class="logout">
-  <h2>ログアウトしました</h2>
-    <ComponentButton buttonText="再ログイン" @click="$router.push({ path: '/login' })"/>
+    <h2>ログアウトしました</h2>
+    <ComponentButton buttonText="再ログイン" @click="$router.push({ path: '/login' })" />
   </div>
 </template>
 
 <script setup lang="ts">
-import ComponentButton from '../components/ComponentButton.vue'
+import ComponentButton from '../components/atoms/ComponentButton.vue'
 </script>
 
-
 <style scoped>
-.logout{
+.logout {
   display: flex;
   justify-content: center;
   align-items: center;

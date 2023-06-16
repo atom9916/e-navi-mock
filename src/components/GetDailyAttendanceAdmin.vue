@@ -2,9 +2,9 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import ComponentButton from './ComponentButton.vue';
-import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type';
-import router from '@/router';
+import ComponentButton from './atoms/ComponentButton.vue'
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
+import router from '@/router'
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -96,32 +96,32 @@ const formatDate = (dateString) => {
 // 曜日を表示
 const formatWeekday = (dateString) => {
   const date = new Date(dateString)
-  const weekday = (date.getDay()) 
+  const weekday = date.getDay()
   const weekdays = ['日', '月', '火', '水', '木', '金', '土'] // 曜日の配列
   return `(${weekdays[weekday]})`
 }
 // 平日or土日
-const formatPatternOfWeekday = (dateString) =>{
+const formatPatternOfWeekday = (dateString) => {
   const date = new Date(dateString)
   const dayOfWeek = date.getDay()
-  if(dayOfWeek === 0 || dayOfWeek === 1){
-    return('土日')
-  }else{
-    return('平日')
+  if (dayOfWeek === 0 || dayOfWeek === 1) {
+    return '土日'
+  } else {
+    return '平日'
   }
 }
 
 // 土日の彩り
 const getColorStyle = (dateString) => {
-    const date = new Date(dateString);
-    const dayOfWeek = date.getDay();
+  const date = new Date(dateString)
+  const dayOfWeek = date.getDay()
 
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-      return 'weekend'; 
-    } else {
-      return 'weekday'; 
-    }
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
+    return 'weekend'
+  } else {
+    return 'weekday'
   }
+}
 
 // 年月取得用フォーム規定
 const defaultYears = ref(dayjs().year())
@@ -151,11 +151,11 @@ const showTargetMonth = () => {
 
   // 日付を表示
   dailyAttendanceDates.value = dates
-  console.log('datesの値',dates)
+  console.log('datesの値', dates)
 }
-  
+
 // 締め作業 依頼中→承認済み
-const apprpveAttendance = async(date) =>{
+const apprpveAttendance = async (date) => {
   const selectedDate = filterDataByDate(date)[0]?.date.S
   await dynamoPatchData(selectedDate)
   router.push('/admin')
@@ -181,9 +181,8 @@ const dynamoPatchData = async (date) => {
       }
     }
   )
-  console.log(response.status,'承認',date)
+  console.log(response.status, '承認', date)
 }
-
 </script>
 <template>
   <form @submit.prevent="showTargetMonth">
@@ -196,7 +195,7 @@ const dynamoPatchData = async (date) => {
       <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
     </select>
     <br />
-    <ComponentButton buttonText="勤怠データを取得"/>
+    <ComponentButton buttonText="勤怠データを取得" />
   </form>
   <br />
   <label>ユーザー選択:</label>
@@ -250,7 +249,7 @@ const dynamoPatchData = async (date) => {
           <td>{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
           <td>{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
           <td>{{ filterDataByDate(date)[0]?.comment.S }}</td>
-          <td><ComponentButton buttonText="承認" @click="apprpveAttendance(date)"/></td>
+          <td><ComponentButton buttonText="承認" @click="apprpveAttendance(date)" /></td>
         </tr>
       </tbody>
     </table>
@@ -277,7 +276,7 @@ td {
   background-color: rgb(254, 228, 228);
 }
 
-.weekday{
-background-color: rgb(236, 247, 248);
+.weekday {
+  background-color: rgb(236, 247, 248);
 }
 </style>

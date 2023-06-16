@@ -1,15 +1,13 @@
 <template>
-  <label>年:</label>
-  <select v-model="defaultYears">
-    <option :value="year" :key="year" v-for="year in years">{{ year }}</option>
-  </select>
-  <span>&nbsp;</span>
-  <label>月:</label>
-  <select v-model="defaultMonths">
-    <option :value="month" :key="month" v-for="month in months">{{ month }}</option>
-  </select>
-  <br />
-  <ComponentButton buttonText="カレンダーを更新" type="submit" @click="generateCalendar"/>
+  <GetDateComponent
+    :years="years"
+    :months="months"
+    :defaultYears="defaultYears"
+    :defaultMonths="defaultMonths"
+    @submit.prevent="generateCalendar"
+    @update:defaultYears="defaultYears = $event"
+    @update:defaultMonths="defaultMonths = $event"
+  />
 
   <table>
     <thead>
@@ -20,10 +18,10 @@
     <tbody>
       <tr v-for="week in weeks" :key="String(week)">
         <td v-for="day in week" :key="day">
-          <template v-if="day !== 0">
+          <div v-if="day !== 0">
             <button @click="selectDate(day)" class="button">{{ day }}</button>
-          </template>
-          <template v-else></template>
+          </div>
+          <div v-else></div>
         </td>
       </tr>
     </tbody>
@@ -34,12 +32,12 @@
 import dayjs from 'dayjs'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useStoreSelectedDate } from '@/stores/selectedDate'
-import ComponentButton from './ComponentButton.vue';
+import GetDateComponent from './atoms/GetDateComponent.vue'
 
 // 初期値
 const defaultYears = ref(dayjs().year())
 const defaultMonths = ref(dayjs().month() + 1)
-  const selectedDate = ref<Date | null>(null)
+const selectedDate = ref<Date | null>(null)
 
 // ドロップダウンリストの表示非表示
 // const showDefaultYearOptions = ref(false)
@@ -56,7 +54,7 @@ const selectDate = (day) => {
   selectedDate.value = selected.toDate()
   const store = useStoreSelectedDate()
   store.setSelectedDate(selected.toDate())
-  console.log('カレンダーから取得した日付',selectedDate.value)
+  console.log('カレンダーから取得した日付', selectedDate.value)
 }
 
 // const handleDocumentClick = (event) => {
@@ -109,50 +107,32 @@ function generateCalendar() {
 </script>
 
 <style scoped>
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown input {
-  width: 50px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  z-index: 1;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  display: none;
-}
-
-.dropdown-menu li {
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
-.dropdown-menu li:hover {
-  background-color: #f5f5f5;
-}
-
-.button {
+button {
   border: none;
-  background-color: #fff;
+  background-color: #f7eccf;
+  color: #1b5e20;
+  font-size: 20px;
   cursor: pointer;
 }
 
 table {
-  border-collapse: none;
+  border-collapse: collapse;
+  width: 80%;
+  border: 2px solid #1b5e20;
+  margin: 50px auto;
 }
 
-th,
+th {
+  background-color: #1b5e20;
+  border: 2px solid #1b5e20;
+  font-size: 18px;
+  color: #f7eccf;
+  padding: 5px 0;
+}
+
 td {
   border: none;
-  padding: 8px;
+  padding: 20px 0;
+  background-color: #f7eccf;
 }
 </style>

@@ -1,10 +1,12 @@
 <template>
-  <CalenderTable />
-  <br>
-  <getPaidOff/>
-  <br />
   <form @submit="submitForm">
-    <p>日付:{{ selectedDate ? DateTime.fromFormat(selectedDate, 'yyyy-MM-dd').toFormat('M/d') : '日付を選択してください' }}</p>
+    <p>
+      日付:{{
+        selectedDate
+          ? DateTime.fromFormat(selectedDate, 'yyyy-MM-dd').toFormat('M/d')
+          : '日付を選択してください'
+      }}
+    </p>
     <label>出欠:</label>
     <select v-model="defaultAttendantStatus">
       <option
@@ -76,22 +78,19 @@
     <div>
       <p>勤務時間合計:{{ totalWorkHours }}</p>
     </div>
-    <ComponentButton buttonText="承認依頼" type="submit"/>
+    <ComponentButton buttonText="承認依頼" type="submit" />
   </form>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
-import CalenderTable from '../components/CalenderTable.vue'
 import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
-import getPaidOff from './getPaidOff.vue'
-import ComponentButton from './ComponentButton.vue'
-import { useRouter } from 'vue-router' 
-import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type';
-
+import ComponentButton from './atoms/ComponentButton.vue'
+import { useRouter } from 'vue-router'
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
 
 // 初期値勤務時間
 const startHour = ref('09')
@@ -207,7 +206,9 @@ const userId = userInfoStore.userInfo?.user_id
 
 //カレンダーから日付を取得
 const store = useStoreSelectedDate()
-const selectedDate = ref(store.selectedDate ? DateTime.fromJSDate(store.selectedDate).toFormat('yyyy-MM-dd') : null)
+const selectedDate = ref(
+  store.selectedDate ? DateTime.fromJSDate(store.selectedDate).toFormat('yyyy-MM-dd') : null
+)
 const updateSelectedDate = (date) => {
   selectedDate.value = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd')
 }
@@ -229,7 +230,6 @@ const fetchSubmittedDailyAttendanceData = async () => {
 
     console.log(`登録済の勤怠情報`, response.data.Items)
     console.log(filteredSubmittedDailyAttendanceData.value)
-
   } catch (error) {
     console.error(error)
   }
@@ -241,14 +241,18 @@ onMounted(() => {
 
 const filteredSubmittedDailyAttendanceData = ref([])
 
-watch([selectedDate, submittedDailyAttendanceData],([newSelectedDate,newSubmittedDailyAttendanceData])=>{
-  const filterByDate = (data, date) =>{
-    return data.filter(item => item.date = date)
+watch(
+  [selectedDate, submittedDailyAttendanceData],
+  ([newSelectedDate, newSubmittedDailyAttendanceData]) => {
+    const filterByDate = (data, date) => {
+      return data.filter((item) => (item.date = date))
+    }
+    filteredSubmittedDailyAttendanceData.value = filterByDate(
+      newSubmittedDailyAttendanceData,
+      newSelectedDate
+    )
   }
-  filteredSubmittedDailyAttendanceData.value = filterByDate(newSubmittedDailyAttendanceData,newSelectedDate)
-})
-
-
+)
 
 // const filterDataByDate = (date) => {
 //   return submittedDailyAttendanceData.value.filter((data) => {
@@ -365,33 +369,40 @@ let totalMinutesOfLateOrEarlyLeave = 480 - (Number(endHour.value)*60 + endMinute
     console.error('エラーが発生しました', error)
   }
 
-
-  //有給を消費する 
-  if(defaultAttendantStatus.value !== '有給'){
-    return;
+  //有給を消費する
+  if (defaultAttendantStatus.value !== '有給') {
+    return
   }
-  try{
+  try {
     const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
-        const paidOff = response.data.paidOff
-        console.log('現在有給内訳',response.data)
-        console.log('使用予定有給',paidOff.used_amount + 1)
-        console.log('残予定有給',paidOff.remaining_amount - 1)
+    const paidOff = response.data.paidOff
+    console.log('現在有給内訳', response.data)
+    console.log('使用予定有給', paidOff.used_amount + 1)
+    console.log('残予定有給', paidOff.remaining_amount - 1)
 
-        if(paidOff.remaining_amount >= 0){
-            const usedAmount = paidOff.used_amount + 1
-            const remainingAmount = paidOff.remaining_amount -1
-            await axios.put(`http://localhost:4242/paidOff/${userId}`,{
-                used_amount:usedAmount,
-                remaining_amount:remainingAmount
-            })
-            console.log(`有給を使用しました`)
-  }else{
-    console.error('有給取得でエラーが発生しました')
+    if (paidOff.remaining_amount >= 0) {
+      const usedAmount = paidOff.used_amount + 1
+      const remainingAmount = paidOff.remaining_amount - 1
+      await axios.put(`http://localhost:4242/paidOff/${userId}`, {
+        used_amount: usedAmount,
+        remaining_amount: remainingAmount
+      })
+      console.log(`有給を使用しました`)
+    } else {
+      console.error('有給取得でエラーが発生しました')
+    }
+  } catch (error) {
+    console.error(error)
   }
 
-}catch(error){console.error(error)}
-
-const router = useRouter()
-router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })
-}  
+  const router = useRouter()
+  router.push({ path: '/daily/attendanceRegistration/attendanceCompleted' })
+}
 </script>
+
+<style scoped>
+form {
+  width: 30%;
+  margin: 50px auto;
+}
+</style>

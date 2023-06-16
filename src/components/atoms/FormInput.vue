@@ -13,8 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { required } from 'yargs'
-
 const props = defineProps({
   inputName: {
     type: String,
@@ -32,6 +30,9 @@ const props = defineProps({
   }
 })
 const emits = ['update:modelValue']
+
+props
+emits
 </script>
 
 <style scoped>
