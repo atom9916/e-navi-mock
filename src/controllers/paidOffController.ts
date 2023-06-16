@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { getAllPaidOff, getPaidOffByUserId } from '@/lib/prisma/paidOff/get'
-import { createPaidOff } from '@/lib/prisma/paidOff/create'
-import { updatePaidOff } from '@/lib/prisma/paidOff/update'
-import { deletePaidOff } from '@/lib/prisma/paidOff/delete'
+import { getAllPaidOff, getPaidOffByUserId } from '../lib/prisma/paidOff/get'
+import { createPaidOff } from '../lib/prisma/paidOff/create'
+import { updatePaidOff } from '../lib/prisma/paidOff/update'
+import { deletePaidOff } from '../lib/prisma/paidOff/delete'
 
 const router = Router()
 
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     if (allPaidOff instanceof Error) {
       throw new Error(`${allPaidOff}`)
     }
-    res.status(200).json({ message: '有給データを全権取得しました' ,allPaidOff})
+    res.status(200).json({ message: '有給データを全権取得しました', allPaidOff })
   } catch (error: any) {
     res.status(400).json({ message: `有給データの取得に失敗しました:${error.message}` })
   }

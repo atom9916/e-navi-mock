@@ -34,7 +34,7 @@ async function main() {
 
   const paidOff = await prisma.paid_off.createMany({
     data: [
-      { user_id: 'test1' },
+      { user_id: 'onGE8VNwcFSUj6JB64rK83J5SEA3' },
       { user_id: 'test2' },
       { user_id: 'test3' },
       { user_id: 'test4' },
