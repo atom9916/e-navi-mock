@@ -17,19 +17,40 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <p>
-      今日は&nbsp;<span style="font-weight: 500; font-size: 1.4em; color: red">{{
-        currentDate
-      }}</span
-      >&nbsp;です
-    </p>
-  </div>
-  <div>
-    <p>
-      現在の時刻は&nbsp;<span style="font-weight: 250; font-size: 1.4em">{{ currentTime }}</span
-      >&nbsp;です
-    </p>
-  </div>
-  <div><p>今日もお仕事、がんばりましょう</p></div>
+  <table>
+    <th>現在時刻</th>
+    <tr>
+      <td>
+        {{ currentDate }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {{ currentTime }}
+      </td>
+    </tr>
+  </table>
 </template>
+
+<style scoped>
+table {
+  margin: 0 auto;
+  width: 60%;
+  font-size: 18px;
+  border: 2px solid #1b5e20;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+th {
+  border: 2px solid #1b5e20;
+  background-color: #1b5e20;
+  color: #f7eccf;
+}
+
+tr {
+  font-size: 22px;
+  border: 1px solid #1b5e20;
+  background-color: #f7eccf;
+}
+</style>
