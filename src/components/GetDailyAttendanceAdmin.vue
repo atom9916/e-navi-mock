@@ -4,7 +4,9 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import ComponentButton from './atoms/ComponentButton.vue'
 import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
-import router from '@/router'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 型定義
 // DynamoDBでは型情報も含んだオブジェクトとして取得
@@ -158,7 +160,8 @@ const showTargetMonth = () => {
 const apprpveAttendance = async (date) => {
   const selectedDate = filterDataByDate(date)[0]?.date.S
   await dynamoPatchData(selectedDate)
-  router.push('/admin')
+  alert(`${selectedDate}の勤怠実績を承認しました`)
+  router.push({path:'/admin'})
 }
 
 const dynamoPatchData = async (date) => {
