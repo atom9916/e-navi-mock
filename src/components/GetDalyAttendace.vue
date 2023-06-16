@@ -139,16 +139,17 @@ const showTargetMonth = () => {
 </script>
 
 <template>
-  <GetDateComponent
-    :defaultYears="defaultYears"
-    :defaultMonths="defaultMonths"
-    :years="years"
-    :months="months"
-    @submit.prevent="showTargetMonth"
-    @update:defaultMonths="defaultMonths = $event"
-    @update:defaultYears="defaultYears = $event"
-  />
-
+  <div class="getDateComponent">
+    <GetDateComponent
+      :defaultYears="defaultYears"
+      :defaultMonths="defaultMonths"
+      :years="years"
+      :months="months"
+      @submit.prevent="showTargetMonth"
+      @update:defaultMonths="defaultMonths = $event"
+      @update:defaultYears="defaultYears = $event"
+    />
+  </div>
   <div class="monthlyAttendance">
     <table>
       <thead>
@@ -217,6 +218,11 @@ td {
   padding: 8px;
   font-size: 14px;
   text-align: center;
+}
+
+.getDateComponent {
+  width: 40%;
+  margin: 0 auto;
 }
 
 .weekend {

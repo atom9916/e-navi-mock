@@ -53,7 +53,6 @@ form {
   border: 2px solid #1b5e20;
   border-radius: 5px;
   padding: 10px;
-  width: 30%;
   margin: 50px auto;
 }
 </style>

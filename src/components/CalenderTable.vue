@@ -1,31 +1,35 @@
 <template>
-  <GetDateComponent
-    :years="years"
-    :months="months"
-    :defaultYears="defaultYears"
-    :defaultMonths="defaultMonths"
-    @submit.prevent="generateCalendar"
-    @update:defaultYears="defaultYears = $event"
-    @update:defaultMonths="defaultMonths = $event"
-  />
+  <div class="calender-wrapper">
+    <div class="getDateComponent">
+      <GetDateComponent
+        :years="years"
+        :months="months"
+        :defaultYears="defaultYears"
+        :defaultMonths="defaultMonths"
+        @submit.prevent="generateCalendar"
+        @update:defaultYears="defaultYears = $event"
+        @update:defaultMonths="defaultMonths = $event"
+      />
+    </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th v-for="day in daysOfWeek" :key="day">{{ day }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="week in weeks" :key="String(week)">
-        <td v-for="day in week" :key="day">
-          <div v-if="day !== 0">
-            <button @click="selectDate(day)" class="button">{{ day }}</button>
-          </div>
-          <div v-else></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <table>
+      <thead>
+        <tr>
+          <th v-for="day in daysOfWeek" :key="day">{{ day }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="week in weeks" :key="String(week)">
+          <td v-for="day in week" :key="day">
+            <div v-if="day !== 0">
+              <button @click="selectDate(day)" class="button">{{ day }}</button>
+            </div>
+            <div v-else></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -107,6 +111,10 @@ function generateCalendar() {
 </script>
 
 <style scoped>
+.calender-wrapper {
+  width: 60%;
+}
+
 button {
   border: none;
   background-color: #f7eccf;
@@ -134,5 +142,10 @@ td {
   border: none;
   padding: 20px 0;
   background-color: #f7eccf;
+}
+
+.getDateComponent {
+  width: 80%;
+  margin: 50px auto;
 }
 </style>
