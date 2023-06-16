@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted,  } from 'vue'
 import { useStoreSelectedDate } from '@/stores/selectedDate'
 import GetDateComponent from './atoms/GetDateComponent.vue'
 

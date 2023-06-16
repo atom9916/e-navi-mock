@@ -1,15 +1,32 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import ComponentButton from './atoms/ComponentButton.vue';
+import { useClockIn } from '../stores/clockIn'
+import { useClockOut } from '../stores/clockOut'
 
 const currentDate = ref('')
 const currentTime = ref('')
+const storeClockIn = useClockIn()
+const storeClockOut = useClockOut()
 
 const updateDateTime = () => {
   const now = new Date()
   currentDate.value = now.toLocaleDateString()
   currentTime.value = now.toLocaleTimeString()
 }
+
+const saveClockIn = () => {
+  const now = new Date()
+  storeClockIn.clockIn = now
+  console.log('出勤時刻',now)
+}
+
+const saveClockOut = () => {
+  const now = new Date()
+  storeClockOut.clockOut = now
+  console.log('退勤時刻',now)
+}
+
 
 onMounted(() => {
   updateDateTime()
@@ -31,8 +48,8 @@ onMounted(() => {
       </td>
     </tr>
   </table> 
-  <ComponentButton buttonText="出勤"/>
-  <ComponentButton buttonText="退勤"/>
+  <ComponentButton buttonText="出勤" @click="saveClockIn"/>
+  <ComponentButton buttonText="退勤" @click="saveClockOut"/>
   
 </template>
 
