@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import ComponentButton from '../components/atoms/ComponentButton.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 
 const defaultUser = ref('')
@@ -42,6 +45,8 @@ const givePaidOff = async()=>{
       remaining_amount:remainingAmount + newPaidOff
     })
     console.log(`新規有給を${newPaidOff}日、付与しました`)
+    alert(`新規有給を${newPaidOff}日  付与しました`)
+    router.push({path:'/admin'})
   }else{
     console.log('これから考える')
     console.log('ユーザーID',id.value)
