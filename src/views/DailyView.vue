@@ -10,7 +10,16 @@ useHead({
 </script>
 
 <template>
-  <CalenderTable />
-  <getPaidOff />
-  <TimeEntryForm />
+  <main>
+    <getPaidOff />
+    <CalenderTable />
+    <TimeEntryForm />
+  </main>
 </template>
+
+<style scoped>
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+</style>

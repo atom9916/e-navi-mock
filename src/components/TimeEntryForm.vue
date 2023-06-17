@@ -1,14 +1,15 @@
 <template>
   <form @submit="submitForm">
     <p>
-      日付:{{
+      ● 日付：{{
         selectedDate
           ? DateTime.fromFormat(selectedDate, 'yyyy-MM-dd').toFormat('M/d')
           : '日付を選択してください'
       }}
     </p>
-    <label>出欠:</label>
-    <select v-model="defaultAttendantStatus">
+
+    <label for="attendance">● 出欠：</label>
+    <select id="attendance" v-model="defaultAttendantStatus">
       <option
         :value="attendantStatus.name"
         :key="attendantStatus.name"
@@ -17,67 +18,87 @@
         {{ attendantStatus.name }}
       </option>
     </select>
-    <p>状態:</p>
-    <!-- <p>状態:{{filteredSubmittedDailyAttendanceData}}</p> -->
-    <label>シフト:</label>
-    <select v-model="defaultShift">
-      <option :value="shift.name" :key="shift.name" v-for="shift in shifts">
-        {{ shift.name }}
-      </option>
-    </select>
-    <br />
-    <label>就業開始時間:</label>
-    <select v-model="startHour">
-      <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option></select
-    >時
-    <select v-model="startMinute">
-      <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option></select
-    >分
-    <br />
-    <label>就業終了時間:</label>
-    <select v-model="endHour">
-      <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option></select
-    >時
-    <select v-model="endMinute">
-      <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option></select
-    >分
-    <br />
-    <label>時有給:</label>
-    <select v-model="timePaidHoliday">
-      <option
-        :value="timePaidHoliday"
-        :key="timePaidHoliday"
-        v-for="timePaidHoliday in timePaidHolidays"
-      >
-        {{ timePaidHoliday }}
-      </option></select
-    >時間
-    <br />
-    <label>休憩時間:</label>
-    <select v-model="restHour">
-      <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option></select
-    >時
-    <select v-model="restMinute">
-      <option :value="minute" :key="minute" v-for="minute in minutes">{{ minute }}</option></select
-    >分
-    <br />
-    <label>遅刻理由:</label>
-    <select v-model="defaultTardinessStatus">
-      <option
-        :value="tardinessStatus.name"
-        :key="tardinessStatus.name"
-        v-for="tardinessStatus in tardinessStatuses"
-      >
-        {{ tardinessStatus.name }}
-      </option>
-    </select>
-    <br />
-    <label>コメント:</label>
-    <textarea name="comment" v-model="comment" cols="30" rows="1" />
-    <br />
-    <div>
-      <p>勤務時間合計:{{ totalWorkHours }}</p>
-    </div>
+
+    <p>● 状態：</p>
+    <!-- <p>状態:{{ filteredSubmittedDailyAttendanceData }}</p> -->
+
+    <p>
+      <label for="shift">● シフト：</label>
+      <select id="shift" v-model="defaultShift">
+        <option :value="shift.name" :key="shift.name" v-for="shift in shifts">
+          {{ shift.name }}
+        </option>
+      </select>
+    </p>
+
+    <p>
+      <label>● 就業開始時間：</label>
+      <select v-model="startHour">
+        <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option></select
+      >時
+      <select v-model="startMinute">
+        <option :value="minute" :key="minute" v-for="minute in minutes">
+          {{ minute }}
+        </option></select
+      >分
+    </p>
+
+    <p>
+      <label>● 就業終了時間：</label>
+      <select v-model="endHour">
+        <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option></select
+      >時
+      <select v-model="endMinute">
+        <option :value="minute" :key="minute" v-for="minute in minutes">
+          {{ minute }}
+        </option></select
+      >分
+    </p>
+
+    <p>
+      <label>● 時有給：</label>
+      <select v-model="timePaidHoliday">
+        <option
+          :value="timePaidHoliday"
+          :key="timePaidHoliday"
+          v-for="timePaidHoliday in timePaidHolidays"
+        >
+          {{ timePaidHoliday }}
+        </option></select
+      >時間
+    </p>
+
+    <p>
+      <label>● 休憩時間：</label>
+      <select v-model="restHour">
+        <option :value="hour" :key="hour" v-for="hour in hours">{{ hour }}</option></select
+      >時
+      <select v-model="restMinute">
+        <option :value="minute" :key="minute" v-for="minute in minutes">
+          {{ minute }}
+        </option></select
+      >分
+    </p>
+
+    <p>
+      <label>● 遅刻理由：</label>
+      <select v-model="defaultTardinessStatus">
+        <option
+          :value="tardinessStatus.name"
+          :key="tardinessStatus.name"
+          v-for="tardinessStatus in tardinessStatuses"
+        >
+          {{ tardinessStatus.name }}
+        </option>
+      </select>
+    </p>
+
+    <p>
+      <label>● コメント： </label>
+      <textarea name="comment" v-model="comment" cols="30" rows="1" />
+    </p>
+
+    <p>● 勤務時間合計： {{ totalWorkHours }}</p>
     <ComponentButton buttonText="承認依頼" type="submit" />
   </form>
 </template>
@@ -90,7 +111,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 import ComponentButton from './atoms/ComponentButton.vue'
 import { useRouter } from 'vue-router'
-import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type.ts'
 
 const router = useRouter()
 
@@ -399,6 +420,10 @@ let totalMinutesOfLateOrEarlyLeave = 480 - (Number(endHour.value)*60 + endMinute
 <style scoped>
 form {
   width: 30%;
-  margin: 50px auto;
+  margin: 50px 0;
+  border: 2px solid #1b5e20;
+  padding: 5px 30px;
+  border-radius: 5px;
+  background-color: #f7eccf;
 }
 </style>
