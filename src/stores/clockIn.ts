@@ -2,18 +2,18 @@ import { defineStore } from 'pinia'
 
 export const useClockIn = defineStore('clockIn', {
   state: () => ({
-    clockIn: null as Date | null,
+    clockIn: '',
   }),
   actions: {
-    setClockIn(date:Date) {
-      this.clockIn = date
+    setClockIn(dateString:string) {
+      this.clockIn = dateString
     },
     clearClockIn(){
-      this.clockIn = null
+      this.clockIn = ''
     }
   },
   getters:{
-    getClockIn():Date | null {
+    getClockIn():string {
       return this.clockIn
     },
   }

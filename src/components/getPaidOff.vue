@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 
 // 型定義
@@ -46,9 +46,16 @@ const fetchPaidOffData = async () => {
     console.error(error)
   }
 }
-onMounted(() => {
-  fetchPaidOffData()
+
+watchEffect(()=>{
+  if(userInfoStore.userInfo){
+    fetchPaidOffData()
+  }
 })
+
+// onMounted(() => {
+//   fetchPaidOffData()
+// })
 </script>
 
 <style scoped>

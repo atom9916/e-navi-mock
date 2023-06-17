@@ -2,14 +2,14 @@
   <div>
     <getPaidOff />
     <RealTimeClock />
-    <sampleClockInout/>
+    <ClockInoutAndSubmit/>
   </div>
 </template>
 
 <script setup lang="ts">
 import getPaidOff from './getPaidOff.vue'
 import RealTimeClock from './realTimeClock.vue'
-import sampleClockInout from './sampleClockInout.vue';
+import ClockInoutAndSubmit from './ClockInoutAndSubmit.vue';
 </script>
 
 <style scoped>
