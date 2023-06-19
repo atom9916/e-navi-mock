@@ -97,5 +97,4 @@ const submitFromMainpage = async ( ) => {
     <p>出勤 {{ storeClockIn.clockIn ? storeClockIn.clockIn : '- - :- -' }}</p>
     <p>退勤 {{ storeClockOut.clockOut ? storeClockOut.clockOut : '- - : - -'}}</p>
     <ComponentButton buttonText="承認依頼" @click="submitFromMainpage"/>
-    
 </template>
