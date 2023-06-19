@@ -111,7 +111,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { DateTime } from 'luxon'
 import ComponentButton from './atoms/ComponentButton.vue'
 import { useRouter } from 'vue-router'
-import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type.ts'
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
 
 const router = useRouter()
 
