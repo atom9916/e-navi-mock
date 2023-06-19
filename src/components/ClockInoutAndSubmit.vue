@@ -25,12 +25,34 @@ onMounted(() => {
 const storeClockIn = useClockIn()
 const storeClockOut = useClockOut()
 
+// 勤務時間の計算
+const startHour = ref('')
+const startMinute = ref('')
+const endHour = ref('')
+const endMinute = ref('')
+
+const startSplit = storeClockIn.clockIn.split(':')
+startHour.value = startSplit[0]
+startMinute.value = startSplit[1]
+
+const endSplit = storeClockOut.clockOut.split(':')
+endHour.value = endSplit[0]
+endMinute.value = endSplit[1]
+
+const totalMinutes = ((Number(endHour.value)*60)+Number(endMinute.value)) 
+                   - ((Number(startHour.value)*60)+Number(startMinute.value)+ 60)
+
+let workHour = Math.floor(totalMinutes/60)
+workHour = Math.min(workHour, 8)
+
+
+
+
 // ユーザー情報をストアから取得
 const userInfoStore = useUserInfoStore()
 const userId = userInfoStore.userInfo?.user_id
 
 // 非同期通信(ポスト)
-
 const submitFromMainpage = async ( ) => {
 
   const submitData = {
@@ -42,7 +64,7 @@ const submitFromMainpage = async ( ) => {
     punch_in: storeClockIn.clockIn,
     punch_out: storeClockOut.clockOut,
     break_time: `01:00`,
-    work_hour:8,
+    work_hour:workHour,
     overtime:0,
     midnight: '00:00',
     midnightOvertime: '00:00',
@@ -74,6 +96,7 @@ const submitFromMainpage = async ( ) => {
 <template>
     <p>出勤 {{ storeClockIn.clockIn ? storeClockIn.clockIn : '- - :- -' }}</p>
     <p>退勤 {{ storeClockOut.clockOut ? storeClockOut.clockOut : '- - : - -'}}</p>
-    <p>{{ currentDate }}</p>
     <ComponentButton buttonText="承認依頼" @click="submitFromMainpage"/>
+    <p>{{ workHour }}</p>
+    
 </template>
