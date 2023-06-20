@@ -1,6 +1,7 @@
 <template>
   <div>
-    <getPaidOff />
+    <!-- <getPaidOff /> -->
+    <!-- ↑についてログイン時にid取得より前に非同期処理をしてしまうのでエラーがでます。解消できるまで、いったん非表示にします -->
     <RealTimeClock />
     <ClockInoutAndSubmit/>
   </div>

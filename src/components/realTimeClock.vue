@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import ComponentButton from './atoms/ComponentButton.vue';
+import ComponentButton from './atoms/ComponentButton.vue'
 import { useClockIn } from '../stores/clockIn'
 import { useClockOut } from '../stores/clockOut'
 
@@ -17,20 +17,19 @@ const updateDateTime = () => {
 
 const saveClockIn = () => {
   const now = new Date()
-  const dateString = now.toLocaleTimeString(undefined,{hour: '2-digit', minute: '2-digit' })
+  const dateString = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
   storeClockIn.clockIn = dateString
-  console.log('出勤時刻',dateString)
-  alert(`出勤時間(${dateString})を登録しました`)
+  console.log('出勤時刻', dateString)
+  alert(`出勤時間(${dateString})を打刻しました`)
 }
 
 const saveClockOut = () => {
   const now = new Date()
-  const dateString = now.toLocaleTimeString(undefined,{hour: '2-digit', minute: '2-digit' })
+  const dateString = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
   storeClockOut.clockOut = dateString
-  console.log('退勤時刻',dateString)
-  alert(`退勤時間(${dateString})を登録しました`)
+  console.log('退勤時刻', dateString)
+  alert(`退勤時間(${dateString})を打刻しました`)
 }
-
 
 onMounted(() => {
   updateDateTime()
@@ -51,10 +50,9 @@ onMounted(() => {
         {{ currentTime }}
       </td>
     </tr>
-  </table> 
-  <ComponentButton buttonText="出勤" @click="saveClockIn"/>
-  <ComponentButton buttonText="退勤" @click="saveClockOut"/>
-  
+  </table>
+  <ComponentButton buttonText="出勤" @click="saveClockIn" />
+  <ComponentButton buttonText="退勤" @click="saveClockOut" />
 </template>
 
 <style scoped>

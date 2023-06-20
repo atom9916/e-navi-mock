@@ -19,11 +19,9 @@
       </option>
     </select>
 
-    <p>● 状態：</p>
-    <!-- <p>状態:{{ filteredSubmittedDailyAttendanceData }}</p> -->
-
+    <p>● 状態：{{ submittedDailyAttendanceData.length > 0 ? submittedDailyAttendanceData[0].state.S :'未入力'}}</p>
     <p>
-      <label for="shift">● シフト：</label>
+      <label for="shift">● シフト：</label> 
       <select id="shift" v-model="defaultShift">
         <option :value="shift.name" :key="shift.name" v-for="shift in shifts">
           {{ shift.name }}
@@ -104,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted,watchEffect } from 'vue'
 import axios from 'axios'
 import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
@@ -112,6 +110,7 @@ import { DateTime } from 'luxon'
 import ComponentButton from './atoms/ComponentButton.vue'
 import { useRouter } from 'vue-router'
 import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
+import { response } from 'express'
 
 const router = useRouter()
 
@@ -237,54 +236,34 @@ const updateSelectedDate = (date) => {
 }
 store.setSelectedDate = updateSelectedDate
 
+
+
 // 状態を取得or未入
 const submittedDailyAttendanceData = ref([] as DailyAttendanceData[])
 
 const fetchSubmittedDailyAttendanceData = async () => {
   const url = import.meta.env.VITE_AWS_API_URL
   try {
-    const response = await axios.get(`${url}/daily?id=${userId}`, {
+    const response = await axios.get(`${url}/daily?id=${userId}&date=${selectedDate.value}`, {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': import.meta.env.VITE_AWS_API_KEY
       }
     })
+
     submittedDailyAttendanceData.value = response.data.Items
 
     console.log(`登録済の勤怠情報`, response.data.Items)
-    console.log(filteredSubmittedDailyAttendanceData.value)
+    console.log('選択日付',selectedDate.value)
+    console.log(submittedDailyAttendanceData.value[0].state.S)
+
   } catch (error) {
     console.error(error)
   }
 }
 
-onMounted(() => {
-  fetchSubmittedDailyAttendanceData()
-})
-
-const filteredSubmittedDailyAttendanceData = ref([])
-
-watch(
-  [selectedDate, submittedDailyAttendanceData],
-  ([newSelectedDate, newSubmittedDailyAttendanceData]) => {
-    const filterByDate = (data, date) => {
-      return data.filter((item) => (item.date = date))
-    }
-    filteredSubmittedDailyAttendanceData.value = filterByDate(
-      newSubmittedDailyAttendanceData,
-      newSelectedDate
-    )
-  }
-)
-
-// const filterDataByDate = (date) => {
-//   return submittedDailyAttendanceData.value.filter((data) => {
-//     const dataDate = new Date(data.date.S)
-//     dataDate === date
-//   })
-// }
-
-// const submittedState = filterDataByDate(selectedDate.value)[0]?.state.S || '未入力'
+watch(selectedDate,fetchSubmittedDailyAttendanceData)
+onMounted(fetchSubmittedDailyAttendanceData)
 
 // 非同期通信(ポスト)
 const submitForm = async (event) => {
