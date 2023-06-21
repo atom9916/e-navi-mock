@@ -7,12 +7,12 @@ export interface DailyAttendanceData {
     punch_in: { S: string }
     punch_out: { S: string }
     break_time: { S: string }
-    work_hour: { N: number }
-    overtime: { N: number }
+    work_hour: { S: string  }
+    overtime: { S: string  }
     midnight: { S: string }
     midnightOvertime: { S: string }
-    timePaidHoliday: { N: number }
-    lateOrEarlyLeave: { N: number }
+    timePaidHoliday: { S: string  }
+    lateOrEarlyLeave: { S: string  }
     tardiness: { S: string }
     comment: { S: string }
   }

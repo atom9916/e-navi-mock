@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, watchEffect } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
 import { useStoreSelectedDate } from '../stores/selectedDate'
 import { useUserInfoStore } from '@/stores/userInfo'
@@ -281,20 +281,11 @@ const submitForm = async (event) => {
     (Number(restHour.value) * 60 + restMinuteForCalculation) -
     (Number(startHour.value) * 60 + startMinuteForCalculation)
 
-  let workHour = Math.floor(totalMinutes / 60)
-    .toString()
-    .padStart(2, '0')
+  let workHour = Math.floor(totalMinutes / 60).toString().padStart(2, '0')
   let workMinute = (totalMinutes % 60).toString().padStart(2, '0')
 
   let workHourResult = workHour + ':' + workMinute
-
-  let overtime =
-    Number(endHour.value) +
-    endMinuteForCalculation +
-    Number(timePaidHoliday.value) -
-    (Number(restHour.value) + restMinuteForCalculation) -
-    (Number(startHour.value) + startMinuteForCalculation) -
-    8
+  console.log(workHourResult)
 
   //残業を00:00と表示させるときに後で使いたい
   let totalMinutesOfovertime =
@@ -311,13 +302,7 @@ const submitForm = async (event) => {
   let overtimeMinute = (totalMinutesOfovertime % 60).toString().padStart(2, '0')
 
   let overtimeResult = overtimeHour + ':' + overtimeMinute
-
-  let lateOrEarlyLeave =
-    8 -
-    (Number(endHour.value) +
-      endMinuteForCalculation -
-      (Number(restHour.value) + restMinuteForCalculation) -
-      (Number(startHour.value) + startMinuteForCalculation))
+  console.log(overtimeResult)
 
   // 時有給を00:00と表示させるときに後で使いたい
   let totalMinutesOfTimePaidHoliday = Number(timePaidHoliday.value) * 60
@@ -325,14 +310,18 @@ const submitForm = async (event) => {
     .toString()
     .padStart(2, '0')
   let timePaidHolidayResult = timePaidHolidayHour + ':00'
+  console.log(timePaidHolidayResult)
 
   // 遅刻早退を00:00と表示させるときに後で使いたい
   let totalMinutesOfLateOrEarlyLeave =
-    480 -
+     480-
+     (
     (Number(endHour.value) * 60 + endMinuteForCalculation) +
-    Number(timePaidHoliday.value) * 60 -
-    (Number(restHour.value) * 60 + restMinuteForCalculation) -
+    Number(timePaidHoliday.value) * 60 -(
+    (Number(restHour.value) * 60 + restMinuteForCalculation) +
     (Number(startHour.value) * 60 + startMinuteForCalculation)
+    )
+    )
 
   let lateOrEarlyLeaveHour = Math.floor(totalMinutesOfLateOrEarlyLeave / 60)
     .toString()
@@ -340,7 +329,8 @@ const submitForm = async (event) => {
   let lateOrEarlyLeaveMinute = (totalMinutesOfLateOrEarlyLeave % 60).toString().padStart(2, '0')
 
   let lateOrEarlyLeaveResult = lateOrEarlyLeaveHour + ':' + lateOrEarlyLeaveMinute
-
+  console.log(lateOrEarlyLeaveResult)
+  
   const formData = {
     userId: userId,
     date: selectedDate.value,
@@ -350,12 +340,12 @@ const submitForm = async (event) => {
     punch_in: `${startHour.value}:${startMinute.value}`,
     punch_out: `${endHour.value}:${endMinute.value}`,
     break_time: `${restHour.value}:${restMinute.value}`,
-    work_hour: workHour,
-    overtime: overtime,
+    work_hour: workHourResult,
+    overtime: overtimeResult,
     midnight: '00:00',
     midnightOvertime: '00:00',
-    timePaidHoliday: Number(timePaidHoliday.value),
-    lateOrEarlyLeave: lateOrEarlyLeave,
+    timePaidHoliday: timePaidHolidayResult,
+    lateOrEarlyLeave: lateOrEarlyLeaveResult,
     tardiness: defaultTardinessStatus.value,
     comment: comment.value
   }

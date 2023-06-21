@@ -4,30 +4,18 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import { useUserInfoStore } from '@/stores/userInfo'
 import GetDateComponent from './atoms/GetDateComponent.vue'
-
-// 型定義
-// DynamoDBでは型情報も含んだオブジェクトとして取得
-interface DailyAttendanceData {
-  userId: { S: string }
-  date: { S: Date }
-  state: { S: string }
-  shift: { S: string }
-  attendance: { S: string }
-  punch_in: { S: string }
-  punch_out: { S: string }
-  break_time: { S: string }
-  work_hour: { N: number }
-  overtime: { N: number }
-  midnight: { S: string }
-  midnightOvertime: { S: string }
-  timePaidHoliday: { N: number }
-  lateOrEarlyLeave: { N: number }
-  tardiness: { S: string }
-  comment: { S: string }
-}
+import type { DailyAttendanceData } from '@/types/dailyAttendanceData.type'
 
 // DBデータ初期化
 const dailyAttendanceData = ref([] as DailyAttendanceData[])
+
+const numberOfPresent = ref(null)
+const numberOfAbsent   = ref(null)
+const numberOfWorkOnHoliday = ref(null)
+const numberOfPaidOff = ref(null)
+const numberOfSpecialPaidOff = ref(null)
+const numberOfSubstituteHoliday = ref(null)
+const numberOfMakeupHoliday = ref(null)
 
 // user_id取得
 const userInfoStore = useUserInfoStore()
@@ -133,9 +121,31 @@ const showTargetMonth = () => {
 
   // 日付を表示
   dailyAttendanceDates.value = dates
-
   console.log(dates)
+
+ // 月ごとの内訳を取得
+const filterMonthDataByDate = (attendanceData,year,month) =>{
+  return attendanceData.filter(obj =>{
+    const date = new Date(obj.date.S)
+    return date.getFullYear() === year && date.getMonth() === month -1
+  })
 }
+const filteredMonthData = filterMonthDataByDate(dailyAttendanceData.value,selectedYear,selectedMonth)
+const unwrappedData = filteredMonthData.map(obj =>({...obj}))
+console.log('月別データ',unwrappedData)
+console.log('年',selectedYear)
+console.log('月',selectedMonth)
+
+numberOfPresent.value = unwrappedData.filter(item => item.attendance.S === '出勤').length
+numberOfAbsent.value = unwrappedData.filter(item => item.attendance.S === '欠勤').length
+numberOfWorkOnHoliday.value = unwrappedData.filter(item => item.attendance.S === '休出').length
+numberOfPaidOff.value = unwrappedData.filter(item => item.attendance.S === '有給').length
+numberOfSpecialPaidOff.value = unwrappedData.filter(item => item.attendance.S === '特休').length
+numberOfSubstituteHoliday.value = unwrappedData.filter(item => item.attendance.S === '振休').length
+numberOfMakeupHoliday.value = unwrappedData.filter(item => item.attendance.S === '代休').length
+
+}
+
 </script>
 
 <template>
@@ -150,6 +160,46 @@ const showTargetMonth = () => {
       @update:defaultYears="defaultYears = $event"
     />
   </div>
+
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>出勤数</th>
+          <th>欠勤数</th>
+          <th>休出数</th>
+          <th>有給数</th>
+          <th>時有給数</th>
+          <th>特休数</th>
+          <th>振休数</th>
+          <th>代休数</th>
+          <th>遅早数</th>
+          <th>基本合計</th>
+          <th>残業合計</th>
+          <th>深夜合計</th>
+          <th>深夜残合計</th>
+          <th>遅早合計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <td>{{ numberOfPresent }}</td>
+        <td>{{ numberOfAbsent }}</td>
+        <td>{{ numberOfWorkOnHoliday }}</td>
+        <td>{{ numberOfPaidOff }}</td>
+        <td>時有給のうちわけ</td>
+        <td>{{ numberOfSpecialPaidOff }}</td>
+        <td>{{ numberOfSubstituteHoliday }}</td>
+        <td>{{ numberOfMakeupHoliday }}</td>
+        <td>遅早のうちわけ</td>
+        <td>基本合計</td>
+        <td>残業合計</td>
+        <td>深夜合計</td>
+        <td>深夜残合計</td>
+        <td>遅早合計</td>
+      </tbody>
+    </table>
+  </div>
+
   <div class="monthlyAttendance">
     <table>
       <thead>
@@ -184,12 +234,12 @@ const showTargetMonth = () => {
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.punch_in.S }}</td>
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.punch_out.S }}</td>
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.break_time.S }}</td>
-          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.work_hour.N }}</td>
-          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.overtime.N }}</td>
+          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.work_hour.S }}</td>
+          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.overtime.S }}</td>
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.midnight.S }}</td>
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.midnightOvertime.S }}</td>
-          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.timePaidHoliday.N }}</td>
-          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.N }}</td>
+          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.timePaidHoliday.S }}</td>
+          <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.lateOrEarlyLeave.S }}</td>
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.tardiness.S }}</td>
           <td :class="getColorStyle(date)">{{ filterDataByDate(date)[0]?.comment.S }}</td>
         </tr>
