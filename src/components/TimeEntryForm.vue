@@ -311,6 +311,7 @@ const submitForm = async (event) => {
     .padStart(2, '0')
   let timePaidHolidayResult = timePaidHolidayHour + ':00'
   console.log(timePaidHolidayResult)
+  console.log('これが欲しい',Number(timePaidHolidayHour))
 
   // 遅刻早退を00:00と表示させるときに後で使いたい
   let totalMinutesOfLateOrEarlyLeave =
