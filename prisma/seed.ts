@@ -14,7 +14,8 @@ async function main() {
       { name: '半休' },
       { name: '慶弔休' },
       { name: '欠勤' },
-      { name: '休日出' }
+      { name: '休日出' },
+      {name:'時有給'}
     ]
   })
 
