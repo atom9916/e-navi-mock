@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <p>お知らせ</p>
+  <p class="head">お知らせ</p>
+  <div class="notification">
     <div v-if="flagOfRT">
       <p>・楽須太郎に承認待ちの勤怠実績があります</p>
     </div>
@@ -155,3 +155,20 @@ onMounted(() => {
   fetchDailyAttendanceDataOfSS()
 })
 </script>
+
+<style scoped>
+.notification {
+  border: 3px solid #1b5e20;
+  margin-bottom: 5%;
+  padding: 0.5%;
+  background-color: #f7eccf;
+}
+.head {
+  color: #f7eccf;
+  font-weight: 900;
+  font-size: larger;
+  background-color: #1b5e20;
+  width: 13%;
+  padding: 1%;
+}
+</style>
