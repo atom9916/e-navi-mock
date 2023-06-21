@@ -14,7 +14,7 @@
 // import getPaidOff from './getPaidOff.vue'
 import RealTimeClock from './realTimeClock.vue'
 import ClockInoutAndSubmit from './ClockInoutAndSubmit.vue'
-import NotificationToAdmin from './sampleMessage.vue'
+import NotificationToAdmin from './NotificationToAdmin.vue'
 import { useUserInfoStore } from '../stores/userInfo'
 
 const userInfoStore = useUserInfoStore()
