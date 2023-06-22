@@ -256,7 +256,7 @@ const fetchSubmittedDailyAttendanceData = async () => {
 
     console.log(`登録済の勤怠情報`, response.data.Items)
     console.log('選択日付', selectedDate.value)
-    console.log(submittedDailyAttendanceData.value[0].state.S)
+    console.log('状態:',submittedDailyAttendanceData.value[0]?.state.S ?? '未入力')
   } catch (error) {
     console.error(error)
   }

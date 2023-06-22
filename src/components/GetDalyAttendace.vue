@@ -126,12 +126,17 @@ const showTargetMonth = () => {
  // 月ごとの内訳を取得
 const filterMonthDataByDate = (attendanceData,year,month) =>{
   return attendanceData.filter(obj =>{
+    console.log('年',year)
+    console.log('月',month)
     const date = new Date(obj.date.S)
+    // console.log('要チェック',obj.date.S)
+    // console.log('その2',date.getFullYear())
     return date.getFullYear() === year && date.getMonth() === month -1
   })
 }
 const filteredMonthData = filterMonthDataByDate(dailyAttendanceData.value,selectedYear,selectedMonth)
 const unwrappedData = filteredMonthData.map(obj =>({...obj}))
+console.log('月別生データ',filteredMonthData)
 console.log('月別データ',unwrappedData)
 console.log('年',selectedYear)
 console.log('月',selectedMonth)
