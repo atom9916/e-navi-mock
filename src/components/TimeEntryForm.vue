@@ -201,7 +201,7 @@ onMounted(() => {
 // ドロップダウンリストの選択肢(数字)
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
-const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
+const timePaidHolidays = Array.from({ length: 8 }, (_, index) => String(index).padStart(1))
 
 // 勤務合計時間の規定
 
@@ -273,7 +273,7 @@ const submitForm = async (event) => {
   const endMinuteForCalculation = Number(endMinute.value) / 60
   const restMinuteForCalculation = Number(restMinute.value) / 60
 
-  //勤務時間を08:00と表示させるときに後で使いたい
+  //勤務時間を08:00と表示
   let totalMinutes =
     Number(endHour.value) * 60 +
     endMinuteForCalculation +
@@ -287,7 +287,7 @@ const submitForm = async (event) => {
   let workHourResult = workHour + ':' + workMinute
   console.log(workHourResult)
 
-  //残業を00:00と表示させるときに後で使いたい
+  //残業を00:00と表示
   let totalMinutesOfovertime =
     Number(endHour.value) * 60 +
     endMinuteForCalculation +
@@ -304,7 +304,7 @@ const submitForm = async (event) => {
   let overtimeResult = overtimeHour + ':' + overtimeMinute
   console.log(overtimeResult)
 
-  // 時有給を00:00と表示させるときに後で使いたい
+  // 時有給を00:00と表示
   let totalMinutesOfTimePaidHoliday = Number(timePaidHoliday.value) * 60
   let timePaidHolidayHour = Math.floor(totalMinutesOfTimePaidHoliday / 60)
     .toString()
@@ -312,7 +312,7 @@ const submitForm = async (event) => {
   let timePaidHolidayResult = timePaidHolidayHour + ':00'
   console.log(timePaidHolidayResult)
 
-  // 遅刻早退を00:00と表示させるときに後で使いたい
+  // 遅刻早退を00:00と表示
   let totalMinutesOfLateOrEarlyLeave =
      480-
      (
@@ -368,9 +368,9 @@ const submitForm = async (event) => {
   }
 
   //有給を消費する
-  if (defaultAttendantStatus.value !== '有給') {
+  if (defaultAttendantStatus.value !== '有給' && defaultAttendantStatus.value !== '時有給') {
     return
-  }
+  }else if(defaultAttendantStatus.value !== '時有給'){
   try {
     const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
     const paidOff = response.data.paidOff
@@ -391,8 +391,32 @@ const submitForm = async (event) => {
     }
   } catch (error) {
     console.error(error)
-  }
-}
+  }  
+} else{
+  try {
+    const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
+    const paidOff = response.data.paidOff
+    console.log('現在有給内訳', response.data.paidOff)
+    console.log('使用済有給(予定)', Number(paidOff.used_amount) + Number(timePaidHolidayHour)*0.125)
+    console.log('残有給(予定)', Number(paidOff.remaining_amount) - Number(timePaidHolidayHour)*0.125)
+    console.log('予定確認',Number(paidOff.used_amount))
+
+    if (paidOff.remaining_amount >= 0) {
+      const usedAmount = (Number(paidOff.used_amount) + Number(timePaidHolidayHour)*0.125)
+      const remainingAmount = Number(paidOff.remaining_amount) - Number(timePaidHolidayHour)*0.125
+
+      await axios.put(`http://localhost:4242/paidOff/${userId}`, {
+        used_amount: usedAmount,
+        remaining_amount: remainingAmount
+      })
+      console.log(`時有給を${timePaidHoliday.value}時間、消費しました`)
+    } else {
+      console.error('時有給取得でエラーが発生しました')
+    }
+  } catch (error) {
+    console.error(error)
+  } 
+}}
 </script>
 
 <style scoped>
