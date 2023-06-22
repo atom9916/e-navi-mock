@@ -201,7 +201,7 @@ onMounted(() => {
 // ドロップダウンリストの選択肢(数字)
 const hours = Array.from({ length: 48 }, (_, index) => String(index).padStart(2, '0'))
 const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'))
-const timePaidHolidays = Array.from({ length: 9 }, (_, index) => String(index).padStart(1))
+const timePaidHolidays = Array.from({ length: 8 }, (_, index) => String(index).padStart(1))
 
 // 勤務合計時間の規定
 
@@ -311,7 +311,6 @@ const submitForm = async (event) => {
     .padStart(2, '0')
   let timePaidHolidayResult = timePaidHolidayHour + ':00'
   console.log(timePaidHolidayResult)
-  console.log('これが欲しい',Number(timePaidHolidayHour))
 
   // 遅刻早退を00:00と表示
   let totalMinutesOfLateOrEarlyLeave =
@@ -398,17 +397,19 @@ const submitForm = async (event) => {
     const response = await axios.get(`http://localhost:4242/paidOff/${userId}`)
     const paidOff = response.data.paidOff
     console.log('現在有給内訳', response.data.paidOff)
-    console.log('使用済有給(予定)', paidOff.used_amount + Number(timePaidHolidayHour)*0.125)
-    console.log('残有給(予定)', paidOff.remaining_amount - Number(timePaidHolidayHour)*0.125)
+    console.log('使用済有給(予定)', Number(paidOff.used_amount) + Number(timePaidHolidayHour)*0.125)
+    console.log('残有給(予定)', Number(paidOff.remaining_amount) - Number(timePaidHolidayHour)*0.125)
+    console.log('予定確認',Number(paidOff.used_amount))
 
     if (paidOff.remaining_amount >= 0) {
-      const usedAmount = paidOff.used_amount + Number(timePaidHolidayHour)*0.125
-      const remainingAmount = paidOff.remaining_amount - Number(timePaidHolidayHour)*0.125
+      const usedAmount = (Number(paidOff.used_amount) + Number(timePaidHolidayHour)*0.125)
+      const remainingAmount = Number(paidOff.remaining_amount) - Number(timePaidHolidayHour)*0.125
+
       await axios.put(`http://localhost:4242/paidOff/${userId}`, {
         used_amount: usedAmount,
         remaining_amount: remainingAmount
       })
-      console.log(`時有給を${Number(timePaidHoliday)}時間、消費しました`)
+      console.log(`時有給を${timePaidHoliday.value}時間、消費しました`)
     } else {
       console.error('時有給取得でエラーが発生しました')
     }
