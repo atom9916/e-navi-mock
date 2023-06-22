@@ -132,6 +132,7 @@ const filterMonthDataByDate = (attendanceData,year,month) =>{
 }
 const filteredMonthData = filterMonthDataByDate(dailyAttendanceData.value,selectedYear,selectedMonth)
 const unwrappedData = filteredMonthData.map(obj =>({...obj}))
+console.log('月別生データ',filteredMonthData)
 console.log('月別データ',unwrappedData)
 console.log('年',selectedYear)
 console.log('月',selectedMonth)
